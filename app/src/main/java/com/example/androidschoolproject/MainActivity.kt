@@ -22,7 +22,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background,
                 ) {
-                    Greeting("This is my first commit")
+                    Greeting("This is my second commit")
                 }
             }
         }
@@ -35,6 +35,7 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
         text = "Hello $name!",
         modifier = modifier,
     )
+    Text(text = "can we do another commit?")
 }
 
 @Preview(showBackground = true)
