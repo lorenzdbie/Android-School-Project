@@ -3,45 +3,63 @@ package com.example.androidschoolproject
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
+import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
+import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.androidschoolproject.ui.WeatherApp
 import com.example.androidschoolproject.ui.theme.AndroidSchoolProjectTheme
 
 class MainActivity : ComponentActivity() {
+    @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             AndroidSchoolProjectTheme {
                 // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background,
-                ) {
-                    Greeting("This is my second commit")
+                Surface {
+                    val windowSize = calculateWindowSizeClass(this)
+                    WeatherApp(windowSize = windowSize.widthSizeClass)
                 }
             }
         }
     }
 }
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier,
-    )
-    Text(text = "can we do another commit?")
-}
-
 @Preview(showBackground = true)
 @Composable
-fun GreetingPreview() {
+fun ReplyAppCompactPreview() {
     AndroidSchoolProjectTheme {
-        Greeting("Android")
+        Surface {
+            WeatherApp(
+                windowSize = WindowWidthSizeClass.Compact,
+            )
+        }
+    }
+}
+
+@Preview(showBackground = true, widthDp = 700)
+@Composable
+fun ReplyAppMediumPreview() {
+    AndroidSchoolProjectTheme {
+        Surface {
+            WeatherApp(
+                windowSize = WindowWidthSizeClass.Medium,
+            )
+        }
+    }
+}
+
+@Preview(showBackground = true, widthDp = 1000)
+@Composable
+fun ReplyAppExpandedPreview() {
+    AndroidSchoolProjectTheme {
+        Surface {
+            WeatherApp(
+                windowSize = WindowWidthSizeClass.Expanded,
+            )
+        }
     }
 }

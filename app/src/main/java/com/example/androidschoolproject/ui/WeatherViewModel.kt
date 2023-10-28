@@ -24,6 +24,7 @@ class WeatherViewModel : ViewModel() {
             it.copy(currentCity = selectedCity)
         }
     }
+
 }
 
 data class WeatherUiState(
