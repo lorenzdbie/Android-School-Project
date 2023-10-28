@@ -50,7 +50,7 @@ object LocalWeatherDataProvider {
                     humidity = 81f,
                     windSpeed = 4.12f,
                     windDirection = 200f,
-                    weatherIcon = "01n",
+                    weatherIcon = "02n",
                 ),
                 pollution = Pollution(
                     timeStamp = "2023-10-28T10:00:00.000Z",

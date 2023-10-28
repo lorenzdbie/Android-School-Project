@@ -2,4 +2,6 @@
     <string name="app_name">Weather</string>
     <string name="api_key">efc93cd2-4e04-445e-beec-c8e9d2b5aca1</string>
     <string name="urlExternalAPI">https://api.airvisual.com/v2/</string>
+    <string name="add_city">Add city</string>
+    <string name="add_city_button">Add city button</string>
 </resources>
