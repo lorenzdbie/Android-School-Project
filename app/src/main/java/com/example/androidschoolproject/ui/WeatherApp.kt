@@ -40,9 +40,9 @@ fun WeatherApp(
                 selectedCity = city,
             )
         },
-        onDetailScreenBackPressed = {
-            viewModel.resetHomeScreenStates()
-        },
+        onDetailScreenBackPressed = { viewModel.resetHomeScreenStates() },
+        onAddCityPressed = { viewModel.updateAddCityScreenStates() },
+        onAddCityClosedPressed = { viewModel.resetAddCityScreenStates() },
         modifier = modifier,
     )
 }

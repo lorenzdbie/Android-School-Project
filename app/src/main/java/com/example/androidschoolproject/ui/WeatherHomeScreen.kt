@@ -2,6 +2,7 @@ package com.example.androidschoolproject.ui
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -48,37 +49,31 @@ fun WeatherHomeScreen(
     weatherUiState: WeatherUiState,
     onCityCardPressed: (WeatherCity) -> Unit,
     onDetailScreenBackPressed: () -> Unit,
+    onAddCityPressed: () -> Unit,
+    onAddCityClosedPressed: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-//    if (contentType == WeatherContentType.LIST_AND_DETAIL) {
-//        WeatherAppContent(
-//            contentType = contentType,
-//            weatherUiState = weatherUiState,
-//            onCityCardPressed = onCityCardPressed,
-//        )
-//    } else {
-    if (weatherUiState.isShowingHomepage) {
+    if (contentType == WeatherContentType.LIST_AND_DETAIL) {
         WeatherAppContent(
             contentType = contentType,
             weatherUiState = weatherUiState,
             onCityCardPressed = onCityCardPressed,
+            onAddCityPressed = onAddCityPressed,
         )
     } else {
-        DetailsWeatherScreen(uiState = weatherUiState, onBackPressed = onDetailScreenBackPressed, isFullScreen = true)
+        if (weatherUiState.isShowingHomepage) {
+            WeatherAppContent(
+                contentType = contentType,
+                weatherUiState = weatherUiState,
+                onCityCardPressed = onCityCardPressed,
+                onAddCityPressed = onAddCityPressed,
+            )
+        } else {
+            DetailsWeatherScreen(uiState = weatherUiState, onBackPressed = onDetailScreenBackPressed, isFullScreen = true)
+        }
     }
-}
-// }
-
-@Composable
-fun WeatherListAndDetailsScreen(
-    contentType: WeatherContentType,
-    weatherUiState: WeatherUiState,
-    onCityCardPressed: (WeatherCity) -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    Row {
-        WeatherAppContent(contentType = contentType, weatherUiState = weatherUiState, onCityCardPressed = onCityCardPressed)
-        DetailsWeatherScreen(uiState = weatherUiState, onBackPressed = {})
+    if (weatherUiState.isShowingAddCityBox) {
+        AddCityScreen(onAddPressed = { /*TODO*/ }, onClosePressed = onAddCityClosedPressed)
     }
 }
 
@@ -88,19 +83,35 @@ fun WeatherAppContent(
     contentType: WeatherContentType,
     weatherUiState: WeatherUiState,
     onCityCardPressed: (WeatherCity) -> Unit,
+    onAddCityPressed: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Box(modifier = modifier.fillMaxSize()) {
-        Column {
+        Column(modifier = modifier.fillMaxSize()) {
             WeatherTopAppBar()
-            if (contentType == WeatherContentType.LIST_AND_DETAIL) {
-                WeatherListAndDetailsContent(weatherUiState = weatherUiState, onCityCardPressed = onCityCardPressed, modifier = Modifier.weight(1f))
-            } else {
-                WeatherOnlyListContent(
-                    weatherUiState = weatherUiState,
-                    onCityCardPressed = onCityCardPressed,
-                    modifier = Modifier.weight(1f),
-                )
+            Column(
+                modifier = modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.SpaceBetween,
+            ) {
+                if (contentType == WeatherContentType.LIST_AND_DETAIL) {
+                    WeatherListAndDetailsContent(
+                        weatherUiState = weatherUiState,
+                        onCityCardPressed = onCityCardPressed,
+                        modifier = Modifier.weight(1f),
+                    )
+                } else {
+                    WeatherOnlyListContent(
+                        weatherUiState = weatherUiState,
+                        onCityCardPressed = onCityCardPressed,
+                        modifier = Modifier.weight(1f),
+                    )
+                }
+                // WeatherBottomAddBar(onClick = onAddCityPressed)
+                if (contentType == WeatherContentType.LIST_AND_DETAIL) {
+                    WeatherExtendedBottomAddBar(onClick = onAddCityPressed)
+                } else {
+                    WeatherBottomAddBar(onClick = onAddCityPressed)
+                }
             }
         }
 //    Scaffold(
@@ -138,11 +149,11 @@ fun WeatherOnlyListContent(
 ) {
     val cities = weatherUiState.cityList
     LazyColumn {
-        items(cities, key = { city -> city.id }) {
+        items(cities, key = { city -> city.id }) { city ->
             CityWeatherCard(
-                city = it,
+                city = city,
                 selected = false,
-                onCityCardPressed = onCityCardPressed(it),
+                onCardClick = { onCityCardPressed(city) },
                 modifier = Modifier.padding(5.dp),
             )
         }
@@ -156,19 +167,25 @@ fun WeatherListAndDetailsContent(
     modifier: Modifier = Modifier,
 ) {
     val cities = weatherUiState.cityList
-    Row(modifier = modifier.fillMaxSize()) {
-        LazyColumn(modifier = Modifier.weight(1f)) {
-            items(cities, key = { city -> city.id }) {
-                CityWeatherCard(
-                    city = it,
-                    selected = weatherUiState.currentCity.id == it.id,
-                    onCityCardPressed = onCityCardPressed(it),
-                    modifier = Modifier.padding(5.dp),
-                )
+    Box(modifier = modifier.fillMaxSize()) {
+        Row {
+            LazyColumn(modifier = Modifier.weight(1f)) {
+                items(cities, key = { city -> city.id }) { city ->
+                    CityWeatherCard(
+                        city = city,
+                        selected = weatherUiState.currentCity.id == city.id,
+                        onCardClick = { onCityCardPressed(city) },
+                        modifier = Modifier.padding(5.dp),
+                    )
+                }
             }
+            // val activity = LocalContext.current as Activity
+            DetailsWeatherScreen(
+                uiState = weatherUiState,
+                onBackPressed = {},
+                modifier = Modifier.weight(1f),
+            )
         }
-        // val activity = LocalContext.current as Activity
-        DetailsWeatherScreen(uiState = weatherUiState, onBackPressed = {}, modifier = Modifier.weight(1f))
     }
 }
 
@@ -208,13 +225,15 @@ fun WeatherIcon(icon: String, viewSize: ViewSize, modifier: Modifier = Modifier)
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun CityWeatherCard(city: WeatherCity, selected: Boolean, onCityCardPressed: Unit, modifier: Modifier = Modifier) {
+private fun CityWeatherCard(city: WeatherCity, selected: Boolean, onCardClick: () -> Unit, modifier: Modifier = Modifier) {
     Card(
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
         modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 10.dp),
+        onClick = onCardClick,
     ) {
         Row(modifier = modifier.padding(horizontal = 10.dp, vertical = 5.dp)) {
             Text(text = city.city, style = MaterialTheme.typography.headlineMedium, modifier = Modifier.fillMaxWidth(0.7f))

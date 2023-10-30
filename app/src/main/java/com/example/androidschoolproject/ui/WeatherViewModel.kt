@@ -28,6 +28,22 @@ class WeatherViewModel : ViewModel() {
         }
     }
 
+    fun updateAddCityScreenStates() {
+        _uiState.update {
+            it.copy(
+                isShowingAddCityBox = true,
+            )
+        }
+    }
+
+    fun resetAddCityScreenStates() {
+        _uiState.update {
+            it.copy(
+                isShowingAddCityBox = false,
+            )
+        }
+    }
+
     fun resetHomeScreenStates() {
         _uiState.update {
             it.copy(
@@ -44,4 +60,5 @@ data class WeatherUiState(
     val cityList: List<WeatherCity> = emptyList(),
     val currentCity: WeatherCity = LocalWeatherDataProvider.defaultWeather,
     val isShowingHomepage: Boolean = true,
+    val isShowingAddCityBox: Boolean = false,
 )

@@ -41,7 +41,7 @@ import com.example.androidschoolproject.ui.utils.ViewSize
 import com.example.androidschoolproject.ui.utils.WindDirection
 
 @Composable
-fun DetailsWeatherScreen(uiState: WeatherUiState, onBackPressed: () -> Unit, isFullScreen: Boolean = false, modifier: Modifier = Modifier) {
+fun DetailsWeatherScreen(uiState: WeatherUiState, onBackPressed: () -> Unit, modifier: Modifier = Modifier, isFullScreen: Boolean = false) {
     BackHandler {
         onBackPressed()
     }
@@ -142,6 +142,6 @@ private fun WindDirectionRose(windDirection: Float) {
 @Composable
 fun CityWeatherDetailsPreview() {
     AndroidSchoolProjectTheme {
-        DetailsWeatherScreen(uiState = WeatherUiState(), onBackPressed = {})
+        DetailsWeatherScreen(uiState = WeatherUiState(), onBackPressed = {}, isFullScreen = true)
     }
 }
