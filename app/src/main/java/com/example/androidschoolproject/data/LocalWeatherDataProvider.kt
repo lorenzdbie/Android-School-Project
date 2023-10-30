@@ -24,7 +24,7 @@ object LocalWeatherDataProvider {
                     atmosphericPressure = 993f,
                     humidity = 81f,
                     windSpeed = 5.36f,
-                    windDirection = 194f,
+                    windDirection = 90f,
                     weatherIcon = "04d",
                 ),
                 pollution = Pollution(

@@ -30,7 +30,7 @@ class MainActivity : ComponentActivity() {
 
 @Preview(showBackground = true)
 @Composable
-fun ReplyAppCompactPreview() {
+fun WeatherAppCompactPreview() {
     AndroidSchoolProjectTheme {
         Surface {
             WeatherApp(
@@ -42,7 +42,7 @@ fun ReplyAppCompactPreview() {
 
 @Preview(showBackground = true, widthDp = 700)
 @Composable
-fun ReplyAppMediumPreview() {
+fun WeatherAppMediumPreview() {
     AndroidSchoolProjectTheme {
         Surface {
             WeatherApp(
@@ -54,7 +54,7 @@ fun ReplyAppMediumPreview() {
 
 @Preview(showBackground = true, widthDp = 1000)
 @Composable
-fun ReplyAppExpandedPreview() {
+fun WeatherAppExpandedPreview() {
     AndroidSchoolProjectTheme {
         Surface {
             WeatherApp(

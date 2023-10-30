@@ -8,3 +8,7 @@ enum class WeatherContentType {
 enum class WeatherNavigationType {
     BOTTOM_NAVIGATION, NAVIGATION_RAIL, PERMANENT_NAVIGATION_DRAWER
 }
+
+enum class ViewSize {
+    SMALL, LARGE
+}

@@ -3,6 +3,7 @@ package com.example.androidschoolproject.ui
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -35,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.androidschoolproject.R
 import com.example.androidschoolproject.model.WeatherCity
+import com.example.androidschoolproject.ui.utils.ViewSize
 import com.example.androidschoolproject.ui.utils.WeatherContentType
 import com.example.androidschoolproject.ui.utils.WeatherNavigationType
 
@@ -71,8 +73,8 @@ fun WeatherHomeScreen(
 }
 
 @Composable
-fun CityWeatherCard(city: WeatherCity, modifier: Modifier = Modifier) {
-    @DrawableRes val icon = when (city.weather.weatherIcon) {
+fun WeatherIcon(icon: String, viewSize: ViewSize, modifier: Modifier = Modifier) {
+    @DrawableRes val weatherIcon = when (icon) {
         "01d" -> R.drawable._1d
         "01n" -> R.drawable._1n
         "02d" -> R.drawable._2d
@@ -87,7 +89,27 @@ fun CityWeatherCard(city: WeatherCity, modifier: Modifier = Modifier) {
         "50d" -> R.drawable._50d
         else -> R.drawable._1d
     }
+    Box(
+        modifier = Modifier.size(
+            when (viewSize) {
+                ViewSize.SMALL -> 50.dp
+                ViewSize.LARGE -> 120.dp
+                else -> 50.dp
+            },
+        ),
+    ) {
+        Image(
+            painter = painterResource(id = weatherIcon),
+            contentDescription = null,
+            alignment = Alignment.TopCenter,
+            contentScale = ContentScale.FillWidth,
 
+        )
+    }
+}
+
+@Composable
+private fun CityWeatherCard(city: WeatherCity, modifier: Modifier = Modifier) {
     Card(
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
         modifier = modifier
@@ -97,16 +119,11 @@ fun CityWeatherCard(city: WeatherCity, modifier: Modifier = Modifier) {
         Row(modifier = modifier.padding(horizontal = 10.dp, vertical = 5.dp)) {
             Text(text = city.city, style = MaterialTheme.typography.headlineMedium, modifier = Modifier.fillMaxWidth(0.7f))
             Spacer(modifier = Modifier.weight(1f))
-            Text(text = "${city.weather.temperature}°C")
-            Box(modifier = Modifier.size(50.dp)) {
-                Image(
-                    painter = painterResource(id = icon),
-                    contentDescription = null,
-                    alignment = Alignment.TopCenter,
-                    contentScale = ContentScale.FillWidth,
-
-                )
+            Column {
+                Text(text = "${city.weather.temperature}°C")
+                Text(text = "${shortNotation(directionBasedOnDegrees(city.weather.windDirection))}")
             }
+            WeatherIcon(icon = city.weather.weatherIcon, viewSize = ViewSize.SMALL)
         }
     }
 }
@@ -185,4 +202,34 @@ private fun WeatherExtendedBottomAddBar(
             modifier = Modifier.padding(16.dp),
         )
     }
+}
+
+private fun directionBasedOnDegrees(direction: Float): String {
+    return when {
+        direction >= 11.25 && direction < 33.75 -> "North North East"
+        direction >= 33.75 && direction < 56.25 -> "North East"
+        direction >= 56.25 && direction < 78.75 -> "East North East"
+        direction >= 78.75 && direction < 101.25 -> "East"
+        direction >= 101.25 && direction < 123.75 -> "East South East"
+        direction >= 123.75 && direction < 146.25 -> "South East"
+        direction >= 146.25 && direction < 168.75 -> "South South East"
+        direction >= 168.75 && direction < 191.25 -> "South"
+        direction >= 191.25 && direction < 213.75 -> "South South West"
+        direction >= 213.75 && direction < 236.25 -> "South West"
+        direction >= 236.25 && direction < 258.75 -> "West South West"
+        direction >= 258.75 && direction < 281.25 -> "West"
+        direction >= 281.25 && direction < 303.75 -> "West North West"
+        direction >= 303.75 && direction < 326.25 -> "North West"
+        direction >= 326.25 && direction < 348.75 -> "North North West"
+        else -> "North"
+    }
+}
+private fun shortNotation(direction: String): String {
+    var short = ""
+    for (letter in direction) {
+        if (letter in 'A'..'Z') {
+            short += letter
+        }
+    }
+    return short
 }
