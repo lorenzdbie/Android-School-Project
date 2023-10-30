@@ -52,7 +52,7 @@ fun AddCityButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
         horizontalArrangement = Arrangement.Center,
     ) {
         Button(onClick = onClick, modifier = Modifier.padding(10.dp)) {
-            Text(text = stringResource(id = R.string.add_city))
+            Text(text = stringResource(id = R.string.add_city), fontSize = 20.sp)
         }
     }
 }
@@ -95,7 +95,7 @@ private fun AddCitySelectors(modifier: Modifier = Modifier) {
 @Composable
 private fun Selector(text: String, modifier: Modifier = Modifier) {
     Row(modifier.padding(vertical = 10.dp)) {
-        Text(text = "$text: ")
+        Text(text = "$text: ", fontSize = 20.sp)
     }
 }
 

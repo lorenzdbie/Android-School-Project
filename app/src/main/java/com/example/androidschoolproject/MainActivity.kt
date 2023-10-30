@@ -52,7 +52,7 @@ fun WeatherAppMediumPreview() {
     }
 }
 
-@Preview(showBackground = true, widthDp = 1000)
+@Preview(showBackground = true, widthDp = 1200)
 @Composable
 fun WeatherAppExpandedPreview() {
     AndroidSchoolProjectTheme {

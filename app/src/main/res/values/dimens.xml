@@ -3,4 +3,5 @@
     <dimen name="padding_medium">16dp</dimen>
     <dimen name="image_size">64dp</dimen>
     <dimen name="detail_topbar_close_button_padding_horizontal">10dp</dimen>
+    <dimen name="detail_topbar_back_button_padding_horizontal">24dp</dimen>
 </resources>

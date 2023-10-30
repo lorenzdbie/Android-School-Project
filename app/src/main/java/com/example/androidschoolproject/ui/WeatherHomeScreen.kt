@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -22,7 +23,6 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -36,39 +36,139 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.androidschoolproject.R
 import com.example.androidschoolproject.model.WeatherCity
+import com.example.androidschoolproject.ui.utils.Temperature
 import com.example.androidschoolproject.ui.utils.ViewSize
 import com.example.androidschoolproject.ui.utils.WeatherContentType
-import com.example.androidschoolproject.ui.utils.WeatherNavigationType
+import com.example.androidschoolproject.ui.utils.WindDirection
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WeatherHomeScreen(
-    navigationType: WeatherNavigationType,
+    contentType: WeatherContentType,
+    weatherUiState: WeatherUiState,
+    onCityCardPressed: (WeatherCity) -> Unit,
+    onDetailScreenBackPressed: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+//    if (contentType == WeatherContentType.LIST_AND_DETAIL) {
+//        WeatherAppContent(
+//            contentType = contentType,
+//            weatherUiState = weatherUiState,
+//            onCityCardPressed = onCityCardPressed,
+//        )
+//    } else {
+    if (weatherUiState.isShowingHomepage) {
+        WeatherAppContent(
+            contentType = contentType,
+            weatherUiState = weatherUiState,
+            onCityCardPressed = onCityCardPressed,
+        )
+    } else {
+        DetailsWeatherScreen(uiState = weatherUiState, onBackPressed = onDetailScreenBackPressed, isFullScreen = true)
+    }
+}
+// }
+
+@Composable
+fun WeatherListAndDetailsScreen(
     contentType: WeatherContentType,
     weatherUiState: WeatherUiState,
     onCityCardPressed: (WeatherCity) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Scaffold(
-        topBar = {
+    Row {
+        WeatherAppContent(contentType = contentType, weatherUiState = weatherUiState, onCityCardPressed = onCityCardPressed)
+        DetailsWeatherScreen(uiState = weatherUiState, onBackPressed = {})
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun WeatherAppContent(
+    contentType: WeatherContentType,
+    weatherUiState: WeatherUiState,
+    onCityCardPressed: (WeatherCity) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Box(modifier = modifier.fillMaxSize()) {
+        Column {
             WeatherTopAppBar()
-        },
-        bottomBar = {
             if (contentType == WeatherContentType.LIST_AND_DETAIL) {
-                WeatherExtendedBottomAddBar(onClick = { /*TODO*/ })
+                WeatherListAndDetailsContent(weatherUiState = weatherUiState, onCityCardPressed = onCityCardPressed, modifier = Modifier.weight(1f))
             } else {
-                WeatherBottomAddBar(onClick = { /*TODO*/ })
+                WeatherOnlyListContent(
+                    weatherUiState = weatherUiState,
+                    onCityCardPressed = onCityCardPressed,
+                    modifier = Modifier.weight(1f),
+                )
             }
-        },
-    ) { it ->
-        LazyColumn(contentPadding = it) {
-            items(weatherUiState.cityList) {
+        }
+//    Scaffold(
+//        topBar = {
+//            WeatherTopAppBar()
+//        },
+//        bottomBar = {
+//            if (contentType == WeatherContentType.LIST_AND_DETAIL) {
+//                WeatherExtendedBottomAddBar(onClick = { /*TODO*/ })
+//            } else {
+//                WeatherBottomAddBar(onClick = { /*TODO*/ })
+//            }
+//        },
+//    ) { it ->
+//        LazyColumn(contentPadding = it) {
+//            items(weatherUiState.cityList) {
+//                CityWeatherCard(
+//                    city = it,
+//                    selected = false,
+//                    onCityCardPressed = onCityCardPressed(it),
+//                    modifier = Modifier.padding(5.dp),
+//
+//                )
+//            }
+//        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun WeatherOnlyListContent(
+    weatherUiState: WeatherUiState,
+    onCityCardPressed: (WeatherCity) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val cities = weatherUiState.cityList
+    LazyColumn {
+        items(cities, key = { city -> city.id }) {
+            CityWeatherCard(
+                city = it,
+                selected = false,
+                onCityCardPressed = onCityCardPressed(it),
+                modifier = Modifier.padding(5.dp),
+            )
+        }
+    }
+}
+
+@Composable
+fun WeatherListAndDetailsContent(
+    weatherUiState: WeatherUiState,
+    onCityCardPressed: (WeatherCity) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val cities = weatherUiState.cityList
+    Row(modifier = modifier.fillMaxSize()) {
+        LazyColumn(modifier = Modifier.weight(1f)) {
+            items(cities, key = { city -> city.id }) {
                 CityWeatherCard(
                     city = it,
+                    selected = weatherUiState.currentCity.id == it.id,
+                    onCityCardPressed = onCityCardPressed(it),
                     modifier = Modifier.padding(5.dp),
                 )
             }
         }
+        // val activity = LocalContext.current as Activity
+        DetailsWeatherScreen(uiState = weatherUiState, onBackPressed = {}, modifier = Modifier.weight(1f))
     }
 }
 
@@ -109,7 +209,7 @@ fun WeatherIcon(icon: String, viewSize: ViewSize, modifier: Modifier = Modifier)
 }
 
 @Composable
-private fun CityWeatherCard(city: WeatherCity, modifier: Modifier = Modifier) {
+private fun CityWeatherCard(city: WeatherCity, selected: Boolean, onCityCardPressed: Unit, modifier: Modifier = Modifier) {
     Card(
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
         modifier = modifier
@@ -119,9 +219,9 @@ private fun CityWeatherCard(city: WeatherCity, modifier: Modifier = Modifier) {
         Row(modifier = modifier.padding(horizontal = 10.dp, vertical = 5.dp)) {
             Text(text = city.city, style = MaterialTheme.typography.headlineMedium, modifier = Modifier.fillMaxWidth(0.7f))
             Spacer(modifier = Modifier.weight(1f))
-            Column {
-                Text(text = "${city.weather.temperature}°C")
-                Text(text = "${shortNotation(directionBasedOnDegrees(city.weather.windDirection))}")
+            Column(modifier = Modifier.padding(horizontal = 10.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+                Temperature(temp = city.weather.temperature, size = ViewSize.SMALL)
+                WindDirection(directionFloat = city.weather.windDirection, size = ViewSize.SMALL)
             }
             WeatherIcon(icon = city.weather.weatherIcon, viewSize = ViewSize.SMALL)
         }
@@ -202,34 +302,4 @@ private fun WeatherExtendedBottomAddBar(
             modifier = Modifier.padding(16.dp),
         )
     }
-}
-
-private fun directionBasedOnDegrees(direction: Float): String {
-    return when {
-        direction >= 11.25 && direction < 33.75 -> "North North East"
-        direction >= 33.75 && direction < 56.25 -> "North East"
-        direction >= 56.25 && direction < 78.75 -> "East North East"
-        direction >= 78.75 && direction < 101.25 -> "East"
-        direction >= 101.25 && direction < 123.75 -> "East South East"
-        direction >= 123.75 && direction < 146.25 -> "South East"
-        direction >= 146.25 && direction < 168.75 -> "South South East"
-        direction >= 168.75 && direction < 191.25 -> "South"
-        direction >= 191.25 && direction < 213.75 -> "South South West"
-        direction >= 213.75 && direction < 236.25 -> "South West"
-        direction >= 236.25 && direction < 258.75 -> "West South West"
-        direction >= 258.75 && direction < 281.25 -> "West"
-        direction >= 281.25 && direction < 303.75 -> "West North West"
-        direction >= 303.75 && direction < 326.25 -> "North West"
-        direction >= 326.25 && direction < 348.75 -> "North North West"
-        else -> "North"
-    }
-}
-private fun shortNotation(direction: String): String {
-    var short = ""
-    for (letter in direction) {
-        if (letter in 'A'..'Z') {
-            short += letter
-        }
-    }
-    return short
 }

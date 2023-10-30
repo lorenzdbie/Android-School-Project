@@ -19,15 +19,29 @@ class WeatherViewModel : ViewModel() {
 
     val uiState: StateFlow<WeatherUiState> = _uiState
 
-    fun updateCurrentWeather(selectedCity: WeatherCity) {
+    fun updateDetailScreenStates(selectedCity: WeatherCity) {
         _uiState.update {
-            it.copy(currentCity = selectedCity)
+            it.copy(
+                currentCity = selectedCity,
+                isShowingHomepage = false,
+            )
         }
     }
 
+    fun resetHomeScreenStates() {
+        _uiState.update {
+            it.copy(
+                currentCity = LocalWeatherDataProvider.getWeatherCityData().getOrElse(0) {
+                    LocalWeatherDataProvider.defaultWeather
+                },
+                isShowingHomepage = true,
+            )
+        }
+    }
 }
 
 data class WeatherUiState(
     val cityList: List<WeatherCity> = emptyList(),
-    val currentCity: WeatherCity? = null,
+    val currentCity: WeatherCity = LocalWeatherDataProvider.defaultWeather,
+    val isShowingHomepage: Boolean = true,
 )

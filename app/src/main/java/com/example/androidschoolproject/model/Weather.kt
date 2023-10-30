@@ -1,7 +1,5 @@
 package com.example.androidschoolproject.model
 
-import androidx.annotation.DrawableRes
-
 data class Weather(
     val timeStamp: String,
     val temperature: Float,

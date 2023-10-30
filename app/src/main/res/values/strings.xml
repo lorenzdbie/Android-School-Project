@@ -6,4 +6,5 @@
     <string name="add_city_button">Add city button</string>
     <string name="add_new_city">Add a new city</string>
     <string name="navigation_close">close button</string>
+    <string name="navigation_back">navigate back</string>
 </resources>
