@@ -41,8 +41,8 @@ fun AddCityScreen(onAddPressed: () -> Unit, onClosePressed: () -> Unit, modifier
     ) {
         Card(
             modifier = modifier
-                .width(450.dp)
-                .padding(5.dp), // Add padding if necessary
+                .width(400.dp)
+                .padding(15.dp), // Add padding if necessary
             elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
             shape = RoundedCornerShape(40.dp), // Set the corner radius as needed
         ) {

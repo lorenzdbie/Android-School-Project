@@ -45,27 +45,29 @@ fun DetailsWeatherScreen(uiState: WeatherUiState, onBackPressed: () -> Unit, mod
     BackHandler {
         onBackPressed()
     }
-    Column(
-        modifier = Modifier
-            .padding(10.dp)
-            .fillMaxSize(),
-    ) {
-        if (isFullScreen) {
-            IconButton(
-                onClick = onBackPressed,
-                modifier = Modifier
-                    .padding(horizontal = dimensionResource(R.dimen.detail_topbar_back_button_padding_horizontal))
-                    .background(MaterialTheme.colorScheme.surface, shape = CircleShape),
-            ) {
-                Icon(
-                    imageVector = Icons.Default.ArrowBack,
-                    contentDescription = stringResource(id = R.string.navigation_back),
-                )
+    Box(modifier = modifier) {
+        Column(
+            modifier = Modifier
+                .padding(10.dp)
+                .fillMaxSize(),
+        ) {
+            if (isFullScreen) {
+                IconButton(
+                    onClick = onBackPressed,
+                    modifier = Modifier
+                        .padding(horizontal = dimensionResource(R.dimen.detail_topbar_back_button_padding_horizontal))
+                        .background(MaterialTheme.colorScheme.surface, shape = CircleShape),
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.ArrowBack,
+                        contentDescription = stringResource(id = R.string.navigation_back),
+                    )
+                }
             }
+            DetailHeader(city = uiState.currentCity)
+            //  Spacer(modifier = Modifier.weight(1f))
+            WeatherDetails(city = uiState.currentCity)
         }
-        DetailHeader(city = uiState.currentCity)
-        //  Spacer(modifier = Modifier.weight(1f))
-        WeatherDetails(city = uiState.currentCity)
     }
 }
 
