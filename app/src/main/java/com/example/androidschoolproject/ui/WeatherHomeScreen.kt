@@ -33,6 +33,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -77,7 +78,12 @@ fun WeatherHomeScreen(
     if (weatherUiState.isShowingAddCityBox) {
         if (contentType == WeatherContentType.LIST_AND_DETAIL) {
             Row {
-                Box(modifier = Modifier.weight(1f).fillMaxSize().background(MaterialTheme.colorScheme.background.copy(alpha = 0.8f)))
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxSize()
+                        .background(MaterialTheme.colorScheme.background.copy(alpha = 0.8f)),
+                )
                 AddCityScreen(
                     onAddPressed = { /*TODO*/ },
                     onClosePressed = onAddCityClosedPressed,
@@ -138,7 +144,8 @@ fun WeatherOnlyListContent(
     modifier: Modifier = Modifier,
 ) {
     val cities = weatherUiState.cityList
-    LazyColumn(modifier = modifier) {
+    val weatherContentDescription = stringResource(R.string.listOnlyContent)
+    LazyColumn(modifier = modifier.testTag(weatherContentDescription)) {
         items(cities, key = { city -> city.id }) { city ->
             CityWeatherCard(
                 city = city,
@@ -157,7 +164,8 @@ fun WeatherListAndDetailsContent(
     modifier: Modifier = Modifier,
 ) {
     val cities = weatherUiState.cityList
-    Row(modifier = modifier) {
+    val weatherContentDescription = stringResource(R.string.listAndDetailsContent)
+    Row(modifier = modifier.testTag(weatherContentDescription)) {
         LazyColumn(modifier = Modifier.weight(1f)) {
             items(cities, key = { city -> city.id }) { city ->
                 CityWeatherCard(
@@ -199,7 +207,6 @@ fun WeatherIcon(icon: String, viewSize: ViewSize, modifier: Modifier = Modifier)
             when (viewSize) {
                 ViewSize.SMALL -> 50.dp
                 ViewSize.LARGE -> 120.dp
-                else -> 50.dp
             },
         ),
     ) {
@@ -217,10 +224,17 @@ fun WeatherIcon(icon: String, viewSize: ViewSize, modifier: Modifier = Modifier)
 @Composable
 private fun CityWeatherCard(city: WeatherCity, selected: Boolean, onCardClick: () -> Unit, modifier: Modifier = Modifier) {
     Card(
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 10.dp),
         modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 10.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = if (selected) {
+                MaterialTheme.colorScheme.tertiaryContainer
+            } else {
+                MaterialTheme.colorScheme.primaryContainer
+            },
+        ),
         onClick = onCardClick,
     ) {
         Row(modifier = modifier.padding(horizontal = 10.dp, vertical = 5.dp)) {
@@ -271,13 +285,16 @@ private fun WeatherBottomAddBar(
         modifier = Modifier.fillMaxWidth(),
         contentAlignment = Alignment.BottomCenter,
     ) {
+        val addButtonContentDescription = stringResource(R.string.small_add_city_button)
         FloatingActionButton(
             onClick = onClick,
             containerColor = MaterialTheme.colorScheme.secondaryContainer,
             contentColor = MaterialTheme.colorScheme.secondary,
             shape = MaterialTheme.shapes.small,
             elevation = FloatingActionButtonDefaults.elevation(),
-            modifier = Modifier.padding(16.dp),
+            modifier = Modifier
+                .padding(16.dp)
+                .testTag(addButtonContentDescription),
         ) {
             Icon(Icons.Filled.Add, contentDescription = stringResource(id = R.string.add_city_button), modifier = Modifier.scale(2f))
         }
@@ -293,6 +310,7 @@ private fun WeatherExtendedBottomAddBar(
         modifier = Modifier.fillMaxWidth(),
         contentAlignment = Alignment.BottomStart,
     ) {
+        val addButtonContentDescription = stringResource(R.string.extended_add_city_button)
         ExtendedFloatingActionButton(
             onClick = onClick,
             text = { Text(text = stringResource(id = R.string.add_city), fontSize = 25.sp) },
@@ -306,7 +324,9 @@ private fun WeatherExtendedBottomAddBar(
                     modifier = Modifier.scale(2f),
                 )
             },
-            modifier = Modifier.padding(16.dp),
+            modifier = Modifier
+                .padding(16.dp)
+                .testTag(addButtonContentDescription),
         )
     }
 }

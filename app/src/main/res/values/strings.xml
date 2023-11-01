@@ -5,6 +5,12 @@
     <string name="add_city">Add city</string>
     <string name="add_city_button">Add city button</string>
     <string name="add_new_city">Add a new city</string>
-    <string name="navigation_close">close button</string>
-    <string name="navigation_back">navigate back</string>
+    <string name="navigation_close">Close button</string>
+    <string name="navigation_back">Navigate back</string>
+
+    <string name="small_add_city_button">Small add city button</string>
+    <string name="extended_add_city_button">Small add city button</string>
+    <string name="listOnlyContent">List only content</string>
+    <string name="listAndDetailsContent">List and details content</string>
+    <string name="add_city_screen">Add city screen</string>
 </resources>
