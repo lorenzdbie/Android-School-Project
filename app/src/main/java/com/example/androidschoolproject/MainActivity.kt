@@ -1,5 +1,7 @@
 package com.example.androidschoolproject
 
+import AppContent
+import LocationPermissionScreen
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -9,19 +11,34 @@ import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.example.androidschoolproject.ui.WeatherApp
 import com.example.androidschoolproject.ui.theme.AndroidSchoolProjectTheme
 
 class MainActivity : ComponentActivity() {
+
     @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             AndroidSchoolProjectTheme {
+                val navController = rememberNavController()
+                val windowSize = calculateWindowSizeClass(this)
                 // A surface container using the 'background' color from the theme
                 Surface {
-                    val windowSize = calculateWindowSizeClass(this)
-                    WeatherApp(windowSize = windowSize.widthSizeClass)
+                    NavHost(navController, startDestination = "locationPermission") {
+                        composable("locationPermission") {
+                            LocationPermissionScreen(navController = navController)
+                        }
+                        composable("weatherApp") {
+                            AppContent(
+                                navController = navController,
+                                windowSize = windowSize.widthSizeClass,
+                            )
+                        }
+                    }
                 }
             }
         }

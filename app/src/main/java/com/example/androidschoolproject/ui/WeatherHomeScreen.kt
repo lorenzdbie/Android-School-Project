@@ -143,6 +143,7 @@ fun WeatherOnlyListContent(
     onCityCardPressed: (WeatherCity) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    Text(text = "Longitude = ${weatherUiState.longitude}, latitude = ${weatherUiState.latitude}")
     val cities = weatherUiState.cityList
     val weatherContentDescription = stringResource(R.string.listOnlyContent)
     LazyColumn(modifier = modifier.testTag(weatherContentDescription)) {
