@@ -1,6 +1,6 @@
 package com.example.androidschoolproject.data
 
-import com.example.androidschoolproject.model.Location
+import com.example.androidschoolproject.model.CityLocation
 import com.example.androidschoolproject.model.Pollution
 import com.example.androidschoolproject.model.Weather
 import com.example.androidschoolproject.model.WeatherCity
@@ -14,7 +14,7 @@ object LocalWeatherDataProvider {
                 city = "Gent",
                 state = "Flanders",
                 country = "Belgium",
-                location = Location(
+                cityLocation = CityLocation(
                     longitude = 3.80873543079248,
                     latitude = 51.1501360922306,
                 ),
@@ -39,7 +39,7 @@ object LocalWeatherDataProvider {
                 city = "New York City",
                 state = "New York",
                 country = "USA",
-                location = Location(
+                cityLocation = CityLocation(
                     longitude = -73.928596,
                     latitude = 40.694401,
                 ),

@@ -1,19 +1,21 @@
 package com.example.androidschoolproject
 
-import AppContent
-import LocationPermissionScreen
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.androidschoolproject.model.hasLocationPermission
+import com.example.androidschoolproject.ui.LocationPermissionScreen
 import com.example.androidschoolproject.ui.WeatherApp
 import com.example.androidschoolproject.ui.theme.AndroidSchoolProjectTheme
 
@@ -34,7 +36,6 @@ class MainActivity : ComponentActivity() {
                         }
                         composable("weatherApp") {
                             AppContent(
-                                navController = navController,
                                 windowSize = windowSize.widthSizeClass,
                             )
                         }
@@ -42,6 +43,18 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+    }
+}
+
+@Composable
+fun AppContent(windowSize: WindowWidthSizeClass) {
+    val context = LocalContext.current
+
+    if (context.hasLocationPermission()) {
+        WeatherApp(windowSize = windowSize)
+    } else {
+        Text("Location permission not granted.")
+        // Handle this case according to your use case
     }
 }
 

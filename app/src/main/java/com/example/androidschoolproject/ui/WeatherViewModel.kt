@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 
 class WeatherViewModel : ViewModel() {
+
     private val _uiState = MutableStateFlow(
         WeatherUiState(
             cityList = LocalWeatherDataProvider.getWeatherCityData(),
@@ -18,15 +19,6 @@ class WeatherViewModel : ViewModel() {
     )
 
     val uiState: StateFlow<WeatherUiState> = _uiState
-
-    fun updateLocation(longitude: Double, latitude: Double) {
-        _uiState.update {
-            it.copy(
-                longitude = longitude,
-                latitude = latitude,
-            )
-        }
-    }
 
     fun updateDetailScreenStates(selectedCity: WeatherCity) {
         _uiState.update {
@@ -63,6 +55,16 @@ class WeatherViewModel : ViewModel() {
             )
         }
     }
+
+    fun updateLocation(longitude: Double, latitude: Double) {
+        _uiState.update {
+            it.copy(
+                longitude = longitude,
+                latitude = latitude,
+
+            )
+        }
+    }
 }
 
 data class WeatherUiState(
@@ -70,7 +72,6 @@ data class WeatherUiState(
     val currentCity: WeatherCity = LocalWeatherDataProvider.defaultWeather,
     val isShowingHomepage: Boolean = true,
     val isShowingAddCityBox: Boolean = false,
-    val hasLocationPermission: Boolean = false,
     val latitude: Double = 0.0,
     val longitude: Double = 0.0,
 )

@@ -1,6 +1,6 @@
 package com.example.androidschoolproject.model
 
-data class Location(
+data class CityLocation(
     val longitude: Double,
     val latitude: Double,
 )

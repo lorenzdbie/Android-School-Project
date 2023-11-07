@@ -2,13 +2,13 @@ package com.example.androidschoolproject.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-//val Purple80 = Color(0xFFD0BCFF)
-//val PurpleGrey80 = Color(0xFFCCC2DC)
-//val Pink80 = Color(0xFFEFB8C8)
+// val Purple80 = Color(0xFFD0BCFF)
+// val PurpleGrey80 = Color(0xFFCCC2DC)
+// val Pink80 = Color(0xFFEFB8C8)
 //
-//val Purple40 = Color(0xFF6650a4)
-//val PurpleGrey40 = Color(0xFF625b71)
-//val Pink40 = Color(0xFF7D5260)
+// val Purple40 = Color(0xFF6650a4)
+// val PurpleGrey40 = Color(0xFF625b71)
+// val Pink40 = Color(0xFF7D5260)
 
 val md_theme_light_primary = Color(0xFF005EB3)
 val md_theme_light_onPrimary = Color(0xFFFFFFFF)
@@ -71,6 +71,5 @@ val md_theme_dark_shadow = Color(0xFF000000)
 val md_theme_dark_surfaceTint = Color(0xFFA8C8FF)
 val md_theme_dark_outlineVariant = Color(0xFF43474E)
 val md_theme_dark_scrim = Color(0xFF000000)
-
 
 val seed = Color(0xFF006AC9)

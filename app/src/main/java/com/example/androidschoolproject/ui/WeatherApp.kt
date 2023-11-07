@@ -7,9 +7,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.androidschoolproject.model.WeatherCity
+import com.example.androidschoolproject.model.getCurrentLocation
 import com.example.androidschoolproject.ui.utils.WeatherContentType
-import getCurrentLocation
-import hasLocationPermission
 
 @Composable
 fun WeatherApp(
@@ -19,7 +18,6 @@ fun WeatherApp(
     val viewModel: WeatherViewModel = viewModel()
     val uiState = viewModel.uiState.collectAsState().value
     val contentType: WeatherContentType
-    val context = LocalContext.current
 
     when (windowSize) {
         WindowWidthSizeClass.Compact -> {
@@ -35,11 +33,9 @@ fun WeatherApp(
             contentType = WeatherContentType.LIST_ONLY
         }
     }
-
-    if (hasLocationPermission(context)) {
-        getCurrentLocation(context = context) { lat, long ->
-            viewModel.updateLocation(longitude = long as Double, latitude = lat as Double)
-        }
+    val context = LocalContext.current
+    getCurrentLocation(context) { long, lat ->
+        viewModel.updateLocation(longitude = long, latitude = lat)
     }
 
     WeatherHomeScreen(

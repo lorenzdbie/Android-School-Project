@@ -14,7 +14,7 @@ class WeatherViewModelTest {
     }
 
     @Test
-    fun testupdateDetailScreenStates() {
+    fun testUpdateDetailScreenStates() {
         // Given
         val selectedCity = LocalWeatherDataProvider.getWeatherCityData().first()
 
