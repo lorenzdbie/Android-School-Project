@@ -1,13 +1,19 @@
 package com.example.androidschoolproject.ui
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.androidschoolproject.data.LocalWeatherDataProvider
 import com.example.androidschoolproject.model.WeatherCity
+import com.example.androidschoolproject.network.WeatherApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import okio.IOException
 
 class WeatherViewModel : ViewModel() {
+
+    private var key: String = ""
 
     private val _uiState = MutableStateFlow(
         WeatherUiState(
@@ -55,6 +61,9 @@ class WeatherViewModel : ViewModel() {
             )
         }
     }
+    fun updateKey(key: String) {
+        this.key = key
+    }
 
     fun updateLocation(longitude: Double, latitude: Double) {
         _uiState.update {
@@ -65,13 +74,54 @@ class WeatherViewModel : ViewModel() {
             )
         }
     }
-}
 
-data class WeatherUiState(
-    val cityList: List<WeatherCity> = emptyList(),
-    val currentCity: WeatherCity = LocalWeatherDataProvider.defaultWeather,
-    val isShowingHomepage: Boolean = true,
-    val isShowingAddCityBox: Boolean = false,
-    val latitude: Double = 0.0,
-    val longitude: Double = 0.0,
-)
+    fun getNearestCity() {
+        viewModelScope.launch {
+            try {
+                val localCity = WeatherApi.retrofitService.getNearestCity(
+                    longitude = uiState.value.longitude.toString(),
+                    latitude = uiState.value.latitude.toString(),
+                    apiKey = key,
+                )
+                _uiState.update {
+                    it.copy(
+                        localCity = localCity,
+                    )
+                }
+            } catch (e: IOException) {
+                e.localizedMessage
+            }
+        }
+    }
+
+    fun getCountries() {
+        viewModelScope.launch {
+            try {
+                val countryResult = WeatherApi.retrofitService.getCountries(apiKey = key)
+                _uiState.update {
+                    it.copy(countries = countryResult)
+                }
+            } catch (e: IOException) {
+                e.stackTrace
+            }
+        }
+    }
+
+    fun getStates(country: String) {
+        viewModelScope.launch {
+            val stateResult = WeatherApi.retrofitService.getStates(country = country, apiKey = key)
+        }
+    }
+
+    fun getCities(country: String, state: String) {
+        viewModelScope.launch {
+            val citiesResult = WeatherApi.retrofitService.getCities(country = country, state = state, apiKey = key)
+        }
+    }
+
+    fun getCity(country: String, state: String, city: String) {
+        viewModelScope.launch {
+            val cityResult = WeatherApi.retrofitService.getCity(country = country, state = state, city = city, apiKey = key)
+        }
+    }
+}

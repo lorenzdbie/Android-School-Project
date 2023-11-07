@@ -144,6 +144,8 @@ fun WeatherOnlyListContent(
     modifier: Modifier = Modifier,
 ) {
     Text(text = "longitude = ${weatherUiState.longitude}, latitude = ${weatherUiState.latitude}")
+    Text(text = "${weatherUiState.localCity}")
+
     val cities = weatherUiState.cityList
     val weatherContentDescription = stringResource(R.string.listOnlyContent)
     LazyColumn(modifier = modifier.testTag(weatherContentDescription)) {

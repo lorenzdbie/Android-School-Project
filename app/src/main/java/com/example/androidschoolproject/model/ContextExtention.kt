@@ -5,6 +5,8 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
 import androidx.core.content.ContextCompat
+import com.example.androidschoolproject.R
+import com.example.androidschoolproject.ui.WeatherViewModel
 import com.google.android.gms.location.LocationServices
 
 fun Context.hasLocationPermission(): Boolean {
@@ -33,4 +35,11 @@ fun getCurrentLocation(context: Context, callback: (Double, Double) -> Unit) {
             // Handle location retrieval failure
             exception.printStackTrace()
         }
+}
+
+fun startUpdate(viewModel: WeatherViewModel, context: Context) {
+    viewModel.updateKey(context.getString(R.string.api_key))
+    getCurrentLocation(context) { long, lat ->
+        viewModel.updateLocation(longitude = long, latitude = lat)
+    }
 }
