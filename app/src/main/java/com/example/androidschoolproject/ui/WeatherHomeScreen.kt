@@ -11,7 +11,9 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -28,6 +30,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
@@ -40,7 +43,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.androidschoolproject.R
-import com.example.androidschoolproject.model.WeatherCity
+import com.example.androidschoolproject.network.WeatherCity
 import com.example.androidschoolproject.ui.utils.Temperature
 import com.example.androidschoolproject.ui.utils.ViewSize
 import com.example.androidschoolproject.ui.utils.WeatherContentType
@@ -53,6 +56,7 @@ fun WeatherHomeScreen(
     onCityCardPressed: (WeatherCity) -> Unit,
     onDetailScreenBackPressed: () -> Unit,
     onAddCityPressed: () -> Unit,
+    onCollectLocalCity: () -> Unit,
     onAddCityClosedPressed: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -62,6 +66,7 @@ fun WeatherHomeScreen(
             weatherUiState = weatherUiState,
             onCityCardPressed = onCityCardPressed,
             onAddCityPressed = onAddCityPressed,
+            onCollectLocalCity = onCollectLocalCity,
         )
     } else {
         if (weatherUiState.isShowingHomepage) {
@@ -70,6 +75,7 @@ fun WeatherHomeScreen(
                 weatherUiState = weatherUiState,
                 onCityCardPressed = onCityCardPressed,
                 onAddCityPressed = onAddCityPressed,
+                onCollectLocalCity = onCollectLocalCity,
             )
         } else {
             DetailsWeatherScreen(uiState = weatherUiState, onBackPressed = onDetailScreenBackPressed, isFullScreen = true)
@@ -105,6 +111,7 @@ fun WeatherAppContent(
     weatherUiState: WeatherUiState,
     onCityCardPressed: (WeatherCity) -> Unit,
     onAddCityPressed: () -> Unit,
+    onCollectLocalCity: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Box(modifier = modifier) {
@@ -124,6 +131,7 @@ fun WeatherAppContent(
                     WeatherOnlyListContent(
                         weatherUiState = weatherUiState,
                         onCityCardPressed = onCityCardPressed,
+                        onCollectLocalCity = onCollectLocalCity,
                         modifier = Modifier.weight(1f),
                     )
                 }
@@ -141,10 +149,24 @@ fun WeatherAppContent(
 fun WeatherOnlyListContent(
     weatherUiState: WeatherUiState,
     onCityCardPressed: (WeatherCity) -> Unit,
+    onCollectLocalCity: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Text(text = "longitude = ${weatherUiState.longitude}, latitude = ${weatherUiState.latitude}")
-    Text(text = "${weatherUiState.localCity}")
+    LaunchedEffect(Unit) { onCollectLocalCity() }
+    // Text(text = "longitude = ${weatherUiState.longitude}, latitude = ${weatherUiState.latitude}")
+
+//    Button(onClick = onCollectLocalCity) {
+//        Text(text = "Collect local city")
+//    }
+//    Text(text = "${weatherUiState.localCity}")
+    if (weatherUiState.localCity != null) {
+        LocalCityWeatherCard(
+            city = weatherUiState.localCity,
+            selected = false,
+            onCardClick = { onCityCardPressed(weatherUiState.localCity) },
+            modifier = Modifier.padding(5.dp),
+        )
+    }
 
     val cities = weatherUiState.cityList
     val weatherContentDescription = stringResource(R.string.listOnlyContent)
@@ -206,7 +228,7 @@ fun WeatherIcon(icon: String, viewSize: ViewSize, modifier: Modifier = Modifier)
         else -> R.drawable._1d
     }
     Box(
-        modifier = Modifier.size(
+        modifier = Modifier.requiredSize(
             when (viewSize) {
                 ViewSize.SMALL -> 50.dp
                 ViewSize.LARGE -> 120.dp
@@ -216,7 +238,7 @@ fun WeatherIcon(icon: String, viewSize: ViewSize, modifier: Modifier = Modifier)
         Image(
             painter = painterResource(id = weatherIcon),
             contentDescription = null,
-            alignment = Alignment.TopCenter,
+            alignment = Alignment.Center,
             contentScale = ContentScale.FillWidth,
 
         )
@@ -240,14 +262,46 @@ private fun CityWeatherCard(city: WeatherCity, selected: Boolean, onCardClick: (
         ),
         onClick = onCardClick,
     ) {
-        Row(modifier = modifier.padding(horizontal = 10.dp, vertical = 5.dp)) {
-            Text(text = city.city, style = MaterialTheme.typography.headlineMedium, modifier = Modifier.fillMaxWidth(0.7f))
+        Row(modifier = modifier.padding(horizontal = 10.dp, vertical = 5.dp), verticalAlignment = Alignment.CenterVertically) {
+            Text(text = city.city, style = MaterialTheme.typography.headlineSmall, modifier = Modifier.fillMaxWidth(0.6f))
             Spacer(modifier = Modifier.weight(1f))
             Column(modifier = Modifier.padding(horizontal = 10.dp), horizontalAlignment = Alignment.CenterHorizontally) {
                 Temperature(temp = city.weather.temperature, size = ViewSize.SMALL)
-                WindDirection(directionFloat = city.weather.windDirection, size = ViewSize.SMALL)
+                Spacer(modifier = Modifier.height(5.dp))
+                WindDirection(direction = city.weather.windDirection, size = ViewSize.SMALL)
             }
-            WeatherIcon(icon = city.weather.weatherIcon, viewSize = ViewSize.SMALL)
+            WeatherIcon(icon = city.weather.weatherIcon, viewSize = ViewSize.SMALL, modifier = Modifier.fillMaxSize(1f).padding(horizontal = 10.dp))
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun LocalCityWeatherCard(city: WeatherCity, selected: Boolean, onCardClick: () -> Unit, modifier: Modifier = Modifier) {
+    Card(
+        elevation = CardDefaults.cardElevation(defaultElevation = 10.dp),
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(horizontal = 10.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = if (selected) {
+                MaterialTheme.colorScheme.tertiaryContainer
+            } else {
+                MaterialTheme.colorScheme.primaryContainer
+            },
+        ),
+        onClick = onCardClick,
+    ) {
+        Row(modifier = modifier.padding(horizontal = 10.dp, vertical = 5.dp), verticalAlignment = Alignment.CenterVertically) {
+            Icon(painter = painterResource(id = R.drawable.near_me), contentDescription = null, modifier = Modifier.padding(end = 2.dp))
+            Text(text = city.city, style = MaterialTheme.typography.headlineSmall, modifier = Modifier.fillMaxWidth(0.6f))
+            Spacer(modifier = Modifier.weight(1f))
+            Column(modifier = Modifier.padding(horizontal = 10.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+                Temperature(temp = city.weather.temperature, size = ViewSize.SMALL)
+                Spacer(modifier = Modifier.height(5.dp))
+                WindDirection(direction = city.weather.windDirection, size = ViewSize.SMALL)
+            }
+            WeatherIcon(icon = city.weather.weatherIcon, viewSize = ViewSize.SMALL, modifier = Modifier.fillMaxSize(1f).padding(horizontal = 10.dp))
         }
     }
 }

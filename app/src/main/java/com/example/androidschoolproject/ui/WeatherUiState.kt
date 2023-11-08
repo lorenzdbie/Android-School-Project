@@ -1,14 +1,21 @@
 package com.example.androidschoolproject.ui
 
+// import com.example.androidschoolproject.data.LocalWeatherDataProvider
+// import com.example.androidschoolproject.model.WeatherCity
 import com.example.androidschoolproject.data.LocalWeatherDataProvider
-import com.example.androidschoolproject.model.WeatherCity
+import com.example.androidschoolproject.network.City
+import com.example.androidschoolproject.network.Country
+import com.example.androidschoolproject.network.CountryState
+import com.example.androidschoolproject.network.WeatherCity
 
 data class WeatherUiState(
-    val cityList: List<WeatherCity> = emptyList(),
+    val cityList: MutableList<WeatherCity> = mutableListOf(),
     val currentCity: WeatherCity = LocalWeatherDataProvider.defaultWeather,
     // val localCity: WeatherCity = LocalWeatherDataProvider.defaultWeather,
-    val localCity: String = "",
-    val countries: String = "",
+    val localCity: WeatherCity? = null,
+    val countries: List<Country> = mutableListOf(),
+    val states: List<CountryState> = mutableListOf(),
+    val cities: List<City> = mutableListOf(),
     val isShowingHomepage: Boolean = true,
     val isShowingAddCityBox: Boolean = false,
     val latitude: Double = 0.0,

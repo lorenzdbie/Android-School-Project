@@ -1,13 +1,15 @@
 package com.example.androidschoolproject.network
 
+import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
+import kotlinx.serialization.json.Json
+import okhttp3.MediaType.Companion.toMediaType
 import retrofit2.Retrofit
-import retrofit2.converter.scalars.ScalarsConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Query
 
 private const val BASE_URL = "https://api.airvisual.com/v2/"
 
-private val retrofit = Retrofit.Builder().addConverterFactory(ScalarsConverterFactory.create())
+private val retrofit = Retrofit.Builder().addConverterFactory(Json { ignoreUnknownKeys = true }.asConverterFactory("application/json".toMediaType()))
     .baseUrl(BASE_URL)
     .build()
 
@@ -15,26 +17,26 @@ interface WeatherApiService {
 
     @GET("nearest_city")
     suspend fun getNearestCity(
-        @Query("lat") latitude: String,
-        @Query("lon") longitude: String,
+        @Query("lat") latitude: Double,
+        @Query("lon") longitude: Double,
         @Query("key") apiKey: String,
-    ): String
+    ): WeatherCityResponse
 
     @GET("countries")
-    suspend fun getCountries(@Query("key") apiKey: String): String
+    suspend fun getCountries(@Query("key") apiKey: String): CountriesResponse
 
     @GET("states")
     suspend fun getStates(
         @Query("country") country: String,
         @Query("key") apiKey: String,
-    ): String
+    ): CountryStatesResponse
 
     @GET("cities")
     suspend fun getCities(
         @Query("state") state: String,
         @Query("country") country: String,
         @Query("key") apiKey: String,
-    ): String
+    ): CitiesResponse
 
     @GET("city")
     suspend fun getCity(
@@ -42,7 +44,7 @@ interface WeatherApiService {
         @Query("state") state: String,
         @Query("country") country: String,
         @Query("key") apiKey: String,
-    ): String
+    ): WeatherCityResponse
 }
 
 object WeatherApi {

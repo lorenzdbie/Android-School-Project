@@ -4,17 +4,17 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 
 @Composable
-fun Temperature(temp: Float, size: ViewSize) {
+fun Temperature(temp: Double, size: ViewSize) {
     if (size == ViewSize.SMALL) {
-        Text(text = "${temp.format(1)}°C")
+        Text(text = "${String.format("%.1f", temp)}°C")
     } else {
-        Text(text = "Temperature: ${temp.format(1)}°C")
+        Text(text = "Temperature: ${String.format("%.1f", temp)}°C")
     }
 }
 
 @Composable
-fun WindDirection(directionFloat: Float, size: ViewSize) {
-    val direction = directionBasedOnDegrees(directionFloat)
+fun WindDirection(direction: Int, size: ViewSize) {
+    val direction = directionBasedOnDegrees(direction)
     val text = if (size == ViewSize.SMALL) {
         Text(text = shortNotation(direction))
     } else {
@@ -22,7 +22,7 @@ fun WindDirection(directionFloat: Float, size: ViewSize) {
     }
 }
 fun Float.format(digits: Int) = "%.${digits}f".format(this)
-fun directionBasedOnDegrees(direction: Float): String {
+fun directionBasedOnDegrees(direction: Int): String {
     return when {
         direction >= 11.25 && direction < 33.75 -> "North North East"
         direction >= 33.75 && direction < 56.25 -> "North East"

@@ -39,7 +39,7 @@ fun getCurrentLocation(context: Context, callback: (Double, Double) -> Unit) {
 
 fun startUpdate(viewModel: WeatherViewModel, context: Context) {
     viewModel.updateKey(context.getString(R.string.api_key))
-    getCurrentLocation(context) { long, lat ->
+    getCurrentLocation(context) { lat, long ->
         viewModel.updateLocation(longitude = long, latitude = lat)
     }
 }

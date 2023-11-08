@@ -1,10 +1,13 @@
 package com.example.androidschoolproject.ui
 
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModel // ktlint-disable import-ordering
 import androidx.lifecycle.viewModelScope
 import com.example.androidschoolproject.data.LocalWeatherDataProvider
-import com.example.androidschoolproject.model.WeatherCity
+// import com.example.androidschoolproject.data.LocalWeatherDataProvider
+// import com.example.androidschoolproject.model.WeatherCity
 import com.example.androidschoolproject.network.WeatherApi
+import com.example.androidschoolproject.network.WeatherCity
+import com.example.androidschoolproject.network.createWeatherCity
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
@@ -75,14 +78,15 @@ class WeatherViewModel : ViewModel() {
         }
     }
 
-    fun getNearestCity() {
+    fun getNearestCity(latitude: Double, longitude: Double) {
         viewModelScope.launch {
             try {
-                val localCity = WeatherApi.retrofitService.getNearestCity(
-                    longitude = uiState.value.longitude.toString(),
-                    latitude = uiState.value.latitude.toString(),
+                val localCityResponse = WeatherApi.retrofitService.getNearestCity(
+                    longitude = longitude,
+                    latitude = latitude,
                     apiKey = key,
                 )
+                val localCity = createWeatherCity(localCityResponse)
                 _uiState.update {
                     it.copy(
                         localCity = localCity,
@@ -97,9 +101,9 @@ class WeatherViewModel : ViewModel() {
     fun getCountries() {
         viewModelScope.launch {
             try {
-                val countryResult = WeatherApi.retrofitService.getCountries(apiKey = key)
+                val countryResponse = WeatherApi.retrofitService.getCountries(apiKey = key)
                 _uiState.update {
-                    it.copy(countries = countryResult)
+                    it.copy(countries = countryResponse.data)
                 }
             } catch (e: IOException) {
                 e.stackTrace
@@ -109,19 +113,46 @@ class WeatherViewModel : ViewModel() {
 
     fun getStates(country: String) {
         viewModelScope.launch {
-            val stateResult = WeatherApi.retrofitService.getStates(country = country, apiKey = key)
+            try {
+                val stateResponse = WeatherApi.retrofitService.getStates(country = country, apiKey = key)
+                _uiState.update {
+                    it.copy(states = stateResponse.data)
+                }
+            } catch (e: IOException) {
+                e.stackTrace
+            }
         }
     }
 
     fun getCities(country: String, state: String) {
         viewModelScope.launch {
-            val citiesResult = WeatherApi.retrofitService.getCities(country = country, state = state, apiKey = key)
+            try {
+                val citiesResult = WeatherApi.retrofitService.getCities(
+                    country = country,
+                    state = state,
+                    apiKey = key,
+                )
+                _uiState.update {
+                    it.copy(cities = citiesResult.data)
+                }
+            } catch (e: IOException) {
+                e.stackTrace
+            }
         }
     }
 
     fun getCity(country: String, state: String, city: String) {
         viewModelScope.launch {
-            val cityResult = WeatherApi.retrofitService.getCity(country = country, state = state, city = city, apiKey = key)
+            try {
+                val cityResponse = WeatherApi.retrofitService.getCity(country = country, state = state, city = city, apiKey = key)
+                val updatedCitylist: MutableList<WeatherCity> = _uiState.value.cityList
+                updatedCitylist.add(createWeatherCity(cityResponse))
+                _uiState.update {
+                    it.copy(cityList = updatedCitylist)
+                }
+            } catch (e: IOException) {
+                e.stackTrace
+            }
         }
     }
 }

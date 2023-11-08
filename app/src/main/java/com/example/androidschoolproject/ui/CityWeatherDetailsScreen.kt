@@ -34,7 +34,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.androidschoolproject.R
-import com.example.androidschoolproject.model.WeatherCity
+import com.example.androidschoolproject.network.WeatherCity
 import com.example.androidschoolproject.ui.theme.AndroidSchoolProjectTheme
 import com.example.androidschoolproject.ui.utils.Temperature
 import com.example.androidschoolproject.ui.utils.ViewSize
@@ -94,7 +94,7 @@ fun WeatherDetails(city: WeatherCity) {
         Column {
             Temperature(temp = city.weather.temperature, size = ViewSize.LARGE)
             Spacer(modifier = Modifier.width(16.dp))
-            WindDirection(directionFloat = city.weather.windDirection, size = ViewSize.LARGE)
+            WindDirection(direction = city.weather.windDirection, size = ViewSize.LARGE)
             Spacer(modifier = Modifier.width(16.dp))
             WindDirectionRose(city.weather.windDirection)
         }
@@ -119,7 +119,7 @@ fun WeatherInfoColumn(prefix: String, info: Float, size: ViewSize) {
 }
 
 @Composable
-private fun WindDirectionRose(windDirection: Float) {
+private fun WindDirectionRose(windDirection: Int) {
     Box(
         modifier = Modifier
             .padding(15.dp),
