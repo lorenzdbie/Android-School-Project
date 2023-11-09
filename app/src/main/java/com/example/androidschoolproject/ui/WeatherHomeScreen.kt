@@ -207,26 +207,27 @@ fun WeatherListAndDetailsContent(
 ) {
     LaunchedEffect(Unit) { collectLocalCity() }
 
-    if (weatherUiState.localCity != null) {
-        LocalCityWeatherCard(
-            city = weatherUiState.localCity,
-            selected = false,
-            onCardClick = { onCityCardPressed(weatherUiState.localCity) },
-            modifier = Modifier.padding(5.dp),
-        )
-    }
-
     val cities = weatherUiState.cityList
     val weatherContentDescription = stringResource(R.string.listAndDetailsContent)
     Row(modifier = modifier.testTag(weatherContentDescription)) {
-        LazyColumn(modifier = Modifier.weight(1f)) {
-            items(cities, key = { city -> city.id }) { city ->
-                CityWeatherCard(
-                    city = city,
-                    selected = weatherUiState.currentCity.id == city.id,
-                    onCardClick = { onCityCardPressed(city) },
+        Column(modifier = Modifier.weight(1f)) {
+            if (weatherUiState.localCity != null) {
+                LocalCityWeatherCard(
+                    city = weatherUiState.localCity,
+                    selected = false,
+                    onCardClick = { onCityCardPressed(weatherUiState.localCity) },
                     modifier = Modifier.padding(5.dp),
                 )
+            }
+            LazyColumn {
+                items(cities, key = { city -> city.id }) { city ->
+                    CityWeatherCard(
+                        city = city,
+                        selected = weatherUiState.currentCity.id == city.id,
+                        onCardClick = { onCityCardPressed(city) },
+                        modifier = Modifier.padding(5.dp),
+                    )
+                }
             }
         }
         val activity = LocalContext.current as Activity
