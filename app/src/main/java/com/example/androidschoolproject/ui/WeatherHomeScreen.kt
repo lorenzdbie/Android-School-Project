@@ -55,8 +55,13 @@ fun WeatherHomeScreen(
     weatherUiState: WeatherUiState,
     onCityCardPressed: (WeatherCity) -> Unit,
     onDetailScreenBackPressed: () -> Unit,
-    onAddCityPressed: () -> Unit,
-    onCollectLocalCity: () -> Unit,
+    collectLocalCity: () -> Unit,
+    collectCountries: () -> Unit,
+    collectStates: (String) -> Unit,
+    collectCities: (String, String) -> Unit,
+    onCitySelect: (String) -> Unit,
+    onClickAddCity: (String, String, String) -> Unit,
+    onAddCityScreenPressed: () -> Unit,
     onAddCityClosedPressed: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -65,8 +70,8 @@ fun WeatherHomeScreen(
             contentType = contentType,
             weatherUiState = weatherUiState,
             onCityCardPressed = onCityCardPressed,
-            onAddCityPressed = onAddCityPressed,
-            onCollectLocalCity = onCollectLocalCity,
+            collectLocalCity = collectLocalCity,
+            onAddCityPressed = onAddCityScreenPressed,
         )
     } else {
         if (weatherUiState.isShowingHomepage) {
@@ -74,11 +79,11 @@ fun WeatherHomeScreen(
                 contentType = contentType,
                 weatherUiState = weatherUiState,
                 onCityCardPressed = onCityCardPressed,
-                onAddCityPressed = onAddCityPressed,
-                onCollectLocalCity = onCollectLocalCity,
+                onAddCityPressed = onAddCityScreenPressed,
+                collectLocalCity = collectLocalCity,
             )
         } else {
-            DetailsWeatherScreen(uiState = weatherUiState, onBackPressed = onDetailScreenBackPressed, isFullScreen = true)
+            DetailsWeatherScreen(weatherUiState = weatherUiState, onBackPressed = onDetailScreenBackPressed, isFullScreen = true)
         }
     }
     if (weatherUiState.isShowingAddCityBox) {
@@ -91,15 +96,25 @@ fun WeatherHomeScreen(
                         .background(MaterialTheme.colorScheme.background.copy(alpha = 0.8f)),
                 )
                 AddCityScreen(
-                    onAddPressed = { /*TODO*/ },
+                    weatherUiState = weatherUiState,
                     onClosePressed = onAddCityClosedPressed,
+                    collectCountries = collectCountries,
+                    collectStates = collectStates,
+                    collectCities = collectCities,
+                    onCitySelect = onCitySelect,
+                    onClickAddCity = onClickAddCity,
                     modifier = Modifier.weight(1f),
                 )
             }
         } else {
             AddCityScreen(
-                onAddPressed = { /*TODO*/ },
+                weatherUiState = weatherUiState,
                 onClosePressed = onAddCityClosedPressed,
+                collectCountries = collectCountries,
+                collectStates = collectStates,
+                onCitySelect = onCitySelect,
+                collectCities = collectCities,
+                onClickAddCity = onClickAddCity,
             )
         }
     }
@@ -111,7 +126,7 @@ fun WeatherAppContent(
     weatherUiState: WeatherUiState,
     onCityCardPressed: (WeatherCity) -> Unit,
     onAddCityPressed: () -> Unit,
-    onCollectLocalCity: () -> Unit,
+    collectLocalCity: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Box(modifier = modifier) {
@@ -125,13 +140,14 @@ fun WeatherAppContent(
                     WeatherListAndDetailsContent(
                         weatherUiState = weatherUiState,
                         onCityCardPressed = onCityCardPressed,
+                        collectLocalCity = collectLocalCity,
                         modifier = Modifier.weight(1f),
                     )
                 } else {
                     WeatherOnlyListContent(
                         weatherUiState = weatherUiState,
                         onCityCardPressed = onCityCardPressed,
-                        onCollectLocalCity = onCollectLocalCity,
+                        collectLocalCity = collectLocalCity,
                         modifier = Modifier.weight(1f),
                     )
                 }
@@ -149,10 +165,10 @@ fun WeatherAppContent(
 fun WeatherOnlyListContent(
     weatherUiState: WeatherUiState,
     onCityCardPressed: (WeatherCity) -> Unit,
-    onCollectLocalCity: () -> Unit,
+    collectLocalCity: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    LaunchedEffect(Unit) { onCollectLocalCity() }
+    LaunchedEffect(Unit) { collectLocalCity() }
     // Text(text = "longitude = ${weatherUiState.longitude}, latitude = ${weatherUiState.latitude}")
 
 //    Button(onClick = onCollectLocalCity) {
@@ -186,8 +202,20 @@ fun WeatherOnlyListContent(
 fun WeatherListAndDetailsContent(
     weatherUiState: WeatherUiState,
     onCityCardPressed: (WeatherCity) -> Unit,
+    collectLocalCity: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    LaunchedEffect(Unit) { collectLocalCity() }
+
+    if (weatherUiState.localCity != null) {
+        LocalCityWeatherCard(
+            city = weatherUiState.localCity,
+            selected = false,
+            onCardClick = { onCityCardPressed(weatherUiState.localCity) },
+            modifier = Modifier.padding(5.dp),
+        )
+    }
+
     val cities = weatherUiState.cityList
     val weatherContentDescription = stringResource(R.string.listAndDetailsContent)
     Row(modifier = modifier.testTag(weatherContentDescription)) {
@@ -203,7 +231,7 @@ fun WeatherListAndDetailsContent(
         }
         val activity = LocalContext.current as Activity
         DetailsWeatherScreen(
-            uiState = weatherUiState,
+            weatherUiState = weatherUiState,
             onBackPressed = { activity.finish() },
             modifier = Modifier.weight(1f),
         )

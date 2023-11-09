@@ -13,7 +13,7 @@ data class WeatherUiState(
     val currentCity: WeatherCity = LocalWeatherDataProvider.defaultWeather,
     // val localCity: WeatherCity = LocalWeatherDataProvider.defaultWeather,
     val localCity: WeatherCity? = null,
-    val countries: List<Country> = mutableListOf(),
+    val countries: List<Country>? = null,
     val states: List<CountryState> = mutableListOf(),
     val cities: List<City> = mutableListOf(),
     val isShowingHomepage: Boolean = true,
@@ -21,4 +21,7 @@ data class WeatherUiState(
     val latitude: Double = 0.0,
     val longitude: Double = 0.0,
     val key: String = "",
+    val countryName: String = "Select Country",
+    val stateName: String = "Select State",
+    val cityName: String = "Select City",
 )

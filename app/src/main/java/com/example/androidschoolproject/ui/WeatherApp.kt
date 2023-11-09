@@ -49,9 +49,14 @@ fun WeatherApp(
                 selectedCity = city,
             )
         },
-        onCollectLocalCity = { getCurrentLocation(context) { lat, long -> viewModel.getNearestCity(latitude = lat, longitude = long) } },
         onDetailScreenBackPressed = { viewModel.resetHomeScreenStates() },
-        onAddCityPressed = { viewModel.updateAddCityScreenStates() },
+        collectLocalCity = { getCurrentLocation(context) { lat, long -> viewModel.getNearestCity(latitude = lat, longitude = long) } },
+        collectCountries = { viewModel.getCountries() },
+        collectStates = { country: String -> viewModel.getStates(country = country) },
+        collectCities = { country: String, state: String -> viewModel.getCities(country = country, state = state) },
+        onCitySelect = { city: String -> viewModel.addCityName(city = city) },
+        onClickAddCity = { country: String, state: String, city: String -> viewModel.getCity(country = country, state = state, city = city) },
+        onAddCityScreenPressed = { viewModel.updateAddCityScreenStates() },
         onAddCityClosedPressed = { viewModel.resetAddCityScreenStates() },
         modifier = modifier,
     )

@@ -116,7 +116,12 @@ class WeatherViewModel : ViewModel() {
             try {
                 val stateResponse = WeatherApi.retrofitService.getStates(country = country, apiKey = key)
                 _uiState.update {
-                    it.copy(states = stateResponse.data)
+                    it.copy(
+                        countryName = country,
+                        cityName = "Select City",
+                        stateName = "Select State",
+                        states = stateResponse.data,
+                    )
                 }
             } catch (e: IOException) {
                 e.stackTrace
@@ -133,11 +138,23 @@ class WeatherViewModel : ViewModel() {
                     apiKey = key,
                 )
                 _uiState.update {
-                    it.copy(cities = citiesResult.data)
+                    it.copy(
+                        stateName = state,
+                        cities = citiesResult.data,
+                        cityName = "Select City",
+                    )
                 }
             } catch (e: IOException) {
                 e.stackTrace
             }
+        }
+    }
+
+    fun addCityName(city: String) {
+        _uiState.update {
+            it.copy(
+                cityName = city,
+            )
         }
     }
 
@@ -148,7 +165,12 @@ class WeatherViewModel : ViewModel() {
                 val updatedCitylist: MutableList<WeatherCity> = _uiState.value.cityList
                 updatedCitylist.add(createWeatherCity(cityResponse))
                 _uiState.update {
-                    it.copy(cityList = updatedCitylist)
+                    it.copy(
+                        cityList = updatedCitylist,
+                        cityName = "Select City",
+                        stateName = "Select State",
+                        countryName = "Select Country",
+                    )
                 }
             } catch (e: IOException) {
                 e.stackTrace
