@@ -170,6 +170,9 @@ class WeatherViewModel : ViewModel() {
                         cityName = "Select City",
                         stateName = "Select State",
                         countryName = "Select Country",
+                        countries = null,
+                        states = null,
+                        cities = null,
                     )
                 }
             } catch (e: IOException) {

@@ -22,7 +22,7 @@ fun WeatherApp(
     val contentType: WeatherContentType
     val context = LocalContext.current
 
-    LaunchedEffect(Unit) {
+    LaunchedEffect(true) {
         startUpdate(viewModel, context)
     }
 

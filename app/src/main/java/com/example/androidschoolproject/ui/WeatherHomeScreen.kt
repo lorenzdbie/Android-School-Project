@@ -247,9 +247,11 @@ fun WeatherIcon(icon: String, viewSize: ViewSize, modifier: Modifier = Modifier)
         "02d" -> R.drawable._2d
         "02n" -> R.drawable._2n
         "03d" -> R.drawable._3d
+        "03n" -> R.drawable._3d
         "04d" -> R.drawable._4d
+        "04n" -> R.drawable._4d
         "09d" -> R.drawable._9d
-        "010d" -> R.drawable._10d
+        "10d" -> R.drawable._10d
         "10n" -> R.drawable._10n
         "11d" -> R.drawable._11d
         "13d" -> R.drawable._13d

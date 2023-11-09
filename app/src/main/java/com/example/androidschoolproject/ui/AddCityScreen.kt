@@ -143,7 +143,7 @@ private fun AddCitySelectors(
     val states = weatherUiState.states
     val cities = weatherUiState.cities
 
-    Column(modifier = modifier.padding(40.dp).fillMaxWidth()) {
+    Column(modifier = modifier.padding(start = 40.dp, top = 40.dp, bottom = 40.dp, end = 20.dp).fillMaxWidth()) {
         Row(modifier.padding(vertical = 10.dp).fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
             Text(text = "Country: ", fontSize = 20.sp, modifier = Modifier.padding(end = 30.dp))
             if (countries != null) {
