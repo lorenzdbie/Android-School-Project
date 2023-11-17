@@ -5,6 +5,7 @@ package com.example.androidschoolproject.ui
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.androidschoolproject.data.LocalWeatherDataProvider
+import com.example.androidschoolproject.data.WeatherCityRepository
 import com.example.androidschoolproject.network.WeatherApi
 import com.example.androidschoolproject.network.WeatherCity
 import com.example.androidschoolproject.network.createWeatherCity
@@ -13,18 +14,32 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class WeatherViewModel : ViewModel() {
+class WeatherViewModel(private val weatherCityRepository: WeatherCityRepository) : ViewModel() {
 
     private var key: String = ""
+    private  val _uiState = MutableStateFlow(WeatherUiState.MyState())
 
-    private val _uiState = MutableStateFlow(
-        WeatherUiState.MyState(
-            cityList = LocalWeatherDataProvider.getWeatherCityData(),
-            currentCity = LocalWeatherDataProvider.getWeatherCityData().getOrElse(0) {
-                LocalWeatherDataProvider.defaultWeather
-            },
-        ),
-    )
+    init {
+        viewModelScope.launch {
+            weatherCityRepository.getAllWeatherCitiesStream().collect{ weatherCityList ->
+                _uiState.update {
+                    it.copy(
+                        cityList = weatherCityList,
+                        currentCity = weatherCityList[0]
+                    )
+                }
+            }
+        }
+    }
+
+//    private val _uiState = MutableStateFlow(
+//        WeatherUiState.MyState(
+//            cityList = LocalWeatherDataProvider.getWeatherCityData(),
+//            currentCity = LocalWeatherDataProvider.getWeatherCityData().getOrElse(0) {
+//                LocalWeatherDataProvider.defaultWeather
+//            },
+//        ),
+ //   )
 
     val uiState: StateFlow<WeatherUiState.MyState> = _uiState
 
@@ -89,6 +104,7 @@ class WeatherViewModel : ViewModel() {
                 _uiState.update {
                     it.copy(
                         localCity = localCity,
+                        currentCity = localCity
                     )
                 }
             } catch (e: Exception) {
@@ -161,11 +177,13 @@ class WeatherViewModel : ViewModel() {
         viewModelScope.launch {
             try {
                 val cityResponse = WeatherApi.retrofitService.getCity(country = country, state = state, city = city, apiKey = key)
-                val updatedCitylist: MutableList<WeatherCity> = _uiState.value.cityList
-                updatedCitylist.add(createWeatherCity(cityResponse))
+              //  val updatedCitylist: MutableList<WeatherCity> = _uiState.value.cityList
+                val newWeatherCity = createWeatherCity(cityResponse)
+               // updatedCitylist.add(newWeatherCity)
+                weatherCityRepository.insertWeatherCity(newWeatherCity)
                 _uiState.update {
                     it.copy(
-                        cityList = updatedCitylist,
+                       // cityList = updatedCitylist,
                         cityName = "Select City",
                         stateName = "Select State",
                         countryName = "Select Country",

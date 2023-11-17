@@ -232,7 +232,7 @@ fun WeatherListAndDetailsContent(
             if (weatherUiState.localCity != null) {
                 LocalCityWeatherCard(
                     city = weatherUiState.localCity,
-                    selected = false,
+                    selected = weatherUiState.currentCity.id == weatherUiState.localCity.id,
                     onCardClick = { onCityCardPressed(weatherUiState.localCity) },
                     modifier = Modifier.padding(5.dp),
                 )

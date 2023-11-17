@@ -17,7 +17,7 @@ fun WeatherApp(
     windowSize: WindowWidthSizeClass,
     modifier: Modifier = Modifier,
 ) {
-    val viewModel: WeatherViewModel = viewModel()
+    val viewModel: WeatherViewModel = viewModel(factory = AppViewModelProvider.Factory)
     val uiState = viewModel.uiState.collectAsState().value
     val contentType: WeatherContentType
     val context = LocalContext.current
