@@ -1,10 +1,10 @@
 package com.example.androidschoolproject.ui
 
-import androidx.lifecycle.ViewModel // ktlint-disable import-ordering
-import androidx.lifecycle.viewModelScope
-import com.example.androidschoolproject.data.LocalWeatherDataProvider
 // import com.example.androidschoolproject.data.LocalWeatherDataProvider
 // import com.example.androidschoolproject.model.WeatherCity
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.androidschoolproject.data.LocalWeatherDataProvider
 import com.example.androidschoolproject.network.WeatherApi
 import com.example.androidschoolproject.network.WeatherCity
 import com.example.androidschoolproject.network.createWeatherCity
@@ -12,14 +12,13 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import okio.IOException
 
 class WeatherViewModel : ViewModel() {
 
     private var key: String = ""
 
     private val _uiState = MutableStateFlow(
-        WeatherUiState(
+        WeatherUiState.MyState(
             cityList = LocalWeatherDataProvider.getWeatherCityData(),
             currentCity = LocalWeatherDataProvider.getWeatherCityData().getOrElse(0) {
                 LocalWeatherDataProvider.defaultWeather
@@ -27,7 +26,7 @@ class WeatherViewModel : ViewModel() {
         ),
     )
 
-    val uiState: StateFlow<WeatherUiState> = _uiState
+    val uiState: StateFlow<WeatherUiState.MyState> = _uiState
 
     fun updateDetailScreenStates(selectedCity: WeatherCity) {
         _uiState.update {
@@ -92,8 +91,8 @@ class WeatherViewModel : ViewModel() {
                         localCity = localCity,
                     )
                 }
-            } catch (e: IOException) {
-                e.localizedMessage
+            } catch (e: Exception) {
+                WeatherUiState.Error
             }
         }
     }
@@ -105,8 +104,8 @@ class WeatherViewModel : ViewModel() {
                 _uiState.update {
                     it.copy(countries = countryResponse.data)
                 }
-            } catch (e: IOException) {
-                e.stackTrace
+            } catch (e: Exception) {
+                WeatherUiState.Error
             }
         }
     }
@@ -123,8 +122,8 @@ class WeatherViewModel : ViewModel() {
                         states = stateResponse.data,
                     )
                 }
-            } catch (e: IOException) {
-                e.stackTrace
+            } catch (e: Exception) {
+                WeatherUiState.Error
             }
         }
     }
@@ -144,8 +143,8 @@ class WeatherViewModel : ViewModel() {
                         cityName = "Select City",
                     )
                 }
-            } catch (e: IOException) {
-                e.stackTrace
+            } catch (e: Exception) {
+                WeatherUiState.Error
             }
         }
     }
@@ -175,8 +174,8 @@ class WeatherViewModel : ViewModel() {
                         cities = null,
                     )
                 }
-            } catch (e: IOException) {
-                e.stackTrace
+            } catch (e: Exception) {
+                WeatherUiState.Error
             }
         }
     }

@@ -1,6 +1,6 @@
 package com.example.androidschoolproject.data
 
-import com.example.androidschoolproject.network.CityLocation
+import com.example.androidschoolproject.network.CityCoordinates
 import com.example.androidschoolproject.network.Pollution
 import com.example.androidschoolproject.network.Weather
 import com.example.androidschoolproject.network.WeatherCity
@@ -19,12 +19,7 @@ object LocalWeatherDataProvider {
                 city = "Gent",
                 state = "Flanders",
                 country = "Belgium",
-                cityLocation = CityLocation(type = "Point", coordinates = doubleArrayOf(3.808, 51.1501)),
-//                CityLocation(
-//                    longitude = 3.80873543079248,
-//                    latitude = 51.1501360922306,
-//                ),
-
+                cityLocation = CityCoordinates(longitude = 3.80873543079248, latitude = 51.1501360922306),
                 weather = Weather(
                     timeStamp = "2023-10-28T09:00:00.000Z",
                     temperature = 12.0,
@@ -46,11 +41,7 @@ object LocalWeatherDataProvider {
                 city = "New York City",
                 state = "New York",
                 country = "USA",
-                cityLocation = CityLocation(type = "Point", coordinates = doubleArrayOf(-73.928596, 40.694401)),
-//                cityLocation = CityLocation(
-//                    longitude = -73.928596,
-//                    latitude = 40.694401,
-//                ),
+                cityLocation = CityCoordinates(longitude = -73.928596, latitude = 40.694401),
                 weather = Weather(
                     timeStamp = "2023-10-28T10:00:00.000Z",
                     temperature = 17.0,

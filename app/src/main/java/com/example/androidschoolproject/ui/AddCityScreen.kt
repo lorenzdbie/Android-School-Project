@@ -60,30 +60,55 @@ fun AddCityScreen(
     }
 
     val addCityScreenDescription = stringResource(R.string.add_city_screen)
-    Box(
-        modifier = modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background.copy(alpha = 0.8f))
-            .testTag(addCityScreenDescription),
-        contentAlignment = Alignment.Center,
-    ) {
-        Card(
-            modifier = modifier
-                .width(400.dp)
-                .padding(15.dp), // Add padding if necessary
-            elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
-            shape = RoundedCornerShape(40.dp), // Set the corner radius as needed
-        ) {
-            Column(modifier = Modifier.padding(10.dp)) {
-                AddCityHeader(onClosePressed = onClosePressed)
-                AddCitySelectors(weatherUiState = weatherUiState, collectStates = collectStates, collectCities = collectCities, onCitySelect = onCitySelect)
-                AddCityButton(
-                    enabled = weatherUiState.countryName != "Select Country" && weatherUiState.stateName != "Select State" && weatherUiState.cityName != "Select City",
-                    onClick = {
-                        onClickAddCity(weatherUiState.countryName, weatherUiState.stateName, weatherUiState.cityName)
-                        onClosePressed()
-                    },
-                )
+    when (weatherUiState) {
+        is WeatherUiState.Error -> {
+            Box(modifier = Modifier.fillMaxSize()) {
+                Text(text = weatherUiState.toString())
+            }
+        }
+
+        is WeatherUiState.Loading -> {
+            Box(modifier = Modifier.fillMaxSize()) {
+                Text(text = weatherUiState.toString())
+            }
+        }
+
+        is WeatherUiState.MyState -> {
+            Box(
+                modifier = modifier
+                    .fillMaxSize()
+                    .background(MaterialTheme.colorScheme.background.copy(alpha = 0.8f))
+                    .testTag(addCityScreenDescription),
+                contentAlignment = Alignment.Center,
+            ) {
+                Card(
+                    modifier = modifier
+                        .width(400.dp)
+                        .padding(15.dp), // Add padding if necessary
+                    elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
+                    shape = RoundedCornerShape(40.dp), // Set the corner radius as needed
+                ) {
+                    Column(modifier = Modifier.padding(10.dp)) {
+                        AddCityHeader(onClosePressed = onClosePressed)
+                        AddCitySelectors(
+                            weatherUiState = weatherUiState,
+                            collectStates = collectStates,
+                            collectCities = collectCities,
+                            onCitySelect = onCitySelect,
+                        )
+                        AddCityButton(
+                            enabled = weatherUiState.countryName != "Select Country" && weatherUiState.stateName != "Select State" && weatherUiState.cityName != "Select City",
+                            onClick = {
+                                onClickAddCity(
+                                    weatherUiState.countryName,
+                                    weatherUiState.stateName,
+                                    weatherUiState.cityName,
+                                )
+                                onClosePressed()
+                            },
+                        )
+                    }
+                }
             }
         }
     }
@@ -133,7 +158,7 @@ fun AddCityHeader(onClosePressed: () -> Unit, modifier: Modifier = Modifier) {
 
 @Composable
 private fun AddCitySelectors(
-    weatherUiState: WeatherUiState,
+    weatherUiState: WeatherUiState.MyState,
     modifier: Modifier = Modifier,
     collectStates: (String) -> Unit,
     collectCities: (String, String) -> Unit,

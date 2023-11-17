@@ -31,17 +31,15 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.androidschoolproject.R
 import com.example.androidschoolproject.network.WeatherCity
-import com.example.androidschoolproject.ui.theme.AndroidSchoolProjectTheme
 import com.example.androidschoolproject.ui.utils.Temperature
 import com.example.androidschoolproject.ui.utils.ViewSize
 import com.example.androidschoolproject.ui.utils.WindDirection
 
 @Composable
-fun DetailsWeatherScreen(weatherUiState: WeatherUiState, onBackPressed: () -> Unit, modifier: Modifier = Modifier, isFullScreen: Boolean = false) {
+fun DetailsWeatherScreen(weatherUiState: WeatherUiState.MyState, onBackPressed: () -> Unit, modifier: Modifier = Modifier, isFullScreen: Boolean = false) {
     BackHandler {
         onBackPressed()
     }
@@ -140,10 +138,10 @@ private fun WindDirectionRose(windDirection: Int) {
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun CityWeatherDetailsPreview() {
-    AndroidSchoolProjectTheme {
-        DetailsWeatherScreen(weatherUiState = WeatherUiState(), onBackPressed = {}, isFullScreen = true)
-    }
-}
+// @Preview(showBackground = true)
+// @Composable
+// fun CityWeatherDetailsPreview() {
+//    AndroidSchoolProjectTheme {
+//        DetailsWeatherScreen(weatherUiState = WeatherUiState(), onBackPressed = {}, isFullScreen = true)
+//    }
+// }
