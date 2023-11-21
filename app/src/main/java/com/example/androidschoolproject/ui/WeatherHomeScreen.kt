@@ -232,7 +232,7 @@ fun WeatherListAndDetailsContent(
             if (weatherUiState.localCity != null) {
                 LocalCityWeatherCard(
                     city = weatherUiState.localCity,
-                    selected = weatherUiState.currentCity.id == weatherUiState.localCity.id,
+                    selected = weatherUiState.currentCity?.id == weatherUiState.localCity.id,
                     onCardClick = { onCityCardPressed(weatherUiState.localCity) },
                     modifier = Modifier.padding(5.dp),
                 )
@@ -241,7 +241,7 @@ fun WeatherListAndDetailsContent(
                 items(cities, key = { city -> city.id }) { city ->
                     CityWeatherCard(
                         city = city,
-                        selected = weatherUiState.currentCity.id == city.id,
+                        selected = weatherUiState.currentCity?.id == city.id,
                         onCardClick = { onCityCardPressed(city) },
                         modifier = Modifier.padding(5.dp),
                     )

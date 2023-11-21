@@ -11,7 +11,7 @@ import com.example.androidschoolproject.network.WeatherCity
 sealed interface WeatherUiState {
     data class MyState(
         val cityList: List<WeatherCity> = mutableListOf(),
-        val currentCity: WeatherCity = LocalWeatherDataProvider.defaultWeather,
+        val currentCity: WeatherCity = LocalWeatherDataProvider.weatherCity1,
         // val localCity: WeatherCity = LocalWeatherDataProvider.defaultWeather,
         val localCity: WeatherCity? = null,
         val countries: List<Country>? = null,

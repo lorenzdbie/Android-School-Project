@@ -4,7 +4,6 @@ package com.example.androidschoolproject.ui
 // import com.example.androidschoolproject.model.WeatherCity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.androidschoolproject.data.LocalWeatherDataProvider
 import com.example.androidschoolproject.data.WeatherCityRepository
 import com.example.androidschoolproject.network.WeatherApi
 import com.example.androidschoolproject.network.WeatherCity
@@ -23,10 +22,16 @@ class WeatherViewModel(private val weatherCityRepository: WeatherCityRepository)
         viewModelScope.launch {
             weatherCityRepository.getAllWeatherCitiesStream().collect{ weatherCityList ->
                 _uiState.update {
-                    it.copy(
-                        cityList = weatherCityList,
-                        currentCity = weatherCityList[0]
-                    )
+                    if (weatherCityList.isNotEmpty()) {
+                        it.copy(
+                            cityList = weatherCityList,
+                            currentCity = weatherCityList[0]
+                        )
+                    } else {
+                        it.copy(
+                            cityList = weatherCityList
+                        )
+                    }
                 }
             }
         }
@@ -71,9 +76,9 @@ class WeatherViewModel(private val weatherCityRepository: WeatherCityRepository)
     fun resetHomeScreenStates() {
         _uiState.update {
             it.copy(
-                currentCity = LocalWeatherDataProvider.getWeatherCityData().getOrElse(0) {
-                    LocalWeatherDataProvider.defaultWeather
-                },
+//                currentCity = LocalWeatherDataProvider.getWeatherCityData().getOrElse(0) {
+//                    LocalWeatherDataProvider.defaultWeather
+//                },
                 isShowingHomepage = true,
             )
         }
