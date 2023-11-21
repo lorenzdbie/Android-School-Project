@@ -1,6 +1,5 @@
 package com.example.androidschoolproject.test
 
-import android.util.Log
 import com.example.androidschoolproject.data.FakeWeatherCityRepository
 import com.example.androidschoolproject.ui.WeatherViewModel
 import kotlinx.coroutines.Dispatchers
@@ -33,7 +32,6 @@ class WeatherViewModelTest {
     fun setUp() {
         Dispatchers.setMain(UnconfinedTestDispatcher())
         viewModel = WeatherViewModel(weatherCityRepository = FakeWeatherCityRepository())
-        Log.d("info", "${viewModel.uiState.value.cityList.size}")
     }
 
     @After

@@ -2,7 +2,6 @@ package com.example.androidschoolproject.ui
 
 // import com.example.androidschoolproject.data.LocalWeatherDataProvider
 // import com.example.androidschoolproject.model.WeatherCity
-import com.example.androidschoolproject.data.LocalWeatherDataProvider
 import com.example.androidschoolproject.network.City
 import com.example.androidschoolproject.network.Country
 import com.example.androidschoolproject.network.CountryState
@@ -11,7 +10,7 @@ import com.example.androidschoolproject.network.WeatherCity
 sealed interface WeatherUiState {
     data class MyState(
         val cityList: List<WeatherCity> = mutableListOf(),
-        val currentCity: WeatherCity = LocalWeatherDataProvider.weatherCity1,
+        val currentCity: WeatherCity? = null,
         // val localCity: WeatherCity = LocalWeatherDataProvider.defaultWeather,
         val localCity: WeatherCity? = null,
         val countries: List<Country>? = null,

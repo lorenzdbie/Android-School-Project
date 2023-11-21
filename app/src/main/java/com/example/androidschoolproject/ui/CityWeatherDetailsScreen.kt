@@ -62,9 +62,11 @@ fun DetailsWeatherScreen(weatherUiState: WeatherUiState.MyState, onBackPressed: 
                     )
                 }
             }
-            DetailHeader(city = weatherUiState.currentCity)
-            //  Spacer(modifier = Modifier.weight(1f))
-            WeatherDetails(city = weatherUiState.currentCity)
+            if (weatherUiState.currentCity != null) {
+                DetailHeader(city = weatherUiState.currentCity)
+                //  Spacer(modifier = Modifier.weight(1f))
+                WeatherDetails(city = weatherUiState.currentCity)
+            }
         }
     }
 }
