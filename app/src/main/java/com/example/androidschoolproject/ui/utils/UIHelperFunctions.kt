@@ -2,6 +2,9 @@ package com.example.androidschoolproject.ui.utils
 
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import java.time.Instant
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 
 @Composable
 fun Temperature(temp: Double, size: ViewSize) {
@@ -50,4 +53,23 @@ fun shortNotation(direction: String): String {
         }
     }
     return short
+}
+
+fun formatToLocalDateTime(dateString: String): String {
+    val zonedDateTime = Instant.parse(dateString).atZone(ZoneId.systemDefault())
+    val localDateTimeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm")
+    return localDateTimeFormatter.format(zonedDateTime.withZoneSameInstant(ZoneId.of("Asia/Jakarta")))
+}
+
+
+fun pollutionUnit(unit: String): String {
+    return when (unit) {
+        "p1" -> "ug/m3"  // pm10
+        "p2" -> "ug/m3"  // pm2.5
+        "o3" -> "ppb O3"  // Ozone O3
+        "n2" -> "ppb NO2"  // Nitrogen dioxide NO2
+        "s2" -> "ppb SO2"  // Sulfur dioxide SO2
+        "co" -> "ppm CO"  // Carbon monoxide CO
+        else -> ""
+    }
 }
