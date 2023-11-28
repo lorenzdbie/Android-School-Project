@@ -64,6 +64,8 @@ dependencies {
     implementation("androidx.compose.material3:material3-window-size-class")
     implementation("com.google.accompanist:accompanist-permissions:0.25.0")
     implementation("androidx.navigation:navigation-compose:2.5.3")
+    implementation("com.google.accompanist:accompanist-swiperefresh:0.18.0")
+
 
     // Api connections
     implementation("com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:1.0.0")

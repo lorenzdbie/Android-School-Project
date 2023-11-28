@@ -57,6 +57,16 @@ class WeatherViewModel(private val weatherCityRepository: WeatherCityRepository)
         }
     }
 
+    fun deleteCity(city: WeatherCity) {
+        viewModelScope.launch {
+        try {
+            weatherCityRepository.deleteWeatherCity(city)
+        } catch (e: Exception) {
+            WeatherUiState.Error
+        }
+    }
+    }
+
     fun updateAddCityScreenStates() {
         _uiState.update {
             it.copy(

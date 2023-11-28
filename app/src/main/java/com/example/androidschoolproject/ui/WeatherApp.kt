@@ -49,6 +49,7 @@ fun WeatherApp(
                 selectedCity = city,
             )
         },
+        onCityCardDelete = { city: WeatherCity -> viewModel.deleteCity(city)},
         onDetailScreenBackPressed = { viewModel.resetHomeScreenStates() },
         collectLocalCity = { getCurrentLocation(context) { lat, long -> viewModel.getNearestCity(latitude = lat, longitude = long) } },
         collectCountries = { viewModel.getCountries() },
