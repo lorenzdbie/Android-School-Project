@@ -2,9 +2,9 @@ package com.example.androidschoolproject.ui.utils
 
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import java.time.Instant
-import java.time.ZoneId
-import java.time.format.DateTimeFormatter
+import com.example.androidschoolproject.R
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 @Composable
 fun Temperature(temp: Double, size: ViewSize) {
@@ -45,6 +45,27 @@ fun directionBasedOnDegrees(direction: Int): String {
         else -> "North"
     }
 }
+
+fun getWeatherIcon(icon: String) : Int{
+   return  when (icon) {
+        "01d" -> R.drawable._1d
+        "01n" -> R.drawable._1n
+        "02d" -> R.drawable._2d
+        "02n" -> R.drawable._2n
+        "03d" -> R.drawable._3d
+        "03n" -> R.drawable._3d
+        "04d" -> R.drawable._4d
+        "04n" -> R.drawable._4d
+        "09d" -> R.drawable._9d
+        "10d" -> R.drawable._10d
+        "10n" -> R.drawable._10n
+        "11d" -> R.drawable._11d
+        "13d" -> R.drawable._13d
+        "50d" -> R.drawable._50d
+        else -> R.drawable._1d
+    }
+}
+
 fun shortNotation(direction: String): String {
     var short = ""
     for (letter in direction) {
@@ -55,10 +76,15 @@ fun shortNotation(direction: String): String {
     return short
 }
 
-fun formatToLocalDateTime(dateString: String): String {
-    val zonedDateTime = Instant.parse(dateString).atZone(ZoneId.systemDefault())
-    val localDateTimeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm")
-    return localDateTimeFormatter.format(zonedDateTime.withZoneSameInstant(ZoneId.of("Asia/Jakarta")))
+
+
+fun formatToLocalDateTime(dateString: String): String? {
+
+    val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US)
+    val outputFormat = SimpleDateFormat("dd-MM-yyyy HH:mm", Locale.US)
+
+    val date = inputFormat.parse(dateString)
+    return date?.let { outputFormat.format(it) }
 }
 
 

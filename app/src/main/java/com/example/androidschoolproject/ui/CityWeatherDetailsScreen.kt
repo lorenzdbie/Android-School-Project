@@ -1,6 +1,8 @@
 package com.example.androidschoolproject.ui
 
+import android.os.Build
 import androidx.activity.compose.BackHandler
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -40,9 +42,10 @@ import com.example.androidschoolproject.ui.utils.WindDirection
 import com.example.androidschoolproject.ui.utils.formatToLocalDateTime
 import com.example.androidschoolproject.ui.utils.pollutionUnit
 
+
 @Composable
 fun DetailsWeatherScreen(
-    weatherUiState: WeatherUiState.MyState,
+    weatherUiState: WeatherUiState,
     onBackPressed: () -> Unit,
     modifier: Modifier = Modifier,
     isFullScreen: Boolean = false
@@ -82,6 +85,7 @@ fun DetailsWeatherScreen(
                 Spacer(modifier = Modifier.weight(1f))
                 Text(
                     "Last updated : ${formatToLocalDateTime(dateString = city.weather.timeStamp)}",
+                  //  text= "Last update: ${city.weather.timeStamp}",
                     modifier = Modifier.align(
                         Alignment.CenterHorizontally
                     )

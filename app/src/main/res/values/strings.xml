@@ -13,4 +13,7 @@
     <string name="listOnlyContent">List only content</string>
     <string name="listAndDetailsContent">List and details content</string>
     <string name="add_city_screen">Add city screen</string>
+
+    <string name="location_title">locationPermission</string>
+    <string name="weather_title">weatherApp</string>
 </resources>

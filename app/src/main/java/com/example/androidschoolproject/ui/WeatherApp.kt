@@ -1,10 +1,13 @@
 package com.example.androidschoolproject.ui
 
+import androidx.compose.foundation.background
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.androidschoolproject.model.getCurrentLocation
@@ -18,7 +21,9 @@ fun WeatherApp(
     modifier: Modifier = Modifier,
 ) {
     val viewModel: WeatherViewModel = viewModel(factory = AppViewModelProvider.Factory)
-    val uiState = viewModel.uiState.collectAsState().value
+    val weatherUiState = viewModel.uiState.collectAsState().value
+    val apiUiState = viewModel.apiState
+
     val contentType: WeatherContentType
     val context = LocalContext.current
 
@@ -43,12 +48,9 @@ fun WeatherApp(
 
     WeatherHomeScreen(
         contentType = contentType,
-        weatherUiState = uiState,
-        onCityCardPressed = { city: WeatherCity ->
-            viewModel.updateDetailScreenStates(
-                selectedCity = city,
-            )
-        },
+        weatherUiState = weatherUiState,
+        apiUiState = apiUiState,
+        onCityCardPressed = { city: WeatherCity -> viewModel.updateDetailScreenStates( selectedCity = city ) },
         onCityCardDelete = { city: WeatherCity -> viewModel.deleteCity(city)},
         onDetailScreenBackPressed = { viewModel.resetHomeScreenStates() },
         collectLocalCity = { getCurrentLocation(context) { lat, long -> viewModel.getNearestCity(latitude = lat, longitude = long) } },
@@ -59,6 +61,8 @@ fun WeatherApp(
         onClickAddCity = { country: String, state: String, city: String -> viewModel.getCity(country = country, state = state, city = city) },
         onAddCityScreenPressed = { viewModel.updateAddCityScreenStates() },
         onAddCityClosedPressed = { viewModel.resetAddCityScreenStates() },
-        modifier = modifier,
+        modifier = modifier.background(
+                brush = Brush.verticalGradient(
+                    colors = listOf( MaterialTheme.colorScheme.primary, MaterialTheme.colorScheme.secondary ))),
     )
 }

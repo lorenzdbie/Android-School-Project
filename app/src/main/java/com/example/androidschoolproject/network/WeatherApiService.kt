@@ -9,6 +9,7 @@ import retrofit2.http.Query
 
 private const val BASE_URL = "https://api.airvisual.com/v2/"
 
+
 private val retrofit = Retrofit.Builder().addConverterFactory(Json { ignoreUnknownKeys = true }.asConverterFactory("application/json".toMediaType()))
     .baseUrl(BASE_URL)
     .build()

@@ -44,6 +44,7 @@ import com.example.androidschoolproject.R
 @Composable
 fun AddCityScreen(
     weatherUiState: WeatherUiState,
+    apiUiState: ApiUiState,
     onClosePressed: () -> Unit,
     collectCountries: () -> Unit,
     modifier: Modifier = Modifier,
@@ -60,59 +61,57 @@ fun AddCityScreen(
     }
 
     val addCityScreenDescription = stringResource(R.string.add_city_screen)
-    when (weatherUiState) {
-        is WeatherUiState.Error -> {
-            Box(modifier = Modifier.fillMaxSize()) {
-                Text(text = weatherUiState.toString())
-            }
-        }
-
-        is WeatherUiState.Loading -> {
-            Box(modifier = Modifier.fillMaxSize()) {
-                Text(text = weatherUiState.toString())
-            }
-        }
-
-        is WeatherUiState.MyState -> {
-            Box(
-                modifier = modifier
-                    .fillMaxSize()
-                    .background(MaterialTheme.colorScheme.background.copy(alpha = 0.8f))
-                    .testTag(addCityScreenDescription),
-                contentAlignment = Alignment.Center,
-            ) {
-                Card(
-                    modifier = modifier
-                        .width(400.dp)
-                        .padding(15.dp), // Add padding if necessary
-                    elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
-                    shape = RoundedCornerShape(40.dp), // Set the corner radius as needed
-                ) {
-                    Column(modifier = Modifier.padding(10.dp)) {
-                        AddCityHeader(onClosePressed = onClosePressed)
-                        AddCitySelectors(
-                            weatherUiState = weatherUiState,
-                            collectStates = collectStates,
-                            collectCities = collectCities,
-                            onCitySelect = onCitySelect,
+//    when (apiUiState) {
+//        is ApiUiState.Error -> {
+//         ErrorScreen(modifier)
+//        }
+//
+//        is ApiUiState.Loading -> {
+//            Box(modifier = Modifier.fillMaxSize()) {
+//                Text(text = weatherUiState.toString())
+//            }
+//        }
+//
+//        is ApiUiState.Success -> {
+    Box(
+        modifier = modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background.copy(alpha = 0.8f))
+            .testTag(addCityScreenDescription),
+        contentAlignment = Alignment.Center,
+    ) {
+        Card(
+            modifier = modifier
+                .width(400.dp)
+                .padding(15.dp), // Add padding if necessary
+            elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
+            shape = RoundedCornerShape(40.dp), // Set the corner radius as needed
+        ) {
+            Column(modifier = Modifier.padding(10.dp)) {
+                AddCityHeader(onClosePressed = onClosePressed)
+                AddCitySelectors(
+                    weatherUiState = weatherUiState,
+                    collectStates = collectStates,
+                    collectCities = collectCities,
+                    onCitySelect = onCitySelect,
+                )
+                AddCityButton(
+                    enabled = weatherUiState.countryName != "Select Country" && weatherUiState.stateName != "Select State" && weatherUiState.cityName != "Select City",
+                    onClick = {
+                        onClickAddCity(
+                            weatherUiState.countryName,
+                            weatherUiState.stateName,
+                            weatherUiState.cityName,
                         )
-                        AddCityButton(
-                            enabled = weatherUiState.countryName != "Select Country" && weatherUiState.stateName != "Select State" && weatherUiState.cityName != "Select City",
-                            onClick = {
-                                onClickAddCity(
-                                    weatherUiState.countryName,
-                                    weatherUiState.stateName,
-                                    weatherUiState.cityName,
-                                )
-                                onClosePressed()
-                            },
-                        )
-                    }
-                }
+                        onClosePressed()
+                    },
+                )
             }
         }
     }
 }
+//  }
+//}
 
 @Composable
 fun AddCityButton(enabled: Boolean, onClick: () -> Unit, modifier: Modifier = Modifier) {
@@ -158,7 +157,7 @@ fun AddCityHeader(onClosePressed: () -> Unit, modifier: Modifier = Modifier) {
 
 @Composable
 private fun AddCitySelectors(
-    weatherUiState: WeatherUiState.MyState,
+    weatherUiState: WeatherUiState,
     modifier: Modifier = Modifier,
     collectStates: (String) -> Unit,
     collectCities: (String, String) -> Unit,
@@ -168,8 +167,16 @@ private fun AddCitySelectors(
     val states = weatherUiState.states
     val cities = weatherUiState.cities
 
-    Column(modifier = modifier.padding(start = 40.dp, top = 40.dp, bottom = 40.dp, end = 20.dp).fillMaxWidth()) {
-        Row(modifier.padding(vertical = 10.dp).fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+    Column(
+        modifier = modifier
+            .padding(start = 40.dp, top = 40.dp, bottom = 40.dp, end = 20.dp)
+            .fillMaxWidth()
+    ) {
+        Row(
+            modifier
+                .padding(vertical = 10.dp)
+                .fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween
+        ) {
             Text(text = "Country: ", fontSize = 20.sp, modifier = Modifier.padding(end = 30.dp))
             if (countries != null) {
                 SelectionInputField(
@@ -183,7 +190,11 @@ private fun AddCitySelectors(
             }
         }
 
-        Row(modifier.padding(vertical = 10.dp).fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+        Row(
+            modifier
+                .padding(vertical = 10.dp)
+                .fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween
+        ) {
             Text(text = "State: ", fontSize = 20.sp, modifier = Modifier.padding(end = 30.dp))
             if (states != null) {
                 SelectionInputField(
@@ -197,7 +208,11 @@ private fun AddCitySelectors(
             }
         }
 
-        Row(modifier.padding(vertical = 10.dp).fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+        Row(
+            modifier
+                .padding(vertical = 10.dp)
+                .fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween
+        ) {
             Text(text = "City: ", fontSize = 20.sp, modifier = Modifier.padding(end = 30.dp))
             if (cities != null) {
                 SelectionInputField(

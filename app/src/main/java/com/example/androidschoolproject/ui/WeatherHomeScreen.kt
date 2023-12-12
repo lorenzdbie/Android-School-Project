@@ -1,7 +1,9 @@
 package com.example.androidschoolproject.ui
 
 import android.app.Activity
+import android.os.Build
 import androidx.annotation.DrawableRes
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -20,9 +22,9 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.DismissDirection
 import androidx.compose.material3.DismissState
 import androidx.compose.material3.DismissValue
@@ -56,11 +58,13 @@ import com.example.androidschoolproject.ui.utils.Temperature
 import com.example.androidschoolproject.ui.utils.ViewSize
 import com.example.androidschoolproject.ui.utils.WeatherContentType
 import com.example.androidschoolproject.ui.utils.WindDirection
+import com.example.androidschoolproject.ui.utils.getWeatherIcon
 
 @Composable
 fun WeatherHomeScreen(
     contentType: WeatherContentType,
     weatherUiState: WeatherUiState,
+    apiUiState: ApiUiState,
     onCityCardPressed: (WeatherCity) -> Unit,
     onCityCardDelete: (WeatherCity) -> Unit,
     onDetailScreenBackPressed: () -> Unit,
@@ -74,20 +78,18 @@ fun WeatherHomeScreen(
     onAddCityClosedPressed: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    when (weatherUiState) {
-        is WeatherUiState.Error -> {
-            Box(modifier = Modifier.fillMaxSize()) {
-                Text(text = weatherUiState.toString())
-            }
-        }
-
-        is WeatherUiState.Loading -> {
-            Box(modifier = Modifier.fillMaxSize()) {
-                Text(text = weatherUiState.toString())
-            }
-        }
-
-        is WeatherUiState.MyState -> {
+//    when (apiUiState) {
+//        is ApiUiState.Error -> {
+//            ErrorScreen(modifier)
+//        }
+//
+//        is ApiUiState.Loading -> {
+//            Box(modifier = Modifier.fillMaxSize()) {
+//                Text(text = weatherUiState.toString())
+//            }
+//        }
+//
+//        is ApiUiState.Success -> {
             if (contentType == WeatherContentType.LIST_AND_DETAIL) {
                 WeatherAppContent(
                     contentType = contentType,
@@ -96,6 +98,7 @@ fun WeatherHomeScreen(
                     onCityCardDelete = onCityCardDelete,
                     collectLocalCity = collectLocalCity,
                     onAddCityPressed = onAddCityScreenPressed,
+                    modifier = modifier,
                 )
             } else {
                 if (weatherUiState.isShowingHomepage) {
@@ -106,13 +109,18 @@ fun WeatherHomeScreen(
                         onCityCardDelete = onCityCardDelete,
                         onAddCityPressed = onAddCityScreenPressed,
                         collectLocalCity = collectLocalCity,
+                        modifier = modifier,
                     )
                 } else {
-                    DetailsWeatherScreen(
-                        weatherUiState = weatherUiState,
-                        onBackPressed = onDetailScreenBackPressed,
-                        isFullScreen = true,
-                    )
+                    Column(modifier = modifier) {
+                        WeatherTopAppBar(modifier = modifier)
+                        DetailsWeatherScreen(
+                            weatherUiState = weatherUiState,
+                            onBackPressed = onDetailScreenBackPressed,
+                            isFullScreen = true,
+                            modifier = modifier,
+                        )
+                    }
                 }
             }
             if (weatherUiState.isShowingAddCityBox) {
@@ -126,6 +134,7 @@ fun WeatherHomeScreen(
                         )
                         AddCityScreen(
                             weatherUiState = weatherUiState,
+                            apiUiState = apiUiState,
                             onClosePressed = onAddCityClosedPressed,
                             collectCountries = collectCountries,
                             collectStates = collectStates,
@@ -138,6 +147,7 @@ fun WeatherHomeScreen(
                 } else {
                     AddCityScreen(
                         weatherUiState = weatherUiState,
+                        apiUiState = apiUiState,
                         onClosePressed = onAddCityClosedPressed,
                         collectCountries = collectCountries,
                         collectStates = collectStates,
@@ -148,22 +158,23 @@ fun WeatherHomeScreen(
                 }
             }
         }
-    }
-}
+  //  }
+//}
+
 
 @Composable
 fun WeatherAppContent(
     contentType: WeatherContentType,
-    weatherUiState: WeatherUiState.MyState,
+    weatherUiState: WeatherUiState,
     onCityCardPressed: (WeatherCity) -> Unit,
     onAddCityPressed: () -> Unit,
     collectLocalCity: () -> Unit,
     modifier: Modifier = Modifier,
     onCityCardDelete: (WeatherCity) -> Unit,
 ) {
-    Box(modifier = modifier) {
+    Box(modifier = modifier.fillMaxSize()) {
         Column(modifier = modifier.fillMaxSize()) {
-            WeatherTopAppBar()
+            WeatherTopAppBar(modifier = modifier.fillMaxWidth())
             Column(
                 modifier = modifier.fillMaxSize(),
                 verticalArrangement = Arrangement.SpaceBetween,
@@ -174,6 +185,7 @@ fun WeatherAppContent(
                         onCityCardPressed = onCityCardPressed,
                         collectLocalCity = collectLocalCity,
                         onCityCardDelete = onCityCardDelete,
+                        onAddCityPressed = onAddCityPressed,
                         modifier = Modifier.weight(1f),
                     )
                 } else {
@@ -184,12 +196,13 @@ fun WeatherAppContent(
                         onCityCardDelete = onCityCardDelete,
                         modifier = Modifier.weight(1f),
                     )
-                }
-                if (contentType == WeatherContentType.LIST_AND_DETAIL) {
-                    WeatherExtendedBottomAddBar(onClick = onAddCityPressed)
-                } else {
                     WeatherBottomAddBar(onClick = onAddCityPressed)
                 }
+//                if (contentType == WeatherContentType.LIST_AND_DETAIL) {
+//                    WeatherExtendedBottomAddBar(onClick = onAddCityPressed)
+//                } else {
+//                    WeatherBottomAddBar(onClick = onAddCityPressed)
+//                }
             }
         }
     }
@@ -198,7 +211,7 @@ fun WeatherAppContent(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WeatherOnlyListContent(
-    weatherUiState: WeatherUiState.MyState,
+    weatherUiState: WeatherUiState,
     onCityCardPressed: (WeatherCity) -> Unit,
     collectLocalCity: () -> Unit,
     onCityCardDelete: (WeatherCity) -> Unit,
@@ -245,14 +258,16 @@ fun WeatherOnlyListContent(
 }
 
 
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WeatherListAndDetailsContent(
-    weatherUiState: WeatherUiState.MyState,
+    weatherUiState: WeatherUiState,
     onCityCardPressed: (WeatherCity) -> Unit,
     collectLocalCity: () -> Unit,
     modifier: Modifier = Modifier,
     onCityCardDelete: (WeatherCity) -> Unit,
+    onAddCityPressed: () -> Unit,
 ) {
     LaunchedEffect(Unit) { collectLocalCity() }
 
@@ -288,6 +303,8 @@ fun WeatherListAndDetailsContent(
                     })
                 }
             }
+            Spacer(modifier = Modifier.weight(1f))
+            WeatherExtendedBottomAddBar(onClick = onAddCityPressed)
         }
         val activity = LocalContext.current as Activity
         DetailsWeatherScreen(
@@ -300,23 +317,7 @@ fun WeatherListAndDetailsContent(
 
 @Composable
 fun WeatherIcon(icon: String, viewSize: ViewSize, modifier: Modifier = Modifier) {
-    @DrawableRes val weatherIcon = when (icon) {
-        "01d" -> R.drawable._1d
-        "01n" -> R.drawable._1n
-        "02d" -> R.drawable._2d
-        "02n" -> R.drawable._2n
-        "03d" -> R.drawable._3d
-        "03n" -> R.drawable._3d
-        "04d" -> R.drawable._4d
-        "04n" -> R.drawable._4d
-        "09d" -> R.drawable._9d
-        "10d" -> R.drawable._10d
-        "10n" -> R.drawable._10n
-        "11d" -> R.drawable._11d
-        "13d" -> R.drawable._13d
-        "50d" -> R.drawable._50d
-        else -> R.drawable._1d
-    }
+    @DrawableRes val weatherIcon = getWeatherIcon(icon)
     Box(
         modifier = Modifier.requiredSize(
             when (viewSize) {
@@ -442,10 +443,11 @@ private fun LocalCityWeatherCard(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WeatherTopAppBar(modifier: Modifier = Modifier) {
-    CenterAlignedTopAppBar(
-        title = {
-            Row(
+            Row(modifier = Modifier
+                .fillMaxWidth()
+                .background(Color.Transparent),
                 verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center,
             ) {
                 Image(
                     modifier = Modifier
@@ -461,9 +463,6 @@ fun WeatherTopAppBar(modifier: Modifier = Modifier) {
                     style = MaterialTheme.typography.displayLarge,
                 )
             }
-        },
-        modifier = modifier,
-    )
 }
 
 @Composable
@@ -501,7 +500,7 @@ private fun WeatherExtendedBottomAddBar(
     modifier: Modifier = Modifier,
 ) {
     Box(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier.padding(0.dp),
         contentAlignment = Alignment.BottomStart,
     ) {
         val addButtonContentDescription = stringResource(R.string.extended_add_city_button)
@@ -525,6 +524,7 @@ private fun WeatherExtendedBottomAddBar(
     }
 }
 
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DismissBackground(dismissState: DismissState) {
@@ -534,8 +534,10 @@ fun DismissBackground(dismissState: DismissState) {
         null -> Color.Transparent
     }
     val direction = dismissState.dismissDirection
-           Row(
-            modifier = Modifier.clip(MaterialTheme.shapes.medium)
+    Row(
+            modifier = Modifier
+                .padding(5.dp)
+                .clip(MaterialTheme.shapes.medium)
                 .fillMaxSize()
                 .background(color),
             verticalAlignment = Alignment.CenterVertically,
@@ -549,3 +551,17 @@ fun DismissBackground(dismissState: DismissState) {
 
         }
     }
+
+@Composable
+fun ErrorScreen(modifier: Modifier = Modifier){
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(text = "Error")
+        Button(onClick = {}) {
+            Text(text = "close")
+        }
+    }
+}
