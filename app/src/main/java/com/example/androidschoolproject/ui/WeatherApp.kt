@@ -4,14 +4,11 @@ import androidx.compose.foundation.background
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.androidschoolproject.model.getCurrentLocation
-import com.example.androidschoolproject.model.startUpdate
 import com.example.androidschoolproject.network.WeatherCity
 import com.example.androidschoolproject.ui.utils.WeatherContentType
 
@@ -27,9 +24,9 @@ fun WeatherApp(
     val contentType: WeatherContentType
     val context = LocalContext.current
 
-    LaunchedEffect(true) {
-        startUpdate(viewModel, context)
-    }
+//    LaunchedEffect(true) {
+//        startUpdate(viewModel, context)
+//    }
 
     when (windowSize) {
         WindowWidthSizeClass.Compact -> {
@@ -53,7 +50,9 @@ fun WeatherApp(
         onCityCardPressed = { city: WeatherCity -> viewModel.updateDetailScreenStates( selectedCity = city ) },
         onCityCardDelete = { city: WeatherCity -> viewModel.deleteCity(city)},
         onDetailScreenBackPressed = { viewModel.resetHomeScreenStates() },
-        collectLocalCity = { getCurrentLocation(context) { lat, long -> viewModel.getNearestCity(latitude = lat, longitude = long) } },
+//        collectLocalCity = { getCurrentLocation(context) { lat, long -> viewModel.getNearestCity(latitude = lat, longitude = long) } },
+        collectLocalCity = {
+            viewModel.getNearestCity()},
         collectCountries = { viewModel.getCountries() },
         collectStates = { country: String -> viewModel.getStates(country = country) },
         collectCities = { country: String, state: String -> viewModel.getCities(country = country, state = state) },

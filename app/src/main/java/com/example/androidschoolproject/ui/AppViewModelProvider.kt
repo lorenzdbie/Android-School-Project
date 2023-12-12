@@ -8,7 +8,11 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 object AppViewModelProvider {
     val Factory = viewModelFactory {
         initializer {
-            WeatherViewModel(weatherApplication().container.weatherCityRepository)
+            WeatherViewModel(
+                weatherApplication().container.weatherCityRepository,
+                weatherApplication().container.apiRepository,
+                weatherApplication().container.locationManager
+            )
         }
     }
 }

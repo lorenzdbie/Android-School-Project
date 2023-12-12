@@ -1,5 +1,6 @@
 package com.example.androidschoolproject.data
 
+import android.util.Log
 import com.example.androidschoolproject.network.City
 import com.example.androidschoolproject.network.Country
 import com.example.androidschoolproject.network.CountryState
@@ -8,7 +9,10 @@ import com.example.androidschoolproject.network.WeatherCity
 import com.example.androidschoolproject.network.createWeatherCity
 
 class OnlineApiRepository(private val apiKey: String): ApiRepository {
+
+
     override suspend fun getNearestCity(latitude: Double, longitude: Double): WeatherCity {
+        Log.d("LOCATION", "long = $longitude, lat = $latitude")
         val response = WeatherApi.retrofitService.getNearestCity( longitude = longitude,
             latitude = latitude,
             apiKey = apiKey)

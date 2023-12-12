@@ -1,9 +1,7 @@
 package com.example.androidschoolproject.ui
 
 import android.app.Activity
-import android.os.Build
 import androidx.annotation.DrawableRes
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -217,13 +215,10 @@ fun WeatherOnlyListContent(
     onCityCardDelete: (WeatherCity) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    LaunchedEffect(Unit) { collectLocalCity() }
-    Text(text = "longitude = ${weatherUiState.longitude}, latitude = ${weatherUiState.latitude}")
+    LaunchedEffect(true) { collectLocalCity() }
+//    Text(text = "longitude = ${weatherUiState.longitude}, latitude = ${weatherUiState.latitude}")
+//Text(text = "local city = ${weatherUiState.localCity}")
 
-//    Button(onClick = onCollectLocalCity) {
-//        Text(text = "Collect local city")
-//    }
-//    Text(text = "${weatherUiState.localCity}")
     if (weatherUiState.localCity != null) {
         LocalCityWeatherCard(
             city = weatherUiState.localCity,
