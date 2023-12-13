@@ -1,3 +1,5 @@
+import org.jetbrains.dokka.DokkaDefaults.includeNonPublic
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -54,8 +56,10 @@ android {
 }
 
 
-tasks.dokkaHtml.configure{
+tasks.dokkaHtml.configure {
     outputDirectory.set(file("../docs"))
+    includeNonPublic
+
 }
 
 dependencies {
