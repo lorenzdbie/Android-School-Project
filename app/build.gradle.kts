@@ -1,5 +1,3 @@
-import org.jetbrains.dokka.DokkaDefaults.includeNonPublic
-
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -58,9 +56,20 @@ android {
 
 tasks.dokkaHtml.configure {
     outputDirectory.set(file("../docs"))
-    includeNonPublic
-
+    dokkaSourceSets.configureEach {
+        // The set of visibility modifiers that should be documented.
+        documentedVisibilities.set(
+            setOf(
+                org.jetbrains.dokka.DokkaConfiguration.Visibility.PUBLIC, // Same for both Kotlin and Java
+                org.jetbrains.dokka.DokkaConfiguration.Visibility.PRIVATE, // Same for both Kotlin and Java
+                org.jetbrains.dokka.DokkaConfiguration.Visibility.PROTECTED, // Same for both Kotlin and Java
+                org.jetbrains.dokka.DokkaConfiguration.Visibility.INTERNAL, // Kotlin-specific internal modifier
+                org.jetbrains.dokka.DokkaConfiguration.Visibility.PACKAGE, // Java-specific package-private visibility
+            )
+        )
+    }
 }
+
 
 dependencies {
 
