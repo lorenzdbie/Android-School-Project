@@ -58,9 +58,9 @@ fun AppContent(windowSize: WindowWidthSizeClass, goToLocationScreen: () -> Unit)
     val context = LocalContext.current
 
     if (context.hasLocationPermission()) {
-        WeatherApp(windowSize = windowSize)
+        WeatherApp(locationEnabled = true, windowSize = windowSize)
     } else {
-        goToLocationScreen()
+        WeatherApp(locationEnabled = false, windowSize = windowSize)
     }
 }
 
@@ -69,7 +69,7 @@ fun AppContent(windowSize: WindowWidthSizeClass, goToLocationScreen: () -> Unit)
 fun WeatherAppCompactPreview() {
     AndroidSchoolProjectTheme {
         Surface {
-            WeatherApp(
+            WeatherApp(locationEnabled = true,
                 windowSize = WindowWidthSizeClass.Compact,
             )
         }
@@ -81,7 +81,7 @@ fun WeatherAppCompactPreview() {
 fun WeatherAppMediumPreview() {
     AndroidSchoolProjectTheme {
         Surface {
-            WeatherApp(
+            WeatherApp(locationEnabled = true,
                 windowSize = WindowWidthSizeClass.Medium,
             )
         }
@@ -93,7 +93,7 @@ fun WeatherAppMediumPreview() {
 fun WeatherAppExpandedPreview() {
     AndroidSchoolProjectTheme {
         Surface {
-            WeatherApp(
+            WeatherApp(locationEnabled = true,
                 windowSize = WindowWidthSizeClass.Expanded,
             )
         }

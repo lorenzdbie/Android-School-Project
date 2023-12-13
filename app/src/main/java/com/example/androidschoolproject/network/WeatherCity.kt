@@ -135,10 +135,8 @@ data class WeatherCity(
     }
 }
 
-fun createWeatherCity(weatherCityResponse: WeatherCityResponse): WeatherCity {
-    val data = weatherCityResponse.data
-
-    val city = data.city
+fun createWeatherCity(data: WeatherCityData): WeatherCity {
+      val city = data.city
     val state = data.state
     val country = data.country
     val cityLocation = CityCoordinates(longitude = data.location.coordinates[0], latitude = data.location.coordinates[1])

@@ -1,5 +1,6 @@
 package com.example.androidschoolproject.test
 
+import com.example.androidschoolproject.data.FakeApiRepository
 import com.example.androidschoolproject.data.FakeWeatherCityRepository
 import com.example.androidschoolproject.ui.WeatherViewModel
 import kotlinx.coroutines.Dispatchers
@@ -14,15 +15,16 @@ import org.junit.rules.TestWatcher
 import org.junit.runner.Description
 
 class TestDispatcherRule(
-    private val testDispatcher: TestDispatcher = UnconfinedTestDispatcher()): TestWatcher() {
-        override fun starting(description: Description) {
-            Dispatchers.setMain(testDispatcher)
-        }
+    private val testDispatcher: TestDispatcher = UnconfinedTestDispatcher()
+) : TestWatcher() {
+    override fun starting(description: Description) {
+        Dispatchers.setMain(testDispatcher)
+    }
 
     override fun finished(description: Description) {
         Dispatchers.resetMain()
     }
-    }
+}
 
 
 class WeatherViewModelTest {
@@ -31,11 +33,14 @@ class WeatherViewModelTest {
     @Before
     fun setUp() {
         Dispatchers.setMain(UnconfinedTestDispatcher())
-        viewModel = WeatherViewModel(weatherCityRepository = FakeWeatherCityRepository())
+        viewModel = WeatherViewModel(
+            weatherCityRepository = FakeWeatherCityRepository(),
+            apiRepository = FakeApiRepository()
+        )
     }
 
     @After
-    fun after(){
+    fun after() {
         Dispatchers.resetMain()
     }
 
@@ -44,7 +49,7 @@ class WeatherViewModelTest {
         // Given
         val selectedCity = viewModel.uiState.value.cityList[0]
 
-            viewModel.updateDetailScreenStates(selectedCity)
+        viewModel.updateDetailScreenStates(selectedCity)
 
         // Then
         assert(viewModel.uiState.value.currentCity == selectedCity)
@@ -61,7 +66,7 @@ class WeatherViewModelTest {
     }
 
     @Test
-    fun `testResetAddCityScreenStates`() {
+    fun testResetAddCityScreenStates() {
         // When
         viewModel.resetAddCityScreenStates()
 

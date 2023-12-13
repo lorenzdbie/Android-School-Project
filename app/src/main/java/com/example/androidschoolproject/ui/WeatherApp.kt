@@ -14,19 +14,20 @@ import com.example.androidschoolproject.ui.utils.WeatherContentType
 
 @Composable
 fun WeatherApp(
+    locationEnabled: Boolean,
     windowSize: WindowWidthSizeClass,
     modifier: Modifier = Modifier,
 ) {
-    val viewModel: WeatherViewModel = viewModel(factory = AppViewModelProvider.Factory)
+    val viewModel: WeatherViewModel = if(locationEnabled) {
+        viewModel(factory = AppViewModelProvider.Factory)
+    } else {
+        viewModel(factory = AppViewModelProvider.FactoryWithoutLocation)
+    }
     val weatherUiState = viewModel.uiState.collectAsState().value
     val apiUiState = viewModel.apiState
 
     val contentType: WeatherContentType
     val context = LocalContext.current
-
-//    LaunchedEffect(true) {
-//        startUpdate(viewModel, context)
-//    }
 
     when (windowSize) {
         WindowWidthSizeClass.Compact -> {
@@ -50,9 +51,6 @@ fun WeatherApp(
         onCityCardPressed = { city: WeatherCity -> viewModel.updateDetailScreenStates( selectedCity = city ) },
         onCityCardDelete = { city: WeatherCity -> viewModel.deleteCity(city)},
         onDetailScreenBackPressed = { viewModel.resetHomeScreenStates() },
-//        collectLocalCity = { getCurrentLocation(context) { lat, long -> viewModel.getNearestCity(latitude = lat, longitude = long) } },
-        collectLocalCity = {
-            viewModel.getNearestCity()},
         collectCountries = { viewModel.getCountries() },
         collectStates = { country: String -> viewModel.getStates(country = country) },
         collectCities = { country: String, state: String -> viewModel.getCities(country = country, state = state) },
@@ -60,6 +58,7 @@ fun WeatherApp(
         onClickAddCity = { country: String, state: String, city: String -> viewModel.getCity(country = country, state = state, city = city) },
         onAddCityScreenPressed = { viewModel.updateAddCityScreenStates() },
         onAddCityClosedPressed = { viewModel.resetAddCityScreenStates() },
+        onDismissError = {viewModel.dismissError()},
         modifier = modifier.background(
                 brush = Brush.verticalGradient(
                     colors = listOf( MaterialTheme.colorScheme.primary, MaterialTheme.colorScheme.secondary ))),

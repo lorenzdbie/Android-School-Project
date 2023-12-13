@@ -16,10 +16,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -36,7 +37,10 @@ import androidx.compose.material3.SwipeToDismiss
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDismissState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -57,6 +61,12 @@ import com.example.androidschoolproject.ui.utils.ViewSize
 import com.example.androidschoolproject.ui.utils.WeatherContentType
 import com.example.androidschoolproject.ui.utils.WindDirection
 import com.example.androidschoolproject.ui.utils.getWeatherIcon
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @Composable
 fun WeatherHomeScreen(
@@ -66,7 +76,6 @@ fun WeatherHomeScreen(
     onCityCardPressed: (WeatherCity) -> Unit,
     onCityCardDelete: (WeatherCity) -> Unit,
     onDetailScreenBackPressed: () -> Unit,
-    collectLocalCity: () -> Unit,
     collectCountries: () -> Unit,
     collectStates: (String) -> Unit,
     collectCities: (String, String) -> Unit,
@@ -75,89 +84,88 @@ fun WeatherHomeScreen(
     onAddCityScreenPressed: () -> Unit,
     onAddCityClosedPressed: () -> Unit,
     modifier: Modifier = Modifier,
+    onDismissError: () -> Unit,
 ) {
-//    when (apiUiState) {
-//        is ApiUiState.Error -> {
-//            ErrorScreen(modifier)
-//        }
-//
-//        is ApiUiState.Loading -> {
-//            Box(modifier = Modifier.fillMaxSize()) {
-//                Text(text = weatherUiState.toString())
-//            }
-//        }
-//
-//        is ApiUiState.Success -> {
-            if (contentType == WeatherContentType.LIST_AND_DETAIL) {
-                WeatherAppContent(
-                    contentType = contentType,
+    if (contentType == WeatherContentType.LIST_AND_DETAIL) {
+        WeatherAppContent(
+            contentType = contentType,
+            weatherUiState = weatherUiState,
+            onCityCardPressed = onCityCardPressed,
+            onCityCardDelete = onCityCardDelete,
+            onAddCityPressed = onAddCityScreenPressed,
+            modifier = modifier,
+        )
+    } else {
+        if (weatherUiState.isShowingHomepage) {
+            WeatherAppContent(
+                contentType = contentType,
+                weatherUiState = weatherUiState,
+                onCityCardPressed = onCityCardPressed,
+                onCityCardDelete = onCityCardDelete,
+                onAddCityPressed = onAddCityScreenPressed,
+                modifier = modifier,
+            )
+        } else {
+            Column(modifier = modifier) {
+                WeatherTopAppBar(modifier = modifier)
+                DetailsWeatherScreen(
                     weatherUiState = weatherUiState,
-                    onCityCardPressed = onCityCardPressed,
-                    onCityCardDelete = onCityCardDelete,
-                    collectLocalCity = collectLocalCity,
-                    onAddCityPressed = onAddCityScreenPressed,
+                    onBackPressed = onDetailScreenBackPressed,
+                    isFullScreen = true,
                     modifier = modifier,
                 )
-            } else {
-                if (weatherUiState.isShowingHomepage) {
-                    WeatherAppContent(
-                        contentType = contentType,
-                        weatherUiState = weatherUiState,
-                        onCityCardPressed = onCityCardPressed,
-                        onCityCardDelete = onCityCardDelete,
-                        onAddCityPressed = onAddCityScreenPressed,
-                        collectLocalCity = collectLocalCity,
-                        modifier = modifier,
-                    )
-                } else {
-                    Column(modifier = modifier) {
-                        WeatherTopAppBar(modifier = modifier)
-                        DetailsWeatherScreen(
-                            weatherUiState = weatherUiState,
-                            onBackPressed = onDetailScreenBackPressed,
-                            isFullScreen = true,
-                            modifier = modifier,
-                        )
-                    }
-                }
-            }
-            if (weatherUiState.isShowingAddCityBox) {
-                if (contentType == WeatherContentType.LIST_AND_DETAIL) {
-                    Row {
-                        Box(
-                            modifier = Modifier
-                                .weight(1f)
-                                .fillMaxSize()
-                                .background(MaterialTheme.colorScheme.background.copy(alpha = 0.8f)),
-                        )
-                        AddCityScreen(
-                            weatherUiState = weatherUiState,
-                            apiUiState = apiUiState,
-                            onClosePressed = onAddCityClosedPressed,
-                            collectCountries = collectCountries,
-                            collectStates = collectStates,
-                            collectCities = collectCities,
-                            onCitySelect = onCitySelect,
-                            onClickAddCity = onClickAddCity,
-                            modifier = Modifier.weight(1f),
-                        )
-                    }
-                } else {
-                    AddCityScreen(
-                        weatherUiState = weatherUiState,
-                        apiUiState = apiUiState,
-                        onClosePressed = onAddCityClosedPressed,
-                        collectCountries = collectCountries,
-                        collectStates = collectStates,
-                        onCitySelect = onCitySelect,
-                        collectCities = collectCities,
-                        onClickAddCity = onClickAddCity,
-                    )
-                }
             }
         }
-  //  }
-//}
+    }
+    if (weatherUiState.isShowingAddCityBox) {
+        if (contentType == WeatherContentType.LIST_AND_DETAIL) {
+            Row {
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxSize()
+                        .background(MaterialTheme.colorScheme.background.copy(alpha = 0.8f)),
+                )
+                AddCityScreen(
+                    weatherUiState = weatherUiState,
+                    apiUiState = apiUiState,
+                    onClosePressed = onAddCityClosedPressed,
+                    collectCountries = collectCountries,
+                    collectStates = collectStates,
+                    collectCities = collectCities,
+                    onCitySelect = onCitySelect,
+                    onClickAddCity = onClickAddCity,
+                    modifier = Modifier.weight(1f),
+                )
+            }
+        } else {
+            AddCityScreen(
+                weatherUiState = weatherUiState,
+                apiUiState = apiUiState,
+                onClosePressed = onAddCityClosedPressed,
+                collectCountries = collectCountries,
+                collectStates = collectStates,
+                onCitySelect = onCitySelect,
+                collectCities = collectCities,
+                onClickAddCity = onClickAddCity,
+            )
+        }
+    }
+    when (apiUiState) {
+        is ApiUiState.Error -> {
+            AlertDialog(onDismissRequest = onDismissError,
+                title = { Text("Error") },
+                text = { Text("An error occurred while fetching data from the API.") },
+                confirmButton = {
+                    Button(onClick = onDismissError) {
+                        Text("Close")
+                    }
+                })
+        }
+
+        else -> {}
+    }
+}
 
 
 @Composable
@@ -166,7 +174,6 @@ fun WeatherAppContent(
     weatherUiState: WeatherUiState,
     onCityCardPressed: (WeatherCity) -> Unit,
     onAddCityPressed: () -> Unit,
-    collectLocalCity: () -> Unit,
     modifier: Modifier = Modifier,
     onCityCardDelete: (WeatherCity) -> Unit,
 ) {
@@ -181,7 +188,6 @@ fun WeatherAppContent(
                     WeatherListAndDetailsContent(
                         weatherUiState = weatherUiState,
                         onCityCardPressed = onCityCardPressed,
-                        collectLocalCity = collectLocalCity,
                         onCityCardDelete = onCityCardDelete,
                         onAddCityPressed = onAddCityPressed,
                         modifier = Modifier.weight(1f),
@@ -190,7 +196,6 @@ fun WeatherAppContent(
                     WeatherOnlyListContent(
                         weatherUiState = weatherUiState,
                         onCityCardPressed = onCityCardPressed,
-                        collectLocalCity = collectLocalCity,
                         onCityCardDelete = onCityCardDelete,
                         modifier = Modifier.weight(1f),
                     )
@@ -211,47 +216,95 @@ fun WeatherAppContent(
 fun WeatherOnlyListContent(
     weatherUiState: WeatherUiState,
     onCityCardPressed: (WeatherCity) -> Unit,
-    collectLocalCity: () -> Unit,
     onCityCardDelete: (WeatherCity) -> Unit,
+    showSelected: Boolean = false,
     modifier: Modifier = Modifier,
 ) {
-    LaunchedEffect(true) { collectLocalCity() }
-//    Text(text = "longitude = ${weatherUiState.longitude}, latitude = ${weatherUiState.latitude}")
-//Text(text = "local city = ${weatherUiState.localCity}")
+    var isRefreshing by remember { mutableStateOf(false) }
+    val coroutineScope = CoroutineScope(Dispatchers.Default)
+    SwipeRefresh(state = rememberSwipeRefreshState(isRefreshing = isRefreshing), onRefresh = {
+        isRefreshing = true
+        coroutineScope.launch {
+            delay(2000)
+            isRefreshing = false
+        }
+    }) {
+//        Column {
+//            if (weatherUiState.localCity != null) {
+//                LocalCityWeatherCard(
+//                    city = weatherUiState.localCity,
+//                    selected = if (showSelected) weatherUiState.currentCity?.id == weatherUiState.localCity.id else false,
+//                    onCardClick = { onCityCardPressed(weatherUiState.localCity) },
+//                    modifier = Modifier.padding(5.dp),
+//                )
+//            }
+//
+//            val cities = weatherUiState.cityList
+//            val weatherContentDescription = stringResource(R.string.listOnlyContent)
+//            LazyColumn(modifier = modifier.testTag(weatherContentDescription)) {
+//                items(cities, key = { city -> city.id }) { city ->
+//                    val dismissState = rememberDismissState(confirmValueChange = {
+//                        if (it == DismissValue.DismissedToStart) {
+//                            onCityCardDelete(city)
+//                        }
+//                        true
+//                    })
+//                    SwipeToDismiss(state = dismissState, background = {
+//                        DismissBackground(dismissState = dismissState)
+//                    }, directions = setOf(DismissDirection.EndToStart), dismissContent = {
+//                        CityWeatherCard(
+//                            city = city,
+//                            selected = if (showSelected) weatherUiState.currentCity?.id == city.id else false,
+//                            onCardClick = { onCityCardPressed(city) },
+//                            modifier = Modifier.padding(5.dp),
+//                        )
+//                    })
+//                }
+//            }
+//        }
+        val cities = weatherUiState.cityList
+        val weatherContentDescription = stringResource(R.string.listOnlyContent)
+        LazyColumn(modifier = modifier.testTag(weatherContentDescription)) {
+            itemsIndexed(cities) { index, city ->
+                val dismissState = rememberDismissState(confirmValueChange = {
+                    if (it == DismissValue.DismissedToStart) {
+                        onCityCardDelete(city)
+                    }
+                    true
+                })
 
-    if (weatherUiState.localCity != null) {
-        LocalCityWeatherCard(
-            city = weatherUiState.localCity,
-            selected = false,
-            onCardClick = { onCityCardPressed(weatherUiState.localCity) },
-            modifier = Modifier.padding(5.dp),
-        )
-    }
-
-    val cities = weatherUiState.cityList
-    val weatherContentDescription = stringResource(R.string.listOnlyContent)
-    LazyColumn(modifier = modifier.testTag(weatherContentDescription)) {
-        items(cities, key = { city -> city.id }) { city ->
-            val dismissState = rememberDismissState(confirmValueChange = {
-                if (it == DismissValue.DismissedToStart) {
-                    onCityCardDelete(city)
+                if (index == 0) {
+                    if (weatherUiState.localCity != null) {
+                        CityWeatherCard(
+                            city = weatherUiState.localCity,
+                            selected = if (showSelected) weatherUiState.currentCity?.id == weatherUiState.localCity.id else false,
+                            onCardClick = { onCityCardPressed(weatherUiState.localCity) },
+                            isLocalCity = true,
+                            modifier = Modifier.padding(5.dp),
+                        )
+                    }
+                    CityWeatherCard(
+                        city = city,
+                        selected = if (showSelected) weatherUiState.currentCity?.id == city.id else false,
+                        onCardClick = { onCityCardPressed(city) },
+                        modifier = Modifier.padding(5.dp),
+                    )
+                } else {
+                    SwipeToDismiss(state = dismissState, background = {
+                        DismissBackground(dismissState = dismissState)
+                    }, directions = setOf(DismissDirection.EndToStart), dismissContent = {
+                        CityWeatherCard(
+                            city = city,
+                            selected = if (showSelected) weatherUiState.currentCity?.id == city.id else false,
+                            onCardClick = { onCityCardPressed(city) },
+                            modifier = Modifier.padding(5.dp),
+                        )
+                    })
                 }
-                true
-            })
-            SwipeToDismiss(state = dismissState, background = {
-                DismissBackground(dismissState = dismissState)
-            }, directions = setOf(DismissDirection.EndToStart), dismissContent = {
-                CityWeatherCard(
-                    city = city,
-                    selected = false,
-                    onCardClick = { onCityCardPressed(city) },
-                    modifier = Modifier.padding(5.dp),
-                )
-            })
+            }
         }
     }
 }
-
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -259,45 +312,21 @@ fun WeatherOnlyListContent(
 fun WeatherListAndDetailsContent(
     weatherUiState: WeatherUiState,
     onCityCardPressed: (WeatherCity) -> Unit,
-    collectLocalCity: () -> Unit,
     modifier: Modifier = Modifier,
     onCityCardDelete: (WeatherCity) -> Unit,
+    showSelected: Boolean = true,
     onAddCityPressed: () -> Unit,
 ) {
-    LaunchedEffect(Unit) { collectLocalCity() }
-
     val cities = weatherUiState.cityList
     val weatherContentDescription = stringResource(R.string.listAndDetailsContent)
     Row(modifier = modifier.testTag(weatherContentDescription)) {
         Column(modifier = Modifier.weight(1f)) {
-            if (weatherUiState.localCity != null) {
-                LocalCityWeatherCard(
-                    city = weatherUiState.localCity,
-                    selected = weatherUiState.currentCity?.id == weatherUiState.localCity.id,
-                    onCardClick = { onCityCardPressed(weatherUiState.localCity) },
-                    modifier = Modifier.padding(5.dp),
-                )
-            }
-            LazyColumn {
-                items(cities, key = { city -> city.id }) { city ->
-                    val dismissState = rememberDismissState(confirmValueChange = {
-                        if (it == DismissValue.DismissedToStart) {
-                            onCityCardDelete(city)
-                        }
-                        true
-                    })
-                    SwipeToDismiss(state = dismissState, background = {
-                        DismissBackground(dismissState = dismissState)
-                    }, directions = setOf(DismissDirection.EndToStart), dismissContent = {
-                        CityWeatherCard(
-                            city = city,
-                            selected = weatherUiState.currentCity?.id == city.id,
-                            onCardClick = { onCityCardPressed(city) },
-                            modifier = Modifier.padding(5.dp),
-                        )
-                    })
-                }
-            }
+            WeatherOnlyListContent(
+                weatherUiState = weatherUiState,
+                onCityCardPressed = onCityCardPressed,
+                onCityCardDelete = onCityCardDelete,
+                showSelected = showSelected
+            )
             Spacer(modifier = Modifier.weight(1f))
             WeatherExtendedBottomAddBar(onClick = onAddCityPressed)
         }
@@ -331,61 +360,62 @@ fun WeatherIcon(icon: String, viewSize: ViewSize, modifier: Modifier = Modifier)
     }
 }
 
+//@OptIn(ExperimentalMaterial3Api::class)
+//@Composable
+//private fun CityWeatherCard(
+//    city: WeatherCity,
+//    selected: Boolean,
+//    onCardClick: () -> Unit,
+//    modifier: Modifier = Modifier,
+//
+//    ) {
+//    Card(
+//        elevation = CardDefaults.cardElevation(defaultElevation = 10.dp),
+//        modifier = modifier
+//            .fillMaxWidth()
+//            .padding(horizontal = 10.dp),
+//        colors = CardDefaults.cardColors(
+//            containerColor = if (selected) {
+//                MaterialTheme.colorScheme.tertiaryContainer
+//            } else {
+//                MaterialTheme.colorScheme.primaryContainer
+//            },
+//        ),
+//        onClick = onCardClick,
+//    ) {
+//        Row(
+//            modifier = modifier.padding(horizontal = 10.dp, vertical = 5.dp),
+//            verticalAlignment = Alignment.CenterVertically
+//        ) {
+//            Text(
+//                text = city.city,
+//                style = MaterialTheme.typography.headlineSmall,
+//                modifier = Modifier.fillMaxWidth(0.6f)
+//            )
+//            Spacer(modifier = Modifier.weight(1f))
+//            Column(
+//                modifier = Modifier.padding(horizontal = 10.dp),
+//                horizontalAlignment = Alignment.CenterHorizontally
+//            ) {
+//                Temperature(temp = city.weather.temperature, size = ViewSize.SMALL)
+//                Spacer(modifier = Modifier.height(5.dp))
+//                WindDirection(direction = city.weather.windDirection, size = ViewSize.SMALL)
+//            }
+//            WeatherIcon(
+//                icon = city.weather.weatherIcon, viewSize = ViewSize.SMALL, modifier = Modifier
+//                    .fillMaxSize(1f)
+//                    .padding(horizontal = 10.dp)
+//            )
+//        }
+//    }
+//}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun CityWeatherCard(
     city: WeatherCity,
     selected: Boolean,
-    onCardClick: () -> Unit,
-    modifier: Modifier = Modifier,
-
-    ) {
-    Card(
-        elevation = CardDefaults.cardElevation(defaultElevation = 10.dp),
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(horizontal = 10.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = if (selected) {
-                MaterialTheme.colorScheme.tertiaryContainer
-            } else {
-                MaterialTheme.colorScheme.primaryContainer
-            },
-        ),
-        onClick = onCardClick,
-    ) {
-        Row(
-            modifier = modifier.padding(horizontal = 10.dp, vertical = 5.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = city.city,
-                style = MaterialTheme.typography.headlineSmall,
-                modifier = Modifier.fillMaxWidth(0.6f)
-            )
-            Spacer(modifier = Modifier.weight(1f))
-            Column(
-                modifier = Modifier.padding(horizontal = 10.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Temperature(temp = city.weather.temperature, size = ViewSize.SMALL)
-                Spacer(modifier = Modifier.height(5.dp))
-                WindDirection(direction = city.weather.windDirection, size = ViewSize.SMALL)
-            }
-            WeatherIcon(
-                icon = city.weather.weatherIcon, viewSize = ViewSize.SMALL, modifier = Modifier
-                    .fillMaxSize(1f)
-                    .padding(horizontal = 10.dp)
-            )
-        }
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun LocalCityWeatherCard(
-    city: WeatherCity,
-    selected: Boolean,
+    isLocalCity: Boolean = false,
     onCardClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -407,11 +437,13 @@ private fun LocalCityWeatherCard(
             modifier = modifier.padding(horizontal = 10.dp, vertical = 5.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Icon(
-                painter = painterResource(id = R.drawable.near_me),
-                contentDescription = null,
-                modifier = Modifier.padding(end = 2.dp)
-            )
+            if (isLocalCity) {
+                Icon(
+                    painter = painterResource(id = R.drawable.near_me),
+                    contentDescription = null,
+                    modifier = Modifier.padding(end = 2.dp)
+                )
+            }
             Text(
                 text = city.city,
                 style = MaterialTheme.typography.headlineSmall,
@@ -427,7 +459,9 @@ private fun LocalCityWeatherCard(
                 WindDirection(direction = city.weather.windDirection, size = ViewSize.SMALL)
             }
             WeatherIcon(
-                icon = city.weather.weatherIcon, viewSize = ViewSize.SMALL, modifier = Modifier
+                icon = city.weather.weatherIcon,
+                viewSize = ViewSize.SMALL,
+                modifier = Modifier
                     .fillMaxSize(1f)
                     .padding(horizontal = 10.dp)
             )
@@ -438,26 +472,27 @@ private fun LocalCityWeatherCard(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WeatherTopAppBar(modifier: Modifier = Modifier) {
-            Row(modifier = Modifier
-                .fillMaxWidth()
-                .background(Color.Transparent),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center,
-            ) {
-                Image(
-                    modifier = Modifier
-                        .size(dimensionResource(id = R.dimen.image_size))
-                        .padding(
-                            dimensionResource(id = R.dimen.padding_small),
-                        ),
-                    painter = painterResource(id = R.drawable._2d),
-                    contentDescription = null,
-                )
-                Text(
-                    text = stringResource(id = R.string.app_name),
-                    style = MaterialTheme.typography.displayLarge,
-                )
-            }
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(Color.Transparent),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center,
+    ) {
+        Image(
+            modifier = Modifier
+                .size(dimensionResource(id = R.dimen.image_size))
+                .padding(
+                    dimensionResource(id = R.dimen.padding_small),
+                ),
+            painter = painterResource(id = R.drawable._2d),
+            contentDescription = null,
+        )
+        Text(
+            text = stringResource(id = R.string.app_name),
+            style = MaterialTheme.typography.displayLarge,
+        )
+    }
 }
 
 @Composable
@@ -530,33 +565,18 @@ fun DismissBackground(dismissState: DismissState) {
     }
     val direction = dismissState.dismissDirection
     Row(
-            modifier = Modifier
-                .padding(5.dp)
-                .clip(MaterialTheme.shapes.medium)
-                .fillMaxSize()
-                .background(color),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Spacer(modifier = Modifier)
-            if (direction == DismissDirection.EndToStart) Icon(
-                Icons.Default.Delete,
-                contentDescription = "delete"
-            )
-
-        }
-    }
-
-@Composable
-fun ErrorScreen(modifier: Modifier = Modifier){
-    Column(
-        modifier = modifier,
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
+        modifier = Modifier
+            .padding(5.dp)
+            .clip(MaterialTheme.shapes.medium)
+            .fillMaxSize()
+            .background(color),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Text(text = "Error")
-        Button(onClick = {}) {
-            Text(text = "close")
-        }
+        Spacer(modifier = Modifier)
+        if (direction == DismissDirection.EndToStart) Icon(
+            Icons.Default.Delete, contentDescription = "delete"
+        )
+
     }
 }

@@ -15,6 +15,15 @@ object AppViewModelProvider {
             )
         }
     }
+
+    val FactoryWithoutLocation = viewModelFactory {
+        initializer {
+            WeatherViewModel(
+                weatherApplication().container.weatherCityRepository,
+                weatherApplication().container.apiRepository,
+            )
+        }
+    }
 }
 
 fun CreationExtras.weatherApplication(): WeatherApplication =
