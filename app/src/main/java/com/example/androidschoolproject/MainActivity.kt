@@ -13,11 +13,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.androidschoolproject.model.hasLocationPermission
 import com.example.androidschoolproject.ui.LocationPermissionScreen
 import com.example.androidschoolproject.ui.OverviewScreen
 import com.example.androidschoolproject.ui.WeatherApp
 import com.example.androidschoolproject.ui.theme.AndroidSchoolProjectTheme
+import com.example.androidschoolproject.ui.utils.hasLocationPermission
 
 class MainActivity : ComponentActivity() {
 
@@ -29,7 +29,7 @@ class MainActivity : ComponentActivity() {
                 val navController = rememberNavController()
                 val windowSize = calculateWindowSizeClass(this)
 
-                val goToLocationScreen = { navController.navigate(OverviewScreen.Location.name) }
+               // val goToLocationScreen = { navController.navigate(OverviewScreen.Location.name) }
                 val goToWeatherApp = { navController.navigate(OverviewScreen.Start.name) }
 
                 val screen = if (this.hasLocationPermission()) OverviewScreen.Start.name else OverviewScreen.Location.name
@@ -43,7 +43,7 @@ class MainActivity : ComponentActivity() {
                         composable(OverviewScreen.Start.name) {
                             AppContent(
                                 windowSize = windowSize.widthSizeClass,
-                            ) { goToLocationScreen() }
+                            )
                         }
                     }
                 }
@@ -54,7 +54,7 @@ class MainActivity : ComponentActivity() {
 
 
 @Composable
-fun AppContent(windowSize: WindowWidthSizeClass, goToLocationScreen: () -> Unit) {
+fun AppContent(windowSize: WindowWidthSizeClass) {
     val context = LocalContext.current
 
     if (context.hasLocationPermission()) {
