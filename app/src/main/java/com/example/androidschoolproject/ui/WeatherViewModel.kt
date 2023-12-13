@@ -115,6 +115,9 @@ class WeatherViewModel(
         }
     }
 
+    /**
+     * resets the screenstate to show WeatherHomeScreen
+     */
     fun resetHomeScreenStates() {
         _uiState.update {
             it.copy(
@@ -123,16 +126,12 @@ class WeatherViewModel(
         }
     }
 
-    fun updateLocation(longitude: Double, latitude: Double) {
-        _uiState.update {
-            it.copy(
-                longitude = longitude,
-                latitude = latitude,
 
-                )
-        }
-    }
-
+    /**
+     * gets the nearest WeatherCity based on coordinates
+     * @param longitude longitude coordinate
+     * @param latitude latitude coordinate
+     */
     private fun getNearestCity(latitude: Double, longitude: Double) {
         viewModelScope.launch {
             apiState = ApiUiState.Loading
