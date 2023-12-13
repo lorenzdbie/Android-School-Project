@@ -15,6 +15,7 @@ buildscript {
         classpath( "org.jetbrains.dokka:dokka-gradle-plugin:${rootProject.extra["dokka_version"]}")
     }
 }
+apply(plugin="org.jetbrains.dokka")
 
 plugins {
     id("com.android.application") version "8.1.2" apply false
