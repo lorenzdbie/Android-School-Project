@@ -6,6 +6,7 @@ plugins {
     id("org.jetbrains.dokka")
 }
 
+
 android {
     namespace = "com.example.androidschoolproject"
     compileSdk = 33
@@ -52,7 +53,9 @@ android {
     }
 }
 
-
+tasks.dokkaHtml.configure{
+    outputDirectory.set(file("$buildDir/docs"))
+}
 
 dependencies {
 
