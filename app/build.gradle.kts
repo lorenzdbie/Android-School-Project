@@ -53,6 +53,7 @@ android {
     }
 }
 
+
 tasks.dokkaHtml.configure{
     outputDirectory.set(file("../docs"))
 }
