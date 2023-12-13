@@ -97,6 +97,9 @@ class WeatherViewModel(
         }
     }
 
+    /**
+     * resets the screenState of AddCityScreen
+     */
     fun resetAddCityScreenStates() {
         _uiState.update {
             it.copy(
