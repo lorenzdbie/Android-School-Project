@@ -17,11 +17,18 @@ import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import java.io.IOException
 
+/**
+ * @constructor
+ * @param weatherCityRepository the repository to the local database
+ * @param apiRepository the repository to make api calls
+ * @param locationManager a location manager to get the current location
+ */
 class WeatherViewModel(
     private val weatherCityRepository: WeatherCityRepository,
     private val apiRepository: ApiRepository,
     private val locationManager: LocationManager? = null
 ) : ViewModel() {
+
 
     private val _uiState = MutableStateFlow(WeatherUiState())
 
@@ -51,6 +58,9 @@ class WeatherViewModel(
     val uiState: StateFlow<WeatherUiState> = _uiState
     var apiState: ApiUiState by mutableStateOf(ApiUiState.Success)
 
+    /**
+     * @param selectedCity the chosen city to be viewed in detail
+     */
     fun updateDetailScreenStates(selectedCity: WeatherCity) {
         _uiState.update {
             it.copy(
@@ -60,6 +70,10 @@ class WeatherViewModel(
         }
     }
 
+    /**
+     * deleted a city from the local repository
+     * @param city the chosen city do be deleted
+     */
     fun deleteCity(city: WeatherCity) {
         viewModelScope.launch {
             apiState = ApiUiState.Loading
@@ -72,6 +86,9 @@ class WeatherViewModel(
         }
     }
 
+    /**
+     * updates the screenstate to show AddCityScreen
+     */
     fun updateAddCityScreenStates() {
         _uiState.update {
             it.copy(

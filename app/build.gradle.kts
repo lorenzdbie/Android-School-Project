@@ -3,6 +3,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("org.jetbrains.kotlin.plugin.serialization")
     id("com.google.devtools.ksp")
+    id("org.jetbrains.dokka")
 }
 
 android {
@@ -51,6 +52,7 @@ android {
     }
 }
 
+
 dependencies {
 
     implementation(platform("androidx.compose:compose-bom:2023.06.01"))
@@ -92,4 +94,7 @@ dependencies {
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
+
+    // documentation
+    dokkaPlugin("org.jetbrains.dokka:android-documentation-plugin:1.9.10")
 }
