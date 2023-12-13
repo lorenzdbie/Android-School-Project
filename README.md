@@ -1,2 +1,1 @@
-Documentation: <br>
-([Lorenzdebie.github.io])
+[Documentation](Lorenzdebie.github.io)
