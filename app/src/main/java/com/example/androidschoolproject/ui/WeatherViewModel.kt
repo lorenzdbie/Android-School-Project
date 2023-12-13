@@ -58,7 +58,9 @@ class WeatherViewModel(
     val uiState: StateFlow<WeatherUiState> = _uiState
     var apiState: ApiUiState by mutableStateOf(ApiUiState.Success)
 
+
     /**
+     * updates the screenState to show details of selected city
      * @param selectedCity the chosen city to be viewed in detail
      */
     fun updateDetailScreenStates(selectedCity: WeatherCity) {
@@ -151,6 +153,9 @@ class WeatherViewModel(
         }
     }
 
+    /**
+     * gets the nearest city based on current location
+     */
     private fun getNearestCityBasedOnCurrentLocation() {
         locationManager?.getCurrentLocation { lat, long ->
             getNearestCity(latitude = lat, longitude = long)
@@ -158,7 +163,9 @@ class WeatherViewModel(
     }
 
 
-
+    /**
+     * fetches a list of countries and updates the state
+     */
     fun getCountries() {
         viewModelScope.launch {
             apiState = ApiUiState.Loading
@@ -175,7 +182,10 @@ class WeatherViewModel(
             }
         }
     }
-
+    /**
+     * fetches a list of states based on parameters and updates the state
+     * @param country a country name
+     */
     fun getStates(country: String) {
         viewModelScope.launch {
             apiState = ApiUiState.Loading
@@ -196,6 +206,11 @@ class WeatherViewModel(
         }
     }
 
+    /**
+     * fetches a list of cities based on parameters and updates the state
+     * @param country a country name
+     * @param state a state name
+     */
     fun getCities(country: String, state: String) {
         viewModelScope.launch {
             apiState = ApiUiState.Loading
@@ -223,6 +238,12 @@ class WeatherViewModel(
         }
     }
 
+    /**
+     * fetches city data based on parameters ans saves it to local repository
+     * @param country a country name
+     * @param state a state name
+     * @param city a city name
+     */
     fun getCity(country: String, state: String, city: String) {
         viewModelScope.launch {
             apiState = ApiUiState.Loading
@@ -236,6 +257,9 @@ class WeatherViewModel(
         }
     }
 
+    /**
+     * reverts the ApiUiState from Error to Success
+     */
     fun dismissError() {
         apiState = ApiUiState.Success
         resetAddCityScreenStates()
