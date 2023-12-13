@@ -54,7 +54,7 @@ android {
 }
 
 tasks.dokkaHtml.configure{
-    outputDirectory.set(file("../app/docs"))
+    outputDirectory.set(file("../docs"))
 }
 
 dependencies {
