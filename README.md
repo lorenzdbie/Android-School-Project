@@ -1,1 +1,1 @@
-[Documentation](https://lorenzdebie.github.io)
+[Documentation](https://lorenzdebie.github.io/Android-School-Project/)
