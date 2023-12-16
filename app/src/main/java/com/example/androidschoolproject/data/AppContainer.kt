@@ -23,12 +23,4 @@ class AppDataContainer(private val context: Context) : AppContainer {
     override val locationManager: LocationManager by lazy {
         GpsLocationManager(context)
     }
-
-
-
-
-
-
-
-
 }

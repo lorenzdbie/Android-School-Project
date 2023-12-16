@@ -18,7 +18,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -26,35 +25,34 @@ import androidx.compose.ui.unit.dp
 import com.example.androidschoolproject.R
 
 @Composable
-fun LocationPermissionScreen(goToStartScreen: () -> Unit) {
-
+fun LocationPermissionScreen(goToStartScreen: () -> Unit, modifier: Modifier = Modifier) {
     val requestPermissionLauncher =
         rememberLauncherForActivityResult(
             contract = ActivityResultContracts.RequestPermission(),
         ) { isGranted: Boolean ->
             if (isGranted) {
-                 goToStartScreen()
+                goToStartScreen()
                 // Permission granted, navigate to the next screen
             } else {
-                   goToStartScreen()
+                goToStartScreen()
             }
         }
 
     Surface(
-        modifier = Modifier.fillMaxSize()
-      //  color = MaterialTheme.colorScheme.primary,
+        modifier = modifier.fillMaxSize(),
+        //  color = MaterialTheme.colorScheme.primary,
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(
-                    brush = Brush.verticalGradient(
-                        colors = listOf(
-                            MaterialTheme.colorScheme.primary,
-                            MaterialTheme.colorScheme.secondary
-                        )
-                    )
-                )
+            modifier = modifier
+//                .fillMaxSize()
+//                .background(
+//                    brush = Brush.verticalGradient(
+//                        colors = listOf(
+//                            MaterialTheme.colorScheme.primary,
+//                            MaterialTheme.colorScheme.secondary,
+//                        ),
+//                    ),
+//                )
                 .padding(16.dp),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -63,7 +61,7 @@ fun LocationPermissionScreen(goToStartScreen: () -> Unit) {
             Icon(
                 painter = painterResource(id = R.drawable.location_on),
                 contentDescription = null,
-                modifier = Modifier.size(200.dp)
+                modifier = Modifier.size(200.dp),
             )
             Spacer(modifier = Modifier.weight(0.5f))
             Text(
@@ -71,20 +69,18 @@ fun LocationPermissionScreen(goToStartScreen: () -> Unit) {
                 style = MaterialTheme.typography.headlineLarge,
                 modifier = Modifier.padding(bottom = 16.dp),
             )
-            Text(text="Start sharing your location with us")
+            Text(text = "Start sharing your location with us")
             Spacer(modifier = Modifier.weight(1f))
             Button(
                 onClick =
-                    // Request location permission again when the button is clicked
-                { requestPermissionLauncher.launch(android.Manifest.permission.ACCESS_FINE_LOCATION) }
-                ,
+                // Request location permission again when the button is clicked
+                { requestPermissionLauncher.launch(android.Manifest.permission.ACCESS_FINE_LOCATION) },
             ) {
                 Text(text = "Share location")
             }
             Button(
                 onClick = goToStartScreen,
-                    colors =  ButtonDefaults.buttonColors(Color.Transparent)
-                ,
+                colors = ButtonDefaults.buttonColors(Color.Transparent),
             ) {
                 Text(text = "Maybe later", modifier = Modifier.background(Color.Transparent))
             }
@@ -97,8 +93,6 @@ fun LocationPermissionScreen(goToStartScreen: () -> Unit) {
 @Composable
 fun LocationPermissionScreenPreview() {
     Surface {
-        LocationPermissionScreen {}
+        LocationPermissionScreen({})
     }
 }
-
-

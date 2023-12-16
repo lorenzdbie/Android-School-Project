@@ -14,6 +14,24 @@
     <string name="listAndDetailsContent">List and details content</string>
     <string name="add_city_screen">Add city screen</string>
 
+    <string name="country_label">Country: %n%s</string>
+    <string name="state_label">State: %n%s</string>
+    <string name="city_label">City: %n%s</string>
+    <string name="weather">Weather</string>
+    <string name="temperature">Temperature</string>
+    <string name="pressure">Pressure</string>
+    <string name="humidity">Humidity</string>
+    <string name="wind">Wind</string>
+    <string name="speed_text">Speed: %.1f m/s</string>
+    <string name="air_quality">Air Quality</string>
+    <string name="us_standard">USA standard</string>
+    <string name="china_standard">China standard</string>
+    <string name="lastUpdated">Last updated: </string>
+
     <string name="location_title">locationPermission</string>
     <string name="weather_title">weatherApp</string>
+
+    <string name="error_title">Error</string>
+    <string name="error_text">An error occurred while fetching data from the API.\nTry again later.</string>
+    <string name="button_close">Close</string>
 </resources>

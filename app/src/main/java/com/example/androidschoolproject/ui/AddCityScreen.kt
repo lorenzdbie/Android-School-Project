@@ -44,7 +44,6 @@ import com.example.androidschoolproject.R
 @Composable
 fun AddCityScreen(
     weatherUiState: WeatherUiState,
-    apiUiState: ApiUiState,
     onClosePressed: () -> Unit,
     collectCountries: () -> Unit,
     modifier: Modifier = Modifier,
@@ -61,18 +60,6 @@ fun AddCityScreen(
     }
 
     val addCityScreenDescription = stringResource(R.string.add_city_screen)
-//    when (apiUiState) {
-//        is ApiUiState.Error -> {
-//         ErrorScreen(modifier)
-//        }
-//
-//        is ApiUiState.Loading -> {
-//            Box(modifier = Modifier.fillMaxSize()) {
-//                Text(text = weatherUiState.toString())
-//            }
-//        }
-//
-//        is ApiUiState.Success -> {
     Box(
         modifier = modifier
             .fillMaxSize()
@@ -103,15 +90,12 @@ fun AddCityScreen(
                             weatherUiState.stateName,
                             weatherUiState.cityName,
                         )
-                        onClosePressed()
                     },
                 )
             }
         }
     }
 }
-//  }
-//}
 
 @Composable
 fun AddCityButton(enabled: Boolean, onClick: () -> Unit, modifier: Modifier = Modifier) {
@@ -170,12 +154,13 @@ private fun AddCitySelectors(
     Column(
         modifier = modifier
             .padding(start = 40.dp, top = 40.dp, bottom = 40.dp, end = 20.dp)
-            .fillMaxWidth()
+            .fillMaxWidth(),
     ) {
         Row(
             modifier
                 .padding(vertical = 10.dp)
-                .fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             Text(text = "Country: ", fontSize = 20.sp, modifier = Modifier.padding(end = 30.dp))
             if (countries != null) {
@@ -193,7 +178,8 @@ private fun AddCitySelectors(
         Row(
             modifier
                 .padding(vertical = 10.dp)
-                .fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             Text(text = "State: ", fontSize = 20.sp, modifier = Modifier.padding(end = 30.dp))
             if (states != null) {
@@ -211,7 +197,8 @@ private fun AddCitySelectors(
         Row(
             modifier
                 .padding(vertical = 10.dp)
-                .fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             Text(text = "City: ", fontSize = 20.sp, modifier = Modifier.padding(end = 30.dp))
             if (cities != null) {
@@ -263,86 +250,3 @@ fun <T> SelectionInputField(
         }
     }
 }
-
-// @Composable
-// fun <T> SelectionInputField(
-//    items: List<T>,
-//    onItemSelected: (String) -> Unit,
-//    selector: (T) -> String,
-//    selectedItem: String,
-// ) {
-//    var expanded by remember { mutableStateOf(false) }
-//    var selectedItem by remember { mutableStateOf("Select Item") }
-//
-//    if (items.isNotEmpty()) {
-//        Box(modifier = Modifier) {
-//            Row(
-//                modifier = Modifier.clickable { expanded = !expanded },
-//                horizontalArrangement = Arrangement.Start,
-//                verticalAlignment = Alignment.CenterVertically,
-//            ) {
-//                Text(text = selectedItem)
-//                Icon(imageVector = Icons.Filled.ArrowDropDown, contentDescription = null)
-//                DropdownMenu(
-//                    expanded = expanded,
-//                    onDismissRequest = { expanded = false },
-//                    modifier = Modifier.height(500.dp),
-//                ) {
-//                    items.forEach { item ->
-//                        DropdownMenuItem(
-//                            text = { Text(text = selector(item)) },
-//                            onClick = {
-//                                selectedItem = selector(item)
-//                                onItemSelected(selector(item))
-//                                expanded = false
-//                            },
-//                        )
-//                    }
-//                }
-//            }
-//        }
-//    }
-// }
-
-// @OptIn(ExperimentalMaterial3Api::class)
-// @Composable
-// fun SelectionInputField(
-//    weatherUiState: WeatherUiState,
-//    onCountrySelected: (String) -> Unit,
-// ) {
-//    val countries = weatherUiState.countries
-//    var expanded by remember { mutableStateOf(false) }
-//    var selectedCountry by remember { mutableStateOf("Select Country") }
-//
-//    if (countries != null) {
-//        Box(modifier = Modifier) {
-//            Row(
-//                modifier = Modifier.clickable { expanded = !expanded },
-//                horizontalArrangement = Arrangement.Start,
-//                verticalAlignment = Alignment.CenterVertically,
-//            ) {
-//                Text(text = selectedCountry)
-//                Icon(imageVector = Icons.Filled.ArrowDropDown, contentDescription = null)
-//                DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }, modifier = Modifier.height(500.dp)) {
-//                    countries.forEach { country ->
-//                        DropdownMenuItem(
-//                            text = { Text(text = country.country) },
-//                            onClick = {
-//                                selectedCountry = country.country
-//                                expanded = false
-//                            },
-//                        )
-//                    }
-//                }
-//            }
-//        }
-//    }
-// }
-
-// @Preview(showBackground = true)
-// @Composable
-// fun AddCityPreview() {
-//    AndroidSchoolProjectTheme {
-//        AddCityScreen(weatherUiState = ,onAddPressed = {}, onClosePressed = {}, collectCountries = {})
-//    }
-// }

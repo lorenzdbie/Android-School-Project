@@ -8,10 +8,13 @@ import androidx.lifecycle.viewModelScope
 import com.example.androidschoolproject.data.ApiRepository
 import com.example.androidschoolproject.data.WeatherCityRepository
 import com.example.androidschoolproject.location.LocationManager
-import com.example.androidschoolproject.network.WeatherCity
-import com.example.androidschoolproject.network.createWeatherCity
+import com.example.androidschoolproject.model.CityCoordinates
+import com.example.androidschoolproject.model.WeatherCity
+import com.example.androidschoolproject.model.createWeatherCity
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
@@ -23,41 +26,34 @@ import java.io.IOException
  * @param apiRepository the repository to make api calls
  * @param locationManager a location manager to get the current location
  */
+
 class WeatherViewModel(
     private val weatherCityRepository: WeatherCityRepository,
     private val apiRepository: ApiRepository,
-    private val locationManager: LocationManager? = null
+    private val locationManager: LocationManager? = null,
 ) : ViewModel() {
-
 
     private val _uiState = MutableStateFlow(WeatherUiState())
 
+    val uiState: StateFlow<WeatherUiState> = _uiState
+    var apiState: ApiUiState by mutableStateOf(ApiUiState.Success)
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading = _isLoading.asStateFlow()
+
     init {
-        if(locationManager != null) {
+        if (locationManager != null) {
             getNearestCityBasedOnCurrentLocation()
         }
         viewModelScope.launch {
             weatherCityRepository.getAllWeatherCitiesStream().collect { weatherCityList ->
                 _uiState.update {
-                    if (weatherCityList.isNotEmpty()) {
-                        it.copy(
-                            cityList = weatherCityList,
-                            currentCity = weatherCityList[0]
-                        )
-                    } else {
-                        it.copy(
-                            cityList = weatherCityList
-                        )
-                    }
+                    it.copy(
+                        cityList = weatherCityList,
+                    )
                 }
             }
         }
     }
-
-
-    val uiState: StateFlow<WeatherUiState> = _uiState
-    var apiState: ApiUiState by mutableStateOf(ApiUiState.Success)
-
 
     /**
      * updates the screenState to show details of selected city
@@ -82,6 +78,10 @@ class WeatherViewModel(
             apiState = try {
                 weatherCityRepository.deleteWeatherCity(city)
                 ApiUiState.Success
+            } catch (e: IOException) {
+                ApiUiState.Error
+            } catch (e: HttpException) {
+                ApiUiState.Error
             } catch (e: Exception) {
                 ApiUiState.Error
             }
@@ -112,8 +112,7 @@ class WeatherViewModel(
                 countries = null,
                 states = null,
                 cities = null,
-
-                )
+            )
         }
     }
 
@@ -128,25 +127,46 @@ class WeatherViewModel(
         }
     }
 
+    private fun addCall() {
+        _uiState.update { it.copy(nrOfCalls = it.nrOfCalls + 1) }
+    }
 
     /**
      * gets the nearest WeatherCity based on coordinates
      * @param longitude longitude coordinate
      * @param latitude latitude coordinate
      */
+
     private fun getNearestCity(latitude: Double, longitude: Double) {
         viewModelScope.launch {
             apiState = ApiUiState.Loading
             apiState = try {
-                val localCityData = apiRepository.getNearestCity(longitude = longitude, latitude = latitude)
-                val localCity = createWeatherCity(localCityData)
+                val oldLocalCity = _uiState.value.localCity
+                val localCityData =
+                    apiRepository.getNearestCity(longitude = longitude, latitude = latitude)
+                addCall()
+                val localCity = oldLocalCity?.copy(
+                    country = localCityData.country,
+                    state = localCityData.state,
+                    city = localCityData.city,
+                    cityLocation = CityCoordinates(
+                        longitude = localCityData.location.coordinates[0],
+                        latitude = localCityData.location.coordinates[1],
+                    ),
+                    weather = localCityData.current.weatherData,
+                    pollution = localCityData.current.pollutionData,
+                )
+                    ?: createWeatherCity(localCityData)
                 _uiState.update {
                     it.copy(
                         localCity = localCity,
-                        currentCity = localCity
                     )
                 }
                 ApiUiState.Success
+            } catch (e: IOException) {
+                ApiUiState.Error
+            } catch (e: HttpException) {
+                ApiUiState.Error
             } catch (e: Exception) {
                 ApiUiState.Error
             }
@@ -156,12 +176,14 @@ class WeatherViewModel(
     /**
      * gets the nearest city based on current location
      */
+
     private fun getNearestCityBasedOnCurrentLocation() {
-        locationManager?.getCurrentLocation { lat, long ->
-            getNearestCity(latitude = lat, longitude = long)
+        viewModelScope.launch {
+            locationManager?.getCurrentLocation { lat, long ->
+                getNearestCity(latitude = lat, longitude = long)
+            }
         }
     }
-
 
     /**
      * fetches a list of countries and updates the state
@@ -171,6 +193,7 @@ class WeatherViewModel(
             apiState = ApiUiState.Loading
             apiState = try {
                 val countries = apiRepository.getCountries()
+                addCall()
                 _uiState.update {
                     it.copy(countries = countries)
                 }
@@ -182,6 +205,7 @@ class WeatherViewModel(
             }
         }
     }
+
     /**
      * fetches a list of states based on parameters and updates the state
      * @param country a country name
@@ -191,6 +215,7 @@ class WeatherViewModel(
             apiState = ApiUiState.Loading
             apiState = try {
                 val states = apiRepository.getState(country = country)
+                addCall()
                 _uiState.update {
                     it.copy(
                         countryName = country,
@@ -200,7 +225,9 @@ class WeatherViewModel(
                     )
                 }
                 ApiUiState.Success
-            } catch (e: Exception) {
+            } catch (e: IOException) {
+                ApiUiState.Error
+            } catch (e: HttpException) {
                 ApiUiState.Error
             }
         }
@@ -216,6 +243,7 @@ class WeatherViewModel(
             apiState = ApiUiState.Loading
             apiState = try {
                 val cities = apiRepository.getCities(country = country, state = state)
+                addCall()
                 _uiState.update {
                     it.copy(
                         stateName = state,
@@ -224,7 +252,9 @@ class WeatherViewModel(
                     )
                 }
                 ApiUiState.Success
-            } catch (e: Exception) {
+            } catch (e: IOException) {
+                ApiUiState.Error
+            } catch (e: HttpException) {
                 ApiUiState.Error
             }
         }
@@ -244,16 +274,63 @@ class WeatherViewModel(
      * @param state a state name
      * @param city a city name
      */
-    fun getCity(country: String, state: String, city: String) {
+
+    suspend fun getCity(country: String, state: String, city: String) {
+        // viewModelScope.launch {
+        apiState = ApiUiState.Loading
+        apiState = try {
+            val newWeatherCityData =
+                apiRepository.getCity(country = country, state = state, city = city)
+            addCall()
+            val newWeatherCity = createWeatherCity(newWeatherCityData)
+            _uiState.update { it.copy(tempCity = newWeatherCity) }
+            weatherCityRepository.insertWeatherCity(newWeatherCity)
+            ApiUiState.Success
+        } catch (e: IOException) {
+            ApiUiState.Error
+        } catch (e: HttpException) {
+            ApiUiState.Error
+        } catch (e: Exception) {
+            ApiUiState.Error
+            //        }
+        }
+    }
+
+    fun refreshContent() {
         viewModelScope.launch {
-            apiState = ApiUiState.Loading
-            apiState = try {
-                val newWeatherCity = apiRepository.getCity(country = country, state = state, city = city)
-                weatherCityRepository.insertWeatherCity(createWeatherCity(newWeatherCity))
-                ApiUiState.Success
-            } catch (e: Exception) {
-                ApiUiState.Error
+            _isLoading.value = true
+            if (locationManager != null) {
+                getNearestCityBasedOnCurrentLocation()
+                _uiState.update { it.copy(numberOfUpdates = 1) }
             }
+            refreshWeatherCities()
+            _isLoading.value = false
+        }
+    }
+
+    private suspend fun refreshWeatherCities() {
+        apiState = ApiUiState.Loading
+        apiState = try {
+            for (city in _uiState.value.cityList) {
+                delay(3000)
+                val newCityData = apiRepository.getCity(
+                    country = city.country,
+                    state = city.state,
+                    city = city.city,
+                )
+                addCall()
+                val updatedCity = city.copy(
+                    weather = newCityData.current.weatherData,
+                    pollution = newCityData.current.pollutionData,
+                )
+                weatherCityRepository.updateWeatherCity(updatedCity)
+                _uiState.update { it.copy(numberOfUpdates = it.numberOfUpdates + 1) }
+            }
+            ApiUiState.Success
+        } catch (e: IOException) {
+            ApiUiState.Error
+        } catch (e: HttpException) {
+            ApiUiState.Error
         }
     }
 

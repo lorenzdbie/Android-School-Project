@@ -11,7 +11,7 @@ object AppViewModelProvider {
             WeatherViewModel(
                 weatherApplication().container.weatherCityRepository,
                 weatherApplication().container.apiRepository,
-                weatherApplication().container.locationManager
+                weatherApplication().container.locationManager,
             )
         }
     }

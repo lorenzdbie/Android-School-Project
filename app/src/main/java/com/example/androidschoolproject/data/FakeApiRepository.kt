@@ -5,7 +5,7 @@ import com.example.androidschoolproject.network.Country
 import com.example.androidschoolproject.network.CountryState
 import com.example.androidschoolproject.network.WeatherCityData
 
-class FakeApiRepository: ApiRepository {
+class FakeApiRepository : ApiRepository {
     override suspend fun getNearestCity(latitude: Double, longitude: Double): WeatherCityData {
         TODO("Not yet implemented")
     }

@@ -6,12 +6,12 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
-import com.example.androidschoolproject.network.WeatherCity
+import com.example.androidschoolproject.model.WeatherCity
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface WeatherDao {
-    @Insert (onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(weatherCity: WeatherCity)
 
     @Update
@@ -20,8 +20,9 @@ interface WeatherDao {
     @Delete
     suspend fun delete(weatherCity: WeatherCity)
 
-    @Query ("SELECT * FROM weatherCities WHERE id = :id")
+    @Query("SELECT * FROM weatherCities WHERE id = :id")
     fun getWeatherCity(id: Int): Flow<WeatherCity>
-    @Query ("SELECT * from weatherCities ORDER BY ID ASC")
+
+    @Query("SELECT * from weatherCities ORDER BY creationTime ASC")
     fun getAllWeatherCities(): Flow<List<WeatherCity>>
 }

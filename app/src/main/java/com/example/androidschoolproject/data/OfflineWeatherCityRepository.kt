@@ -1,6 +1,6 @@
 package com.example.androidschoolproject.data
 
-import com.example.androidschoolproject.network.WeatherCity
+import com.example.androidschoolproject.model.WeatherCity
 import kotlinx.coroutines.flow.Flow
 
 class OfflineWeatherCityRepository(private val weatherDao: WeatherDao) : WeatherCityRepository {
