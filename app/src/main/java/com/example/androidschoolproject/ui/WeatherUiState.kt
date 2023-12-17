@@ -20,10 +20,10 @@ data class WeatherUiState(
     val stateName: String = "Select State",
     val cityName: String = "Select City",
 
-    val numberOfUpdates: Int = 0,
-    val nrOfDbEntries: Int = 0,
-    val tempCity: WeatherCity? = null,
-    val nrOfCalls: Int = 0,
+//    val numberOfUpdates: Int = 0,
+//    val nrOfDbEntries: Int = 0,
+//    val tempCity: WeatherCity? = null,
+//    val nrOfCalls: Int = 0,
 )
 
 sealed interface ApiUiState {

@@ -81,7 +81,7 @@ fun WeatherHomeScreen(
     isLoading: Boolean,
     modifier: Modifier = Modifier,
 
-    ) {
+) {
     if (contentType == WeatherContentType.LIST_AND_DETAIL) {
         WeatherAppContent(
             contentType = contentType,
@@ -105,7 +105,7 @@ fun WeatherHomeScreen(
                 isLoading = isLoading,
                 modifier = modifier,
 
-                )
+            )
         } else {
             Column(modifier = modifier) {
                 WeatherTopAppBar(modifier = modifier)
@@ -189,8 +189,8 @@ fun WeatherAppContent(
                 )
             } else {
                 Row(modifier = Modifier.fillMaxWidth(), Arrangement.SpaceBetween) {
-                    Text(text = "Nr of updates: ${weatherUiState.numberOfUpdates}")
-                    Text(text = "Nr of calls: ${weatherUiState.nrOfCalls}")
+                    //          Text(text = "Nr of updates: ${weatherUiState.numberOfUpdates}")
+                    //         Text(text = "Nr of calls: ${weatherUiState.nrOfCalls}")
                 }
                 WeatherOnlyListContent(
                     weatherUiState = weatherUiState,
@@ -225,7 +225,7 @@ fun WeatherOnlyListContent(
     modifier: Modifier = Modifier,
     showSelected: Boolean = false,
 
-    ) {
+) {
     Surface(modifier = modifier.fillMaxSize()) {
         val swipeRefreshState = rememberSwipeRefreshState(isRefreshing = isLoading)
 
@@ -330,7 +330,7 @@ fun WeatherIcon(icon: String, viewSize: ViewSize, modifier: Modifier = Modifier)
             alignment = Alignment.Center,
             contentScale = ContentScale.FillWidth,
 
-            )
+        )
     }
 }
 

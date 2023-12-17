@@ -6,7 +6,6 @@ plugins {
     id("org.jetbrains.dokka")
 }
 
-
 android {
     namespace = "com.example.androidschoolproject"
     compileSdk = 33
@@ -53,7 +52,6 @@ android {
     }
 }
 
-
 tasks.dokkaHtml.configure {
     outputDirectory.set(file("../docs"))
     dokkaSourceSets.configureEach {
@@ -65,11 +63,10 @@ tasks.dokkaHtml.configure {
                 org.jetbrains.dokka.DokkaConfiguration.Visibility.PROTECTED, // Same for both Kotlin and Java
                 org.jetbrains.dokka.DokkaConfiguration.Visibility.INTERNAL, // Kotlin-specific internal modifier
                 org.jetbrains.dokka.DokkaConfiguration.Visibility.PACKAGE, // Java-specific package-private visibility
-            )
+            ),
         )
     }
 }
-
 
 dependencies {
 
@@ -85,7 +82,6 @@ dependencies {
     implementation("com.google.accompanist:accompanist-permissions:0.25.0")
     implementation("androidx.navigation:navigation-compose:2.5.3")
     implementation("com.google.accompanist:accompanist-swiperefresh:0.27.0")
-
 
     // Api connections
     implementation("com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:1.0.0")
@@ -103,7 +99,6 @@ dependencies {
     implementation("androidx.room:room-runtime:${rootProject.extra["room_version"]}")
     ksp("androidx.room:room-compiler:${rootProject.extra["room_version"]}")
     implementation("androidx.room:room-ktx:${rootProject.extra["room_version"]}")
-
 
     // testing
     testImplementation("junit:junit:4.13.2")

@@ -1,24 +1,30 @@
-package com.example.androidschoolproject.data
+package com.example.androidschoolproject.test.fake
 
+import com.example.androidschoolproject.data.WeatherCityRepository
 import com.example.androidschoolproject.model.WeatherCity
 import kotlinx.coroutines.flow.Flow
 
 class FakeWeatherCityRepository : WeatherCityRepository {
     override fun getAllWeatherCitiesStream(): Flow<List<WeatherCity>> =
-        LocalWeatherDataProvider.getWeatherCityData()
+        LocalWeatherDataSource.getWeatherCityData()
 
     override fun getWeatherCityStream(id: Int): Flow<WeatherCity?> =
-        LocalWeatherDataProvider.defaultWeather
+        LocalWeatherDataSource.defaultWeather
 
     override suspend fun insertWeatherCity(weatherCity: WeatherCity) {
-        TODO("Not yet implemented")
+        LocalWeatherDataSource.weatherCityList.add(
+            weatherCity,
+        )
     }
 
     override suspend fun updateWeatherCity(weatherCity: WeatherCity) {
-        TODO("Not yet implemented")
+        LocalWeatherDataSource.weatherCityList
     }
 
     override suspend fun deleteWeatherCity(weatherCity: WeatherCity) {
-        TODO("Not yet implemented")
+        LocalWeatherDataSource.weatherCityList.remove(
+            weatherCity,
+        )
     }
 }
+//
