@@ -13,6 +13,11 @@ import com.example.androidschoolproject.model.WeatherCity
 import com.example.androidschoolproject.ui.utils.WeatherContentType
 import kotlinx.coroutines.launch
 
+/**
+ * the Main WeatherApp composable that creates the appropriate viewModel and the contentType depending on the screenSize
+ * @param locationEnabled boolean whether or not the app will use location data
+ * @param windowSize the size of the devices screen size
+ */
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun WeatherApp(

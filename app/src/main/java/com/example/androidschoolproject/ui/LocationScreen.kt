@@ -24,36 +24,27 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.androidschoolproject.R
 
+/**
+ *This is the first screen where the user grants of dismisses location permissions for the weather App
+ * @param goToStartScreen a variable to navigate to the weatherApp start screen
+ */
 @Composable
 fun LocationPermissionScreen(goToStartScreen: () -> Unit, modifier: Modifier = Modifier) {
-    val requestPermissionLauncher =
-        rememberLauncherForActivityResult(
-            contract = ActivityResultContracts.RequestPermission(),
-        ) { isGranted: Boolean ->
-            if (isGranted) {
-                goToStartScreen()
-                // Permission granted, navigate to the next screen
-            } else {
-                goToStartScreen()
-            }
+    val requestPermissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission(),
+    ) { isGranted: Boolean ->
+        if (isGranted) {
+            goToStartScreen()
+        } else {
+            goToStartScreen()
         }
+    }
 
     Surface(
         modifier = modifier.fillMaxSize(),
-        //  color = MaterialTheme.colorScheme.primary,
     ) {
         Column(
-            modifier = modifier
-//                .fillMaxSize()
-//                .background(
-//                    brush = Brush.verticalGradient(
-//                        colors = listOf(
-//                            MaterialTheme.colorScheme.primary,
-//                            MaterialTheme.colorScheme.secondary,
-//                        ),
-//                    ),
-//                )
-                .padding(16.dp),
+            modifier = modifier.padding(16.dp),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
@@ -72,9 +63,7 @@ fun LocationPermissionScreen(goToStartScreen: () -> Unit, modifier: Modifier = M
             Text(text = "Start sharing your location with us")
             Spacer(modifier = Modifier.weight(1f))
             Button(
-                onClick =
-                // Request location permission again when the button is clicked
-                { requestPermissionLauncher.launch(android.Manifest.permission.ACCESS_FINE_LOCATION) },
+                onClick = { requestPermissionLauncher.launch(android.Manifest.permission.ACCESS_FINE_LOCATION) },
             ) {
                 Text(text = "Share location")
             }

@@ -77,6 +77,10 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+/**
+ * starts the applicable weatherApp depending on location Permissions
+ * @param windowSize the size of the devices screen size
+ */
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun AppContent(windowSize: WindowWidthSizeClass, modifier: Modifier = Modifier) {

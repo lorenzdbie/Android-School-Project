@@ -9,7 +9,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
@@ -41,16 +41,19 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.androidschoolproject.R
 
+/**
+ * the main AddCityScreen composable
+ */
 @Composable
 fun AddCityScreen(
     weatherUiState: WeatherUiState,
     onClosePressed: () -> Unit,
     collectCountries: () -> Unit,
-    modifier: Modifier = Modifier,
     collectStates: (String) -> Unit,
     collectCities: (String, String) -> Unit,
     onCitySelect: (String) -> Unit,
     onClickAddCity: (String, String, String) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     BackHandler {
         onClosePressed()
@@ -97,6 +100,11 @@ fun AddCityScreen(
     }
 }
 
+/**
+ * button to add the chosen city to the list of weatherCities
+ * @param enabled enables the button
+ * @param onClick viewModel function to add the chosen city to the list of weatherCities
+ */
 @Composable
 fun AddCityButton(enabled: Boolean, onClick: () -> Unit, modifier: Modifier = Modifier) {
     Row(
@@ -109,6 +117,10 @@ fun AddCityButton(enabled: Boolean, onClick: () -> Unit, modifier: Modifier = Mo
     }
 }
 
+/**
+ * ScreenHeader with button to close the screen
+ * @param onClosePressed viewModel function to close the addCityScreen
+ */
 @Composable
 fun AddCityHeader(onClosePressed: () -> Unit, modifier: Modifier = Modifier) {
     Row(
@@ -139,6 +151,9 @@ fun AddCityHeader(onClosePressed: () -> Unit, modifier: Modifier = Modifier) {
     }
 }
 
+/**
+ * combines the generic selector for countries, states and cities
+ */
 @Composable
 private fun AddCitySelectors(
     weatherUiState: WeatherUiState,
@@ -161,6 +176,7 @@ private fun AddCitySelectors(
                 .padding(vertical = 10.dp)
                 .fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(text = "Country: ", fontSize = 20.sp, modifier = Modifier.padding(end = 30.dp))
             if (countries != null) {
@@ -213,6 +229,9 @@ private fun AddCitySelectors(
     }
 }
 
+/**
+ * a generic composable to create a selection field based on the input list
+ */
 @Composable
 fun <T> SelectionInputField(
     items: List<T>,
@@ -234,7 +253,7 @@ fun <T> SelectionInputField(
                 DropdownMenu(
                     expanded = expanded,
                     onDismissRequest = { expanded = false },
-                    modifier = Modifier.height(500.dp),
+                    modifier = Modifier.heightIn(max = 500.dp),
                 ) {
                     items.forEach { item ->
                         DropdownMenuItem(

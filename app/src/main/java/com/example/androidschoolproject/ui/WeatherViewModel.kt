@@ -38,6 +38,9 @@ class WeatherViewModel(
     private val _isLoading = MutableStateFlow(false)
     val isLoading = _isLoading.asStateFlow()
 
+    /**
+     * initializes the local weather and/or the saved city instants from DB into state
+     */
     init {
         if (locationManager != null) {
             getNearestCityBasedOnCurrentLocation()
@@ -255,6 +258,9 @@ class WeatherViewModel(
         }
     }
 
+    /**
+     * saves the chosen city into the ui state
+     */
     fun addCityName(city: String) {
         _uiState.update {
             it.copy(
@@ -291,6 +297,9 @@ class WeatherViewModel(
         }
     }
 
+    /**
+     * refreshes the the users local weather city and the saved list of cities
+     */
     fun refreshContent() {
         viewModelScope.launch {
             _isLoading.value = true
@@ -303,6 +312,9 @@ class WeatherViewModel(
         }
     }
 
+    /**
+     * refreshes the saved list of weather cities
+     */
     private suspend fun refreshWeatherCities() {
         apiState = ApiUiState.Loading
         apiState = try {

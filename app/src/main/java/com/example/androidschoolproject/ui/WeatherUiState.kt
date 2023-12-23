@@ -5,6 +5,9 @@ import com.example.androidschoolproject.network.City
 import com.example.androidschoolproject.network.Country
 import com.example.androidschoolproject.network.CountryState
 
+/**
+ * collection of all the state variables
+ */
 data class WeatherUiState(
     val cityList: List<WeatherCity> = mutableListOf(),
     val currentCity: WeatherCity? = null,
@@ -26,6 +29,9 @@ data class WeatherUiState(
 //    val nrOfCalls: Int = 0,
 )
 
+/**
+ * collection of all the API states
+ */
 sealed interface ApiUiState {
     object Success : ApiUiState
     object Error : ApiUiState
