@@ -48,6 +48,15 @@ import com.example.androidschoolproject.ui.utils.getWeatherIcon
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 
+/**
+ * the main WeatherListScreen composable
+ * @param weatherUiState the state of the weather
+ * @param onCityCardPressed the callback to be called when a city card is pressed
+ * @param onCityCardDelete the callback to be called when a city card is deleted
+ * @param onRefreshContent the callback to be called when the user refreshes the content
+ * @param isLoading the loading state of the content
+ * @param showSelected the state of the selected city
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WeatherListScreen(
@@ -113,6 +122,11 @@ fun WeatherListScreen(
     }
 }
 
+/**
+ * the WeatherIcon composable
+ * @param icon the icon to be displayed
+ * @param viewSize the size of the icon
+ */
 @Composable
 fun WeatherIcon(icon: String, viewSize: ViewSize, modifier: Modifier = Modifier) {
     @DrawableRes val weatherIcon = getWeatherIcon(icon)
@@ -134,6 +148,13 @@ fun WeatherIcon(icon: String, viewSize: ViewSize, modifier: Modifier = Modifier)
     }
 }
 
+/**
+ * the CityWeatherCard composable
+ * @param city the city to be displayed
+ * @param selected the state of the city
+ * @param onCardClick the callback to be called when the card is pressed
+ * @param isLocalCity the state of the city
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun CityWeatherCard(
@@ -201,6 +222,10 @@ private fun CityWeatherCard(
     }
 }
 
+/**
+ * the DismissBackground composable
+ * @param dismissState the state of the dismiss
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DismissBackground(dismissState: DismissState) {

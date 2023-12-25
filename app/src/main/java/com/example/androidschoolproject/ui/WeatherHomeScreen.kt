@@ -37,6 +37,25 @@ import com.example.androidschoolproject.R
 import com.example.androidschoolproject.model.WeatherCity
 import com.example.androidschoolproject.ui.utils.WeatherContentType
 
+/**
+ * the main WeatherHomeScreen composable
+ * @param contentType the type of content to be shown
+ * @param weatherUiState the state of the weather
+ * @param apiUiState the state of the api
+ * @param onCityCardPressed the callback to be called when a city card is pressed
+ * @param onCityCardDelete the callback to be called when a city card is deleted
+ * @param onDetailScreenBackPressed the callback to be called when the user presses the back button on the detail screen
+ * @param collectCountries the callback to be called when the user wants to collect the countries
+ * @param collectStates the callback to be called when the user wants to collect the states
+ * @param collectCities the callback to be called when the user wants to collect the cities
+ * @param onCitySelect the callback to be called when the user selects a city
+ * @param onClickAddCity the callback to be called when the user wants to add a city
+ * @param onAddCityScreenPressed the callback to be called when the user wants to open the add city screen
+ * @param onAddCityClosedPressed the callback to be called when the user wants to close the add city screen
+ * @param onDismissError the callback to be called when the user wants to dismiss the error
+ * @param onRefreshContent the callback to be called when the user wants to refresh the content
+ * @param isLoading the loading state of the content
+ */
 @Composable
 fun WeatherHomeScreen(
     contentType: WeatherContentType,
@@ -140,16 +159,26 @@ fun WeatherHomeScreen(
     }
 }
 
+/**
+ * the main WeatherAppContent composable
+ * @param contentType the type of content to be shown
+ * @param weatherUiState the state of the weather
+ * @param onCityCardPressed the callback to be called when a city card is pressed
+ * @param onAddCityPressed the callback to be called when the user wants to open the add city screen
+ * @param onCityCardDelete the callback to be called when a city card is deleted
+ * @param onRefreshContent the callback to be called when the user wants to refresh the content
+ * @param isLoading the loading state of the content
+ */
 @Composable
 fun WeatherAppContent(
     contentType: WeatherContentType,
     weatherUiState: WeatherUiState,
     onCityCardPressed: (WeatherCity) -> Unit,
     onAddCityPressed: () -> Unit,
-    modifier: Modifier = Modifier,
     onCityCardDelete: (WeatherCity) -> Unit,
     onRefreshContent: () -> Unit,
     isLoading: Boolean,
+    modifier: Modifier = Modifier,
 ) {
     Box(modifier = modifier.fillMaxSize()) {
         Column(modifier = modifier.fillMaxSize()) {
@@ -190,6 +219,15 @@ fun WeatherAppContent(
     }
 }
 
+/**
+ * the main WeatherListAndDetailsContent composable
+ * @param weatherUiState the state of the weather
+ * @param onCityCardPressed the callback to be called when a city card is pressed
+ * @param onCityCardDelete the callback to be called when a city card is deleted
+ * @param onRefreshContent the callback to be called when the user wants to refresh the content
+ * @param isLoading the loading state of the content
+ * @param showSelected the state of the selected city
+ */
 @Composable
 fun WeatherListAndDetailsContent(
     weatherUiState: WeatherUiState,
