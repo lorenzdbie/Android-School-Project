@@ -137,7 +137,6 @@ class WeatherViewModel(
      * @param longitude longitude coordinate
      * @param latitude latitude coordinate
      */
-
     private fun getNearestCity(latitude: Double, longitude: Double) {
         viewModelScope.launch {
             apiState = ApiUiState.Loading
@@ -174,7 +173,6 @@ class WeatherViewModel(
     /**
      * gets the nearest city based on current location
      */
-
     private fun getNearestCityBasedOnCurrentLocation() {
         viewModelScope.launch {
             locationManager?.getCurrentLocation { lat, long ->
@@ -275,7 +273,6 @@ class WeatherViewModel(
      * @param state a state name
      * @param city a city name
      */
-
     fun getCity(country: String, state: String, city: String) {
         viewModelScope.launch {
             apiState = ApiUiState.Loading

@@ -79,7 +79,7 @@ fun WeatherListScreen(
             val localCity = weatherUiState.localCity
             val cityList = weatherUiState.cityList
             val cities = mutableListOf<WeatherCity>()
-//
+
             localCity?.let { cities.add(it) }
             cities.addAll(cityList)
 

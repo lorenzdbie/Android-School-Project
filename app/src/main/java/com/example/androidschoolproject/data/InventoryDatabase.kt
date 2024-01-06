@@ -9,6 +9,9 @@ import com.example.androidschoolproject.model.Pollution
 import com.example.androidschoolproject.model.Weather
 import com.example.androidschoolproject.model.WeatherCity
 
+/**
+ * the main Database class which uses Room and holld all the tables
+ */
 @Database(
     entities = [WeatherCity::class, CityCoordinates::class, Pollution::class, Weather::class],
     version = 1,

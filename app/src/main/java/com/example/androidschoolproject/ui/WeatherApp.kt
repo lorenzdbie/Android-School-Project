@@ -1,7 +1,5 @@
 package com.example.androidschoolproject.ui
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -18,7 +16,7 @@ import kotlinx.coroutines.launch
  * @param locationEnabled boolean whether or not the app will use location data
  * @param windowSize the size of the devices screen size
  */
-@RequiresApi(Build.VERSION_CODES.O)
+// @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun WeatherApp(
     locationEnabled: Boolean,

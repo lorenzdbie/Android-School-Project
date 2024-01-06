@@ -7,6 +7,17 @@ import com.example.androidschoolproject.network.TableNames
 import com.example.androidschoolproject.network.WeatherCityData
 import kotlinx.serialization.Serializable
 
+/**
+ * Data class for WeatherCity
+ * @param id id of the city, auto generated
+ * @param city name of the city
+ * @param state name of the state
+ * @param country name of the country
+ * @param cityLocation location of the city in coordinates
+ * @param weather weather data of the city
+ * @param pollution pollution data of the city
+ * @param creationTime time of creation of the WeatherCity object
+ */
 @Serializable
 @Entity(tableName = TableNames.WEATHER_CITIES)
 data class WeatherCity(
@@ -25,6 +36,11 @@ data class WeatherCity(
     val creationTime: Long = System.currentTimeMillis(),
 )
 
+/**
+ * function to convert WeatherCityData to WeatherCity
+ * @param data WeatherCityData to be converted
+ * @return WeatherCity converted from WeatherCityData
+ */
 fun createWeatherCity(data: WeatherCityData): WeatherCity {
     val city = data.city
     val state = data.state

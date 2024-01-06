@@ -1,7 +1,7 @@
 package com.example.androidschoolproject.test
 
-import com.example.androidschoolproject.location.FakeLocationManager
 import com.example.androidschoolproject.test.fake.FakeApiRepository
+import com.example.androidschoolproject.test.fake.FakeLocationManager
 import com.example.androidschoolproject.test.fake.FakeWeatherCityRepository
 import com.example.androidschoolproject.ui.WeatherViewModel
 import kotlinx.coroutines.Dispatchers

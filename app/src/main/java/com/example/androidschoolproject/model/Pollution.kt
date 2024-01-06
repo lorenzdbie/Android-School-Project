@@ -7,6 +7,15 @@ import com.example.androidschoolproject.network.TableNames
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
+/**
+ * the main Data class for Pollution in the WeatherCity
+ * @param id id of the pollution, auto generated
+ * @param timeStamp time of the pollution data
+ * @param aqiUsa air quality index of the pollution according to USA standards
+ * @param mainUsa main pollutant of the pollution according to USA standards
+ * @param aqiChina air quality index of the pollution according to China standards
+ * @param mainChina main pollutant of the pollution according to China standards
+ */
 @Serializable
 @Entity(tableName = TableNames.POLLUTION)
 data class Pollution(

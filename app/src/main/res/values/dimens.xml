@@ -8,15 +8,21 @@
     <dimen name="card_padding">10dp</dimen>
     <dimen name="icon_padding">2dp</dimen>
     <dimen name="button_padding">10dp</dimen>
+
     <dimen name="header_padding">20dp</dimen>
+    <dimen name="header_padding_small">10dp</dimen>
     <dimen name="add_city_header_padding">15dp</dimen>
     <dimen name="image_size">64dp</dimen>
+
     <dimen name='icon_size_small'>50dp</dimen>
     <dimen name='icon_size_large'>120dp</dimen>
+    <dimen name='icon_size_xlarge'>200dp</dimen>
     <dimen name="text_padding_medium">30dp</dimen>
     <dimen name="detail_topbar_close_button_padding_horizontal">10dp</dimen>
     <dimen name="detail_topbar_back_button_padding_horizontal">24dp</dimen>
     <dimen name="windrose_size">100dp</dimen>
+    <dimen name="windrose_padding">15dp</dimen>
     <dimen name="selector_height">500dp</dimen>
     <dimen name="max_card_width">600dp</dimen>
+    <dimen name="max_detailCard_width">300dp</dimen>
 </resources>

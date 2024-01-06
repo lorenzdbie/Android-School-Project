@@ -34,7 +34,7 @@
     <string name="air_quality">Air Quality</string>
     <string name="us_standard">USA standard</string>
     <string name="china_standard">China standard</string>
-    <string name="lastUpdated">Last updated: </string>
+    <string name="lastUpdated">Last updated: %s</string>
 
     <string name="location_title">locationPermission</string>
     <string name="weather_title">weatherApp</string>
@@ -43,4 +43,13 @@
     <string name="error_text">An error occurred while fetching data from the API.\nTry again later.</string>
     <string name="button_close">Close</string>
     <string name="delete">delete</string>
+
+    <string name="temperature_unit">°C</string>
+    <string name="pressure_unit">hPa</string>
+    <string name="humidity_unit">%</string>
+
+    <string name="ask_sharing">Would you like to view the weather at your location?</string>
+    <string name="start_sharing">Start sharing your location with us</string>
+    <string name="share_location">Share location</string>
+    <string name="decline_sharing">Maybe later</string>
 </resources>

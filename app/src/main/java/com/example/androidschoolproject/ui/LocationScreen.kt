@@ -19,9 +19,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.example.androidschoolproject.R
 
 /**
@@ -44,7 +45,7 @@ fun LocationPermissionScreen(goToStartScreen: () -> Unit, modifier: Modifier = M
         modifier = modifier.fillMaxSize(),
     ) {
         Column(
-            modifier = modifier.padding(16.dp),
+            modifier = modifier.padding(dimensionResource(id = R.dimen.padding_medium)),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
@@ -52,26 +53,26 @@ fun LocationPermissionScreen(goToStartScreen: () -> Unit, modifier: Modifier = M
             Icon(
                 painter = painterResource(id = R.drawable.location_on),
                 contentDescription = null,
-                modifier = Modifier.size(200.dp),
+                modifier = Modifier.size(dimensionResource(id = R.dimen.icon_size_xlarge)),
             )
             Spacer(modifier = Modifier.weight(0.5f))
             Text(
-                text = "Would you like to view the weather at your location?",
+                text = stringResource(id = R.string.ask_sharing),
                 style = MaterialTheme.typography.headlineLarge,
-                modifier = Modifier.padding(bottom = 16.dp),
+                modifier = Modifier.padding(bottom = dimensionResource(id = R.dimen.padding_medium)),
             )
-            Text(text = "Start sharing your location with us")
+            Text(text = stringResource(id = R.string.start_sharing))
             Spacer(modifier = Modifier.weight(1f))
             Button(
                 onClick = { requestPermissionLauncher.launch(android.Manifest.permission.ACCESS_FINE_LOCATION) },
             ) {
-                Text(text = "Share location")
+                Text(text = stringResource(id = R.string.share_location))
             }
             Button(
                 onClick = goToStartScreen,
                 colors = ButtonDefaults.buttonColors(Color.Transparent),
             ) {
-                Text(text = "Maybe later", modifier = Modifier.background(Color.Transparent))
+                Text(text = stringResource(id = R.string.decline_sharing), modifier = Modifier.background(Color.Transparent))
             }
             Spacer(modifier = Modifier.weight(0.3f))
         }

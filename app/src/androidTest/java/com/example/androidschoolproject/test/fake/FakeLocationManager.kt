@@ -1,4 +1,6 @@
-package com.example.androidschoolproject.location
+package com.example.androidschoolproject.test.fake
+
+import com.example.androidschoolproject.location.LocationManager
 
 class FakeLocationManager : LocationManager {
     override fun getCurrentLocation(callback: (Double, Double) -> Unit) {

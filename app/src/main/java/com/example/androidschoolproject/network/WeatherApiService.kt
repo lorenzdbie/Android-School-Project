@@ -48,23 +48,20 @@ interface WeatherApiService {
     suspend fun getNearestCity(
         @Query("lat") latitude: Double,
         @Query("lon") longitude: Double,
-//        @Query("key") apiKey: String,
     ): WeatherCityResponse
 
     @GET("countries")
-    suspend fun getCountries(/*@Query("key") apiKey: String*/): CountriesResponse
+    suspend fun getCountries(): CountriesResponse
 
     @GET("states")
     suspend fun getStates(
         @Query("country") country: String,
-//        @Query("key") apiKey: String,
     ): CountryStatesResponse
 
     @GET("cities")
     suspend fun getCities(
         @Query("state") state: String,
         @Query("country") country: String,
-//        @Query("key") apiKey: String,
     ): CitiesResponse
 
     @GET("city")
@@ -72,7 +69,6 @@ interface WeatherApiService {
         @Query("city") city: String,
         @Query("state") state: String,
         @Query("country") country: String,
-//        @Query("key") apiKey: String,
     ): WeatherCityResponse
 }
 

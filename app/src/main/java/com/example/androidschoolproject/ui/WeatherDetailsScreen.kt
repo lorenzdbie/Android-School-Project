@@ -13,6 +13,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.sizeIn
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
@@ -41,6 +43,12 @@ import com.example.androidschoolproject.ui.utils.WindDirection
 import com.example.androidschoolproject.ui.utils.formatToLocalDateTime
 import com.example.androidschoolproject.ui.utils.pollutionUnit
 
+/**
+ * tThe main DetailsWeatherScreen composable. It displays the weather details of a city.
+ * @param weatherUiState the state of the weather details screen
+ * @param onBackPressed the callback to be called when the back button is pressed
+ * @param isFullScreen whether the screen is full screen or not
+ */
 @Composable
 fun DetailsWeatherScreen(
     weatherUiState: WeatherUiState,
@@ -74,7 +82,6 @@ fun DetailsWeatherScreen(
             if (city != null) {
                 DetailHeader(city = city)
                 Divider()
-                //  Spacer(modifier = Modifier.weight(1f))
                 LazyColumn {
                     item { WeatherDetails(city = city) }
                     item { Divider() }
@@ -82,8 +89,10 @@ fun DetailsWeatherScreen(
                 }
                 Spacer(modifier = Modifier.weight(1f))
                 Text(
-                    "Last updated : ${formatToLocalDateTime(dateString = city.weather.timeStamp)}",
-                    //  text= "Last update: ${city.weather.timeStamp}",
+                    text = stringResource(
+                        id = R.string.lastUpdated,
+                        "${formatToLocalDateTime(dateString = city.weather.timeStamp)}",
+                    ),
                     modifier = Modifier.align(
                         Alignment.CenterHorizontally,
                     ),
@@ -93,20 +102,28 @@ fun DetailsWeatherScreen(
     }
 }
 
+/**
+ * The header of the weather details screen
+ * @param city the city to display
+ */
 @Composable
 fun DetailHeader(city: WeatherCity) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(bottom = 20.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
+            .padding(vertical = dimensionResource(id = R.dimen.header_padding_small)),
+        horizontalArrangement = Arrangement.SpaceEvenly,
     ) {
-        Text("Country: \n${city.country}")
-        Text("State: \n${city.state}")
-        Text("City: \n${city.city}")
+        Text(stringResource(id = R.string.country_label, city.country))
+        Text(stringResource(id = R.string.state_label, city.state))
+        Text(stringResource(id = R.string.country_label, city.city))
     }
 }
 
+/**
+ * The weather details of a city
+ * @param city the city to display
+ */
 @Composable
 fun WeatherDetails(city: WeatherCity) {
     Column {
@@ -115,39 +132,49 @@ fun WeatherDetails(city: WeatherCity) {
             modifier = Modifier.fillMaxSize(),
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
-            Column(modifier = Modifier.weight(1f)) {
+            Column(
+                modifier = Modifier.weight(1f),
+                horizontalAlignment = Alignment.End,
+            ) {
                 DetailCard(
                     detailTitle = R.string.temperature,
                     value = city.weather.temperature,
-                    unit = "°C",
+                    unit = stringResource(id = R.string.temperature_unit),
                 )
-                //         Temperature2(city = city)
                 Wind(city = city)
             }
-            Column(modifier = Modifier.weight(1f)) {
+            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.card_padding)))
+            Column(
+                modifier = Modifier.weight(1f),
+                horizontalAlignment = Alignment.Start,
+            ) {
                 WeatherIconCard(city = city)
                 DetailCard(
                     detailTitle = R.string.humidity,
                     value = city.weather.humidity,
-                    unit = "%",
+                    unit = stringResource(id = R.string.humidity_unit),
                 )
                 DetailCard(
                     detailTitle = R.string.pressure,
                     value = city.weather.atmosphericPressure,
-                    unit = " hPa",
+                    unit = " ${stringResource(id = R.string.pressure_unit)}",
                 )
-                //         Humidity(city = city)
-                //           Pressure(city = city)
             }
         }
     }
 }
 
+/**
+ * A card displaying a weather detail
+ * @param detailTitle the title of the detail
+ * @param value the value of the detail
+ * @param unit the unit of the detail
+ */
 @Composable
 fun DetailCard(@StringRes detailTitle: Int, value: Number, unit: String) {
     Card(
         modifier = Modifier
-            .fillMaxSize()
+            .sizeIn(maxWidth = dimensionResource(id = R.dimen.max_detailCard_width))
             .padding(dimensionResource(id = R.dimen.card_padding)),
     ) {
         Column(
@@ -164,32 +191,15 @@ fun DetailCard(@StringRes detailTitle: Int, value: Number, unit: String) {
     }
 }
 
-// @Composable
-// fun Temperature2(city: WeatherCity) {
-//    Card(
-//        modifier = Modifier
-//            .fillMaxSize()
-//            .padding(10.dp)
-//    ) {
-//        Column(
-//            modifier = Modifier
-//                .fillMaxSize()
-//                .padding(10.dp)
-//        ) {
-//            Text("Temperature")
-//            Text(
-//                "${city.weather.temperature}°C",
-//                modifier = Modifier.align(Alignment.CenterHorizontally)
-//            )
-//        }
-//    }
-// }
-
+/**
+ * The wind details of a city
+ * @param city the city to display
+ */
 @Composable
 fun Wind(city: WeatherCity) {
     Card(
         modifier = Modifier
-            .fillMaxSize()
+            .sizeIn(maxWidth = dimensionResource(id = R.dimen.max_detailCard_width))
             .padding(dimensionResource(id = R.dimen.card_padding)),
     ) {
         Column(
@@ -207,59 +217,21 @@ fun Wind(city: WeatherCity) {
     }
 }
 
-// @Composable
-// fun Humidity(city: WeatherCity) {
-//    Card(
-//        modifier = Modifier
-//            .fillMaxSize()
-//            .padding(10.dp)
-//    ) {
-//        Column(
-//            modifier = Modifier
-//                .fillMaxSize()
-//                .padding(10.dp)
-//        ) {
-//            Text("Humidity")
-//            Text(
-//                "${city.weather.humidity}%",
-//                modifier = Modifier.align(Alignment.CenterHorizontally)
-//            )
-//        }
-//    }
-// }
-//
-// @Composable
-// fun Pressure(city: WeatherCity) {
-//    Card(
-//        modifier = Modifier
-//            .fillMaxSize()
-//            .padding(10.dp)
-//    ) {
-//        Column(
-//            modifier = Modifier
-//                .fillMaxSize()
-//                .padding(10.dp)
-//        ) {
-//            Text("Pressure")
-//            Text(
-//                "${city.weather.atmosphericPressure}hPa",
-//                modifier = Modifier.align(Alignment.CenterHorizontally)
-//            )
-//        }
-//    }
-// }
-
+/**
+ * The weather icon of a city
+ * @param city the city to display
+ */
 @Composable
 fun WeatherIconCard(city: WeatherCity) {
     Card(
         modifier = Modifier
-            .fillMaxSize()
-            .padding(10.dp),
+            .sizeIn(maxWidth = dimensionResource(id = R.dimen.max_detailCard_width))
+            .padding(dimensionResource(id = R.dimen.card_padding)),
     ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(10.dp),
+                .padding(dimensionResource(id = R.dimen.card_padding)),
             Arrangement.Center,
             Alignment.CenterHorizontally,
         ) {
@@ -268,6 +240,10 @@ fun WeatherIconCard(city: WeatherCity) {
     }
 }
 
+/**
+ * The pollution details of a city
+ * @param city the city to display
+ */
 @Composable
 fun PollutionDetails(city: WeatherCity) {
     Column {
@@ -276,16 +252,21 @@ fun PollutionDetails(city: WeatherCity) {
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
-            Column(modifier = Modifier.weight(1f), Arrangement.SpaceBetween) {
+            Column(
+                modifier = Modifier.weight(1f),
+                horizontalAlignment = Alignment.End,
+            ) {
                 DetailCard(
                     detailTitle = R.string.us_standard,
                     value = city.pollution.aqiUsa,
                     unit = " ${pollutionUnit(city.pollution.mainUsa)}",
                 )
-                //      UsaQualityCard(city = city)
             }
-            Column(modifier = Modifier.weight(1f), Arrangement.SpaceBetween) {
-                //      ChinaQualityCard(city = city)
+            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.card_padding)))
+            Column(
+                modifier = Modifier.weight(1f),
+                horizontalAlignment = Alignment.Start,
+            ) {
                 DetailCard(
                     detailTitle = R.string.china_standard,
                     value = city.pollution.aqiChina,
@@ -295,62 +276,24 @@ fun PollutionDetails(city: WeatherCity) {
         }
     }
 }
-//
-// @Composable
-// fun UsaQualityCard(city: WeatherCity) {
-//    Card(
-//        modifier = Modifier
-//            .fillMaxSize()
-//            .padding(10.dp)
-//    ) {
-//        Column(
-//            modifier = Modifier
-//                .fillMaxSize()
-//                .padding(10.dp)
-//        ) {
-//            Text("USA standard")
-//            Text(
-//                "${city.pollution.aqiUsa} ${pollutionUnit(city.pollution.mainUsa)}",
-//                modifier = Modifier.align(Alignment.CenterHorizontally)
-//            )
-//        }
-//    }
-// }
-//
-// @Composable
-// fun ChinaQualityCard(city: WeatherCity) {
-//    Card(
-//        modifier = Modifier
-//            .fillMaxSize()
-//            .padding(10.dp)
-//    ) {
-//        Column(
-//            modifier = Modifier
-//                .fillMaxSize()
-//                .padding(10.dp)
-//        ) {
-//            Text("China Standard")
-//            Text(
-//                "${city.pollution.aqiUsa} ${pollutionUnit(city.pollution.mainUsa)}",
-//                modifier = Modifier.align(Alignment.CenterHorizontally)
-//            )
-//        }
-//    }
-// }
 
+/**
+ * The wind direction of a city
+ * @param windDirection the direction of the wind
+ */
 @Composable
 private fun WindDirectionRose(windDirection: Int) {
     Box(
         modifier = Modifier
-            .padding(15.dp),
+            .padding(dimensionResource(id = R.dimen.windrose_padding)),
     ) {
         Image(
-            painter = painterResource(id = R.drawable.compass), // Replace R.drawable.ic_compass with your actual compass image resource
+            painter = painterResource(id = R.drawable.compass),
             contentDescription = null,
             modifier = Modifier
-                .size(100.dp)
+                .size(dimensionResource(id = R.dimen.windrose_size))
                 .clip(CircleShape)
-                .scale(1.2f) // Adjust the scale factor as needed
+                .scale(1.2f)
                 .graphicsLayer(
                     rotationZ = windDirection - 32f,
                     transformOrigin = TransformOrigin(0.5f, 0.5f),
@@ -359,11 +302,3 @@ private fun WindDirectionRose(windDirection: Int) {
         )
     }
 }
-
-// @Preview(showBackground = true)
-// @Composable
-// fun CityWeatherDetailsPreview() {
-//    AndroidSchoolProjectTheme {
-//        DetailsWeatherScreen(weatherUiState = WeatherUiState.MyState(), onBackPressed = {}, isFullScreen = true)
-//    }
-// }

@@ -42,6 +42,13 @@ import com.example.androidschoolproject.R
 
 /**
  * the main AddCityScreen composable
+ * @param weatherUiState the state of the weather ui
+ * @param onClosePressed the callback to be called when the close button is pressed
+ * @param collectCountries the callback to be called to collect the countries
+ * @param collectStates the callback to be called to collect the states
+ * @param collectCities the callback to be called to collect the cities
+ * @param onCitySelect the callback to be called when the city is selected
+ * @param onClickAddCity the callback to be called when the add city button is pressed
  */
 @Composable
 fun AddCityScreen(

@@ -23,8 +23,13 @@ android {
         }
     }
 
+    buildFeatures {
+        compose = true
+        //    buildConfig = true
+    }
     buildTypes {
         release {
+            //    buildConfigField("String", "API_KEY", "\"efc93cd2-4e04-445e-beec-c8e9d2b5aca1\"")
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -39,9 +44,7 @@ android {
     kotlinOptions {
         jvmTarget = "17"
     }
-    buildFeatures {
-        compose = true
-    }
+
     composeOptions {
         kotlinCompilerExtensionVersion = "1.4.7"
     }

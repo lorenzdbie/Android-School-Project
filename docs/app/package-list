@@ -52,9 +52,6 @@ $dokka.location:com.example.androidschoolproject.data/WeatherDao/getWeatherCity/
 $dokka.location:com.example.androidschoolproject.data/WeatherDao/insert/#com.example.androidschoolproject.model.WeatherCity/PointingToDeclaration/app/com.example.androidschoolproject.data/-weather-dao/insert.html
 $dokka.location:com.example.androidschoolproject.data/WeatherDao/update/#com.example.androidschoolproject.model.WeatherCity/PointingToDeclaration/app/com.example.androidschoolproject.data/-weather-dao/update.html
 $dokka.location:com.example.androidschoolproject.location////PointingToDeclaration/app/com.example.androidschoolproject.location/index.html
-$dokka.location:com.example.androidschoolproject.location/FakeLocationManager///PointingToDeclaration/app/com.example.androidschoolproject.location/-fake-location-manager/index.html
-$dokka.location:com.example.androidschoolproject.location/FakeLocationManager/FakeLocationManager/#/PointingToDeclaration/app/com.example.androidschoolproject.location/-fake-location-manager/-fake-location-manager.html
-$dokka.location:com.example.androidschoolproject.location/FakeLocationManager/getCurrentLocation/#kotlin.Function2[kotlin.Double,kotlin.Double,kotlin.Unit]/PointingToDeclaration/app/com.example.androidschoolproject.location/-fake-location-manager/get-current-location.html
 $dokka.location:com.example.androidschoolproject.location/GpsLocationManager///PointingToDeclaration/app/com.example.androidschoolproject.location/-gps-location-manager/index.html
 $dokka.location:com.example.androidschoolproject.location/GpsLocationManager/GpsLocationManager/#android.content.Context/PointingToDeclaration/app/com.example.androidschoolproject.location/-gps-location-manager/-gps-location-manager.html
 $dokka.location:com.example.androidschoolproject.location/GpsLocationManager/context/#/PointingToDeclaration/app/com.example.androidschoolproject.location/-gps-location-manager/context.html
@@ -68,12 +65,6 @@ $dokka.location:com.example.androidschoolproject.model/CityCoordinates/CityCoord
 $dokka.location:com.example.androidschoolproject.model/CityCoordinates/id/#/PointingToDeclaration/app/com.example.androidschoolproject.model/-city-coordinates/id.html
 $dokka.location:com.example.androidschoolproject.model/CityCoordinates/latitude/#/PointingToDeclaration/app/com.example.androidschoolproject.model/-city-coordinates/latitude.html
 $dokka.location:com.example.androidschoolproject.model/CityCoordinates/longitude/#/PointingToDeclaration/app/com.example.androidschoolproject.model/-city-coordinates/longitude.html
-$dokka.location:com.example.androidschoolproject.model/CityLocation///PointingToDeclaration/app/com.example.androidschoolproject.model/-city-location/index.html
-$dokka.location:com.example.androidschoolproject.model/CityLocation/CityLocation/#kotlin.String#kotlin.DoubleArray/PointingToDeclaration/app/com.example.androidschoolproject.model/-city-location/-city-location.html
-$dokka.location:com.example.androidschoolproject.model/CityLocation/coordinates/#/PointingToDeclaration/app/com.example.androidschoolproject.model/-city-location/coordinates.html
-$dokka.location:com.example.androidschoolproject.model/CityLocation/equals/#kotlin.Any?/PointingToDeclaration/app/com.example.androidschoolproject.model/-city-location/equals.html
-$dokka.location:com.example.androidschoolproject.model/CityLocation/hashCode/#/PointingToDeclaration/app/com.example.androidschoolproject.model/-city-location/hash-code.html
-$dokka.location:com.example.androidschoolproject.model/CityLocation/type/#/PointingToDeclaration/app/com.example.androidschoolproject.model/-city-location/type.html
 $dokka.location:com.example.androidschoolproject.model/Pollution///PointingToDeclaration/app/com.example.androidschoolproject.model/-pollution/index.html
 $dokka.location:com.example.androidschoolproject.model/Pollution/Pollution/#kotlin.Int#kotlin.String#kotlin.Int#kotlin.String#kotlin.Int#kotlin.String/PointingToDeclaration/app/com.example.androidschoolproject.model/-pollution/-pollution.html
 $dokka.location:com.example.androidschoolproject.model/Pollution/aqiChina/#/PointingToDeclaration/app/com.example.androidschoolproject.model/-pollution/aqi-china.html
@@ -116,6 +107,12 @@ $dokka.location:com.example.androidschoolproject.network/CitiesResponse/status/#
 $dokka.location:com.example.androidschoolproject.network/City///PointingToDeclaration/app/com.example.androidschoolproject.network/-city/index.html
 $dokka.location:com.example.androidschoolproject.network/City/City/#kotlin.String/PointingToDeclaration/app/com.example.androidschoolproject.network/-city/-city.html
 $dokka.location:com.example.androidschoolproject.network/City/city/#/PointingToDeclaration/app/com.example.androidschoolproject.network/-city/city.html
+$dokka.location:com.example.androidschoolproject.network/CityLocation///PointingToDeclaration/app/com.example.androidschoolproject.network/-city-location/index.html
+$dokka.location:com.example.androidschoolproject.network/CityLocation/CityLocation/#kotlin.String#kotlin.DoubleArray/PointingToDeclaration/app/com.example.androidschoolproject.network/-city-location/-city-location.html
+$dokka.location:com.example.androidschoolproject.network/CityLocation/coordinates/#/PointingToDeclaration/app/com.example.androidschoolproject.network/-city-location/coordinates.html
+$dokka.location:com.example.androidschoolproject.network/CityLocation/equals/#kotlin.Any?/PointingToDeclaration/app/com.example.androidschoolproject.network/-city-location/equals.html
+$dokka.location:com.example.androidschoolproject.network/CityLocation/hashCode/#/PointingToDeclaration/app/com.example.androidschoolproject.network/-city-location/hash-code.html
+$dokka.location:com.example.androidschoolproject.network/CityLocation/type/#/PointingToDeclaration/app/com.example.androidschoolproject.network/-city-location/type.html
 $dokka.location:com.example.androidschoolproject.network/CountriesResponse///PointingToDeclaration/app/com.example.androidschoolproject.network/-countries-response/index.html
 $dokka.location:com.example.androidschoolproject.network/CountriesResponse/CountriesResponse/#kotlin.String#kotlin.collections.List[com.example.androidschoolproject.network.Country]/PointingToDeclaration/app/com.example.androidschoolproject.network/-countries-response/-countries-response.html
 $dokka.location:com.example.androidschoolproject.network/CountriesResponse/data/#/PointingToDeclaration/app/com.example.androidschoolproject.network/-countries-response/data.html
@@ -148,7 +145,7 @@ $dokka.location:com.example.androidschoolproject.network/WeatherApiService/getCo
 $dokka.location:com.example.androidschoolproject.network/WeatherApiService/getNearestCity/#kotlin.Double#kotlin.Double/PointingToDeclaration/app/com.example.androidschoolproject.network/-weather-api-service/get-nearest-city.html
 $dokka.location:com.example.androidschoolproject.network/WeatherApiService/getStates/#kotlin.String/PointingToDeclaration/app/com.example.androidschoolproject.network/-weather-api-service/get-states.html
 $dokka.location:com.example.androidschoolproject.network/WeatherCityData///PointingToDeclaration/app/com.example.androidschoolproject.network/-weather-city-data/index.html
-$dokka.location:com.example.androidschoolproject.network/WeatherCityData/WeatherCityData/#kotlin.String#kotlin.String#kotlin.String#com.example.androidschoolproject.model.CityLocation#com.example.androidschoolproject.network.CurrentWeather/PointingToDeclaration/app/com.example.androidschoolproject.network/-weather-city-data/-weather-city-data.html
+$dokka.location:com.example.androidschoolproject.network/WeatherCityData/WeatherCityData/#kotlin.String#kotlin.String#kotlin.String#com.example.androidschoolproject.network.CityLocation#com.example.androidschoolproject.network.CurrentWeather/PointingToDeclaration/app/com.example.androidschoolproject.network/-weather-city-data/-weather-city-data.html
 $dokka.location:com.example.androidschoolproject.network/WeatherCityData/city/#/PointingToDeclaration/app/com.example.androidschoolproject.network/-weather-city-data/city.html
 $dokka.location:com.example.androidschoolproject.network/WeatherCityData/country/#/PointingToDeclaration/app/com.example.androidschoolproject.network/-weather-city-data/country.html
 $dokka.location:com.example.androidschoolproject.network/WeatherCityData/current/#/PointingToDeclaration/app/com.example.androidschoolproject.network/-weather-city-data/current.html
