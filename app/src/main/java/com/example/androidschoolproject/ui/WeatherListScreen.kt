@@ -197,10 +197,10 @@ private fun CityWeatherCard(
                 style = MaterialTheme.typography.headlineSmall,
                 modifier = Modifier.fillMaxWidth(0.6f),
             )
-            Text(
-                text = "${city.id}",
-                style = MaterialTheme.typography.headlineSmall,
-            )
+//            Text(
+//                text = "${city.id}",
+//                style = MaterialTheme.typography.headlineSmall,
+//            )
             Spacer(modifier = Modifier.weight(0.1f))
             Column(
                 modifier = Modifier.padding(horizontal = dimensionResource(id = R.dimen.card_padding)),
