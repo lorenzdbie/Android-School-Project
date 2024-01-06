@@ -47,8 +47,10 @@ class MainActivity : ComponentActivity() {
                     .background(
                         brush = Brush.verticalGradient(
                             colors = listOf(
-                                MaterialTheme.colorScheme.primary,
-                                MaterialTheme.colorScheme.secondary,
+                                MaterialTheme.colorScheme.onPrimary,
+                                MaterialTheme.colorScheme.inversePrimary,
+//                                MaterialTheme.colorScheme.onPrimary,
+//                                MaterialTheme.colorScheme.onSecondary,
                             ),
                         ),
                     )

@@ -20,6 +20,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -173,9 +174,13 @@ fun WeatherDetails(city: WeatherCity) {
 @Composable
 fun DetailCard(@StringRes detailTitle: Int, value: Number, unit: String) {
     Card(
+        elevation = CardDefaults.cardElevation(defaultElevation = dimensionResource(id = R.dimen.card_padding)),
         modifier = Modifier
             .sizeIn(maxWidth = dimensionResource(id = R.dimen.max_detailCard_width))
             .padding(dimensionResource(id = R.dimen.card_padding)),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.primaryContainer,
+        ),
     ) {
         Column(
             modifier = Modifier
@@ -198,9 +203,13 @@ fun DetailCard(@StringRes detailTitle: Int, value: Number, unit: String) {
 @Composable
 fun Wind(city: WeatherCity) {
     Card(
+        elevation = CardDefaults.cardElevation(defaultElevation = dimensionResource(id = R.dimen.card_padding)),
         modifier = Modifier
             .sizeIn(maxWidth = dimensionResource(id = R.dimen.max_detailCard_width))
             .padding(dimensionResource(id = R.dimen.card_padding)),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.primaryContainer,
+        ),
     ) {
         Column(
             modifier = Modifier
@@ -224,9 +233,13 @@ fun Wind(city: WeatherCity) {
 @Composable
 fun WeatherIconCard(city: WeatherCity) {
     Card(
+        elevation = CardDefaults.cardElevation(defaultElevation = dimensionResource(id = R.dimen.card_padding)),
         modifier = Modifier
             .sizeIn(maxWidth = dimensionResource(id = R.dimen.max_detailCard_width))
             .padding(dimensionResource(id = R.dimen.card_padding)),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.primaryContainer,
+        ),
     ) {
         Column(
             modifier = Modifier
@@ -264,7 +277,7 @@ fun PollutionDetails(city: WeatherCity) {
             }
             Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.card_padding)))
             Column(
-                modifier = Modifier.weight(1f),
+                modifier = Modifier.weight(1f).padding(bottom = dimensionResource(id = R.dimen.card_padding)),
                 horizontalAlignment = Alignment.Start,
             ) {
                 DetailCard(
