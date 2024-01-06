@@ -1,12 +1,12 @@
 package com.example.androidschoolproject.test.fake
 
-import com.example.androidschoolproject.model.CityLocation
 import com.example.androidschoolproject.model.Pollution
 import com.example.androidschoolproject.model.Weather
 import com.example.androidschoolproject.model.WeatherCity
 import com.example.androidschoolproject.model.createWeatherCity
 import com.example.androidschoolproject.network.CitiesResponse
 import com.example.androidschoolproject.network.City
+import com.example.androidschoolproject.network.CityLocation
 import com.example.androidschoolproject.network.CountriesResponse
 import com.example.androidschoolproject.network.Country
 import com.example.androidschoolproject.network.CountryState

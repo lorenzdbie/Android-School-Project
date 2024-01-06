@@ -18,7 +18,8 @@ class WeatherAppTest {
     @TestCompactWidth
     fun compactDevice_verifySmallAddButton() {
         composeTestRule.setContent {
-            WeatherApp(locationEnabled = false,
+            WeatherApp(
+                locationEnabled = false,
                 windowSize = WindowWidthSizeClass.Compact,
             )
         }
@@ -30,7 +31,8 @@ class WeatherAppTest {
     @TestMediumWidth
     fun mediumDevice_verifySmallAddButton() {
         composeTestRule.setContent {
-            WeatherApp(locationEnabled = false,
+            WeatherApp(
+                locationEnabled = false,
                 windowSize = WindowWidthSizeClass.Medium,
             )
         }
@@ -42,7 +44,8 @@ class WeatherAppTest {
     @TestExpandedWidth
     fun extendedDevice_verifyLargeAddButton() {
         composeTestRule.setContent {
-            WeatherApp(locationEnabled = false,
+            WeatherApp(
+                locationEnabled = false,
                 windowSize = WindowWidthSizeClass.Expanded,
             )
         }
@@ -54,7 +57,8 @@ class WeatherAppTest {
     @TestCompactWidth
     fun compactDevice_verifyWeatherListOnlyScreen() {
         composeTestRule.setContent {
-            WeatherApp(locationEnabled = false,
+            WeatherApp(
+                locationEnabled = false,
                 windowSize = WindowWidthSizeClass.Compact,
             )
         }
@@ -66,7 +70,8 @@ class WeatherAppTest {
     @TestMediumWidth
     fun mediumDevice_verifyWeatherOnlyListContent() {
         composeTestRule.setContent {
-            WeatherApp(locationEnabled = false,
+            WeatherApp(
+                locationEnabled = false,
                 windowSize = WindowWidthSizeClass.Medium,
             )
         }
@@ -78,7 +83,8 @@ class WeatherAppTest {
     @TestExpandedWidth
     fun extendedDevice_verifyWeatherListAndDetailsContent() {
         composeTestRule.setContent {
-            WeatherApp(locationEnabled = false,
+            WeatherApp(
+                locationEnabled = false,
                 windowSize = WindowWidthSizeClass.Expanded,
             )
         }
@@ -90,7 +96,8 @@ class WeatherAppTest {
     @TestCompactWidth
     fun compactDevice_addCityButtonPressed_verifyAddCityScreenShowing() {
         composeTestRule.setContent {
-            WeatherApp(locationEnabled = false,
+            WeatherApp(
+                locationEnabled = false,
                 windowSize = WindowWidthSizeClass.Compact,
             )
         }
@@ -103,7 +110,8 @@ class WeatherAppTest {
     @TestMediumWidth
     fun mediumDevice_addCityButtonPressed_verifyAddCityScreenShowing() {
         composeTestRule.setContent {
-            WeatherApp(locationEnabled = false,
+            WeatherApp(
+                locationEnabled = false,
                 windowSize = WindowWidthSizeClass.Compact,
             )
         }
@@ -116,7 +124,8 @@ class WeatherAppTest {
     @TestExpandedWidth
     fun extendedDevice_addCityButtonPressed_verifyAddCityScreenShowing() {
         composeTestRule.setContent {
-            WeatherApp(locationEnabled = false,
+            WeatherApp(
+                locationEnabled = false,
                 windowSize = WindowWidthSizeClass.Compact,
             )
         }

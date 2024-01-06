@@ -6,7 +6,6 @@ import com.example.androidschoolproject.test.fake.FakeWeatherCityRepository
 import com.example.androidschoolproject.ui.WeatherViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.TestDispatcher
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
@@ -16,29 +15,27 @@ import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
 import org.junit.Before
 import org.junit.Test
-import org.junit.rules.TestWatcher
-import org.junit.runner.Description
 
-class TestDispatcherRule(
-    private val testDispatcher: TestDispatcher = UnconfinedTestDispatcher(),
-) : TestWatcher() {
-    @OptIn(ExperimentalCoroutinesApi::class)
-    override fun starting(description: Description) {
-        Dispatchers.setMain(testDispatcher)
-    }
-
-    @OptIn(ExperimentalCoroutinesApi::class)
-    override fun finished(description: Description) {
-        Dispatchers.resetMain()
-    }
-}
+// class TestDispatcherRule(
+//     private val testDispatcher: TestDispatcher = UnconfinedTestDispatcher(),
+// ) : TestWatcher() {
+//    @OptIn(ExperimentalCoroutinesApi::class)
+//    override fun starting(description: Description) {
+//        Dispatchers.setMain(testDispatcher)
+//    }
+//
+//    @OptIn(ExperimentalCoroutinesApi::class)
+//    override fun finished(description: Description) {
+//        Dispatchers.resetMain()
+//    }
+// }
 
 class WeatherViewModelTest {
     private lateinit var viewModel: WeatherViewModel
 
     private val country = "countryNameTest"
     private val state = "stateNameTest"
-    val city = "cityNameTest"
+    private val city = "cityNameTest"
 
     @OptIn(ExperimentalCoroutinesApi::class)
     @Before
