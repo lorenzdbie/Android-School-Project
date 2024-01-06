@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Close
@@ -74,8 +73,8 @@ fun AddCityScreen(
             modifier = modifier
                 .width(400.dp)
                 .padding(15.dp), // Add padding if necessary
-            elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
-            shape = RoundedCornerShape(40.dp), // Set the corner radius as needed
+            elevation = CardDefaults.cardElevation(defaultElevation = dimensionResource(id = R.dimen.card_elevation)),
+            shape = MaterialTheme.shapes.extraSmall, // Set the corner radius as needed
         ) {
             Column(modifier = Modifier.padding(10.dp)) {
                 AddCityHeader(onClosePressed = onClosePressed)
@@ -86,7 +85,7 @@ fun AddCityScreen(
                     onCitySelect = onCitySelect,
                 )
                 AddCityButton(
-                    enabled = weatherUiState.countryName != "Select Country" && weatherUiState.stateName != "Select State" && weatherUiState.cityName != "Select City",
+                    enabled = weatherUiState.countryName != stringResource(id = R.string.select_country) && weatherUiState.stateName != stringResource(id = R.string.select_state) && weatherUiState.cityName != stringResource(id = R.string.select_city),
                     onClick = {
                         onClickAddCity(
                             weatherUiState.countryName,
@@ -101,9 +100,9 @@ fun AddCityScreen(
 }
 
 /**
- * button to add the chosen city to the list of weatherCities
- * @param enabled enables the button
- * @param onClick viewModel function to add the chosen city to the list of weatherCities
+ * the AddCityButton composable
+ * @param enabled the state of the button
+ * @param onClick the callback to be called when the button is pressed
  */
 @Composable
 fun AddCityButton(enabled: Boolean, onClick: () -> Unit, modifier: Modifier = Modifier) {
@@ -111,22 +110,22 @@ fun AddCityButton(enabled: Boolean, onClick: () -> Unit, modifier: Modifier = Mo
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.Center,
     ) {
-        Button(enabled = enabled, onClick = onClick, modifier = Modifier.padding(10.dp)) {
+        Button(enabled = enabled, onClick = onClick, modifier = Modifier.padding(dimensionResource(id = R.dimen.button_padding))) {
             Text(text = stringResource(id = R.string.add_city), fontSize = 20.sp)
         }
     }
 }
 
 /**
- * ScreenHeader with button to close the screen
- * @param onClosePressed viewModel function to close the addCityScreen
+ * the header of the AddCityScreen
+ * @param onClosePressed the callback to be called when the close button is pressed
  */
 @Composable
 fun AddCityHeader(onClosePressed: () -> Unit, modifier: Modifier = Modifier) {
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .padding(bottom = 15.dp),
+            .padding(bottom = dimensionResource(id = R.dimen.add_city_header_padding)),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
     ) {
@@ -135,7 +134,7 @@ fun AddCityHeader(onClosePressed: () -> Unit, modifier: Modifier = Modifier) {
             fontSize = 36.sp,
             modifier = Modifier
                 .weight(1f)
-                .padding(start = 10.dp),
+                .padding(start = dimensionResource(id = R.dimen.card_padding)),
         )
         IconButton(
             onClick = onClosePressed,
@@ -152,7 +151,11 @@ fun AddCityHeader(onClosePressed: () -> Unit, modifier: Modifier = Modifier) {
 }
 
 /**
- * combines the generic selector for countries, states and cities
+ * the AddCitySelectors composable
+ * @param weatherUiState the state of the weather ui
+ * @param collectStates the callback to be called when the country is chosen
+ * @param collectCities the callback to be called when the state is chosen
+ * @param onCitySelect the callback to be called when the city is selected
  */
 @Composable
 private fun AddCitySelectors(
@@ -168,17 +171,21 @@ private fun AddCitySelectors(
 
     Column(
         modifier = modifier
-            .padding(start = 40.dp, top = 40.dp, bottom = 40.dp, end = 20.dp)
+            .padding(start = dimensionResource(id = R.dimen.padding_xlarge), top = dimensionResource(id = R.dimen.padding_xlarge), bottom = dimensionResource(id = R.dimen.padding_xlarge), end = dimensionResource(id = R.dimen.padding_large))
             .fillMaxWidth(),
     ) {
         Row(
             modifier
-                .padding(vertical = 10.dp)
+                .padding(vertical = dimensionResource(id = R.dimen.card_padding))
                 .fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Text(text = "Country: ", fontSize = 20.sp, modifier = Modifier.padding(end = 30.dp))
+            Text(
+                text = stringResource(id = R.string.country_name),
+                fontSize = 20.sp,
+                modifier = Modifier.padding(end = dimensionResource(id = R.dimen.text_padding_medium)),
+            )
             if (countries != null) {
                 SelectionInputField(
                     items = countries,
@@ -193,11 +200,15 @@ private fun AddCitySelectors(
 
         Row(
             modifier
-                .padding(vertical = 10.dp)
+                .padding(vertical = dimensionResource(id = R.dimen.card_padding))
                 .fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
-            Text(text = "State: ", fontSize = 20.sp, modifier = Modifier.padding(end = 30.dp))
+            Text(
+                text = stringResource(id = R.string.state_name),
+                fontSize = 20.sp,
+                modifier = Modifier.padding(end = 30.dp),
+            )
             if (states != null) {
                 SelectionInputField(
                     items = states,
@@ -216,7 +227,11 @@ private fun AddCitySelectors(
                 .fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
-            Text(text = "City: ", fontSize = 20.sp, modifier = Modifier.padding(end = 30.dp))
+            Text(
+                text = stringResource(id = R.string.city_name),
+                fontSize = 20.sp,
+                modifier = Modifier.padding(end = 30.dp),
+            )
             if (cities != null) {
                 SelectionInputField(
                     items = cities,
@@ -230,7 +245,11 @@ private fun AddCitySelectors(
 }
 
 /**
- * a generic composable to create a selection field based on the input list
+ * the SelectionInputField composable
+ * @param items the list of items to be shown
+ * @param onItemSelected the callback to be called when an item is selected
+ * @param selector the selector to select the item
+ * @param selectedItem the selected item
  */
 @Composable
 fun <T> SelectionInputField(
@@ -253,7 +272,7 @@ fun <T> SelectionInputField(
                 DropdownMenu(
                     expanded = expanded,
                     onDismissRequest = { expanded = false },
-                    modifier = Modifier.heightIn(max = 500.dp),
+                    modifier = Modifier.heightIn(max = dimensionResource(id = R.dimen.selector_height)),
                 ) {
                     items.forEach { item ->
                         DropdownMenuItem(

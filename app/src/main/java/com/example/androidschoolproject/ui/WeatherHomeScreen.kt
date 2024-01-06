@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.AlertDialog
@@ -181,7 +182,10 @@ fun WeatherAppContent(
     modifier: Modifier = Modifier,
 ) {
     Box(modifier = modifier.fillMaxSize()) {
-        Column(modifier = modifier.fillMaxSize()) {
+        Column(
+            modifier = modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
             WeatherTopAppBar(modifier = modifier.fillMaxWidth())
             if (contentType == WeatherContentType.LIST_AND_DETAIL) {
                 WeatherListAndDetailsContent(
@@ -193,18 +197,18 @@ fun WeatherAppContent(
                     modifier = modifier,
                 )
             } else {
-                Row(modifier = Modifier.fillMaxWidth(), Arrangement.SpaceBetween) {
+                Row(modifier = Modifier.widthIn(max = dimensionResource(id = R.dimen.max_card_width))) {
                     //          Text(text = "Nr of updates: ${weatherUiState.numberOfUpdates}")
                     //         Text(text = "Nr of calls: ${weatherUiState.nrOfCalls}")
+                    WeatherListScreen(
+                        weatherUiState = weatherUiState,
+                        onCityCardPressed = onCityCardPressed,
+                        onCityCardDelete = onCityCardDelete,
+                        onRefreshContent = onRefreshContent,
+                        isLoading = isLoading,
+                        modifier = modifier,
+                    )
                 }
-                WeatherListScreen(
-                    weatherUiState = weatherUiState,
-                    onCityCardPressed = onCityCardPressed,
-                    onCityCardDelete = onCityCardDelete,
-                    onRefreshContent = onRefreshContent,
-                    isLoading = isLoading,
-                    modifier = modifier,
-                )
             }
         }
     }
@@ -242,8 +246,6 @@ fun WeatherListAndDetailsContent(
     val activity = LocalContext.current as Activity
 
     Row(modifier = modifier.testTag(weatherContentDescription)) {
-        //   Column(modifier = Modifier.weight(0.7f)) {
-        //       Text(text = "Nr of updates: ${weatherUiState.numberOfUpdates}")
         WeatherListScreen(
             weatherUiState = weatherUiState,
             onCityCardPressed = onCityCardPressed,
@@ -291,8 +293,8 @@ fun WeatherTopAppBar(modifier: Modifier = Modifier) {
 }
 
 /**
- * button to go to the add city screen
- * @param onClick triggers a viewModel function to open the AddCityScreen
+ * Button to go to the addCityScreen
+ * @param onClick the callback to be called to open the AddCityScreen
  */
 @Composable
 private fun WeatherBottomAddBar(
@@ -324,8 +326,8 @@ private fun WeatherBottomAddBar(
 }
 
 /**
- * Extended Button to go to the addCityScreen
- * @param onClick triggers a viewModel function to open the AddCityScreen
+ * Extended button to go to the addCityScreen
+ * @param onClick the callback to be called to open the AddCityScreen
  */
 @Composable
 private fun WeatherExtendedBottomAddBar(

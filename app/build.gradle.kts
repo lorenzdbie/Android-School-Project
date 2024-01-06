@@ -54,6 +54,7 @@ android {
 
 tasks.dokkaHtml.configure {
     outputDirectory.set(file("../docs"))
+    suppressObviousFunctions.set(true)
     dokkaSourceSets.configureEach {
         // The set of visibility modifiers that should be documented.
         documentedVisibilities.set(

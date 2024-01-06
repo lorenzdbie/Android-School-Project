@@ -36,9 +36,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import com.example.androidschoolproject.R
 import com.example.androidschoolproject.model.WeatherCity
 import com.example.androidschoolproject.ui.utils.Temperature
@@ -79,9 +79,8 @@ fun WeatherListScreen(
             val localCity = weatherUiState.localCity
             val cityList = weatherUiState.cityList
             val cities = mutableListOf<WeatherCity>()
-            if (localCity != null) {
-                cities.add(localCity)
-            }
+//
+            localCity?.let { cities.add(it) }
             cities.addAll(cityList)
 
             val weatherContentDescription = stringResource(R.string.listOnlyContent)
@@ -102,7 +101,7 @@ fun WeatherListScreen(
                             selected = if (showSelected) weatherUiState.currentCity?.id == localCity.id else false,
                             onCardClick = { onCityCardPressed(localCity) },
                             isLocalCity = true,
-                            modifier = Modifier.padding(5.dp),
+                            modifier = Modifier.padding(dimensionResource(id = R.dimen.card_padding_small)),
                         )
                     } else {
                         SwipeToDismiss(state = dismissState, background = {
@@ -112,7 +111,7 @@ fun WeatherListScreen(
                                 city = city,
                                 selected = if (showSelected) weatherUiState.currentCity?.id == city.id else false,
                                 onCardClick = { onCityCardPressed(city) },
-                                modifier = Modifier.padding(5.dp),
+                                modifier = Modifier.padding(dimensionResource(id = R.dimen.card_padding_small)),
                             )
                         })
                     }
@@ -133,8 +132,8 @@ fun WeatherIcon(icon: String, viewSize: ViewSize, modifier: Modifier = Modifier)
     Box(
         modifier = Modifier.requiredSize(
             when (viewSize) {
-                ViewSize.SMALL -> 50.dp
-                ViewSize.LARGE -> 120.dp
+                ViewSize.SMALL -> dimensionResource(id = R.dimen.icon_size_small)
+                ViewSize.LARGE -> dimensionResource(id = R.dimen.icon_size_large)
             },
         ),
     ) {
@@ -165,10 +164,10 @@ private fun CityWeatherCard(
     isLocalCity: Boolean = false,
 ) {
     Card(
-        elevation = CardDefaults.cardElevation(defaultElevation = 10.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = dimensionResource(id = R.dimen.card_padding)),
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 10.dp),
+            .padding(horizontal = dimensionResource(id = R.dimen.card_padding)),
         colors = CardDefaults.cardColors(
             containerColor = if (selected) {
                 MaterialTheme.colorScheme.tertiaryContainer
@@ -179,7 +178,10 @@ private fun CityWeatherCard(
         onClick = onCardClick,
     ) {
         Row(
-            modifier = modifier.padding(horizontal = 10.dp, vertical = 5.dp),
+            modifier = modifier.padding(
+                horizontal = dimensionResource(id = R.dimen.card_padding),
+                vertical = dimensionResource(id = R.dimen.card_padding_small),
+            ),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Spacer(modifier = Modifier.weight(0.1f))
@@ -187,7 +189,7 @@ private fun CityWeatherCard(
                 Icon(
                     painter = painterResource(id = R.drawable.near_me),
                     contentDescription = null,
-                    modifier = Modifier.padding(end = 2.dp),
+                    modifier = Modifier.padding(end = dimensionResource(id = R.dimen.icon_padding)),
                 )
             }
             Text(
@@ -195,19 +197,17 @@ private fun CityWeatherCard(
                 style = MaterialTheme.typography.headlineSmall,
                 modifier = Modifier.fillMaxWidth(0.6f),
             )
-            //  Spacer(modifier = Modifier.weight(0.2f))
-//            Spacer(modifier = Modifier.weight(0.1f))
             Text(
                 text = "${city.id}",
                 style = MaterialTheme.typography.headlineSmall,
             )
             Spacer(modifier = Modifier.weight(0.1f))
             Column(
-                modifier = Modifier.padding(horizontal = 10.dp),
+                modifier = Modifier.padding(horizontal = dimensionResource(id = R.dimen.card_padding)),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Temperature(temp = city.weather.temperature, size = ViewSize.SMALL)
-                Spacer(modifier = Modifier.height(5.dp))
+                Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.card_padding_small)))
                 WindDirection(direction = city.weather.windDirection, size = ViewSize.SMALL)
             }
             WeatherIcon(
@@ -215,7 +215,7 @@ private fun CityWeatherCard(
                 viewSize = ViewSize.SMALL,
                 modifier = Modifier
                     .fillMaxSize(1f)
-                    .padding(horizontal = 10.dp),
+                    .padding(horizontal = dimensionResource(id = R.dimen.card_padding)),
             )
             Spacer(modifier = Modifier.weight(0.1f))
         }
@@ -230,14 +230,13 @@ private fun CityWeatherCard(
 @Composable
 fun DismissBackground(dismissState: DismissState) {
     val color = when (dismissState.dismissDirection) {
-        DismissDirection.StartToEnd -> Color(0xFF1DE9B6)
         DismissDirection.EndToStart -> MaterialTheme.colorScheme.error
-        null -> Color.Transparent
+        else -> Color.Transparent
     }
     val direction = dismissState.dismissDirection
     Row(
         modifier = Modifier
-            .padding(5.dp)
+            .padding(dimensionResource(id = R.dimen.card_padding_small))
             .clip(MaterialTheme.shapes.medium)
             .fillMaxSize()
             .background(color),
@@ -248,7 +247,7 @@ fun DismissBackground(dismissState: DismissState) {
         if (direction == DismissDirection.EndToStart) {
             Icon(
                 Icons.Default.Delete,
-                contentDescription = "delete",
+                contentDescription = stringResource(id = R.string.delete),
             )
         }
     }

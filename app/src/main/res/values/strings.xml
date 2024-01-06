@@ -14,6 +14,14 @@
     <string name="listAndDetailsContent">List and details content</string>
     <string name="add_city_screen">Add city screen</string>
 
+    <string name="city_name">City: </string>
+    <string name="country_name">Country: </string>
+    <string name="state_name">State: </string>
+
+    <string name="select_city">Select city</string>
+    <string name="select_country">Select country</string>
+    <string name="select_state">Select state</string>
+
     <string name="country_label">Country: %n%s</string>
     <string name="state_label">State: %n%s</string>
     <string name="city_label">City: %n%s</string>
@@ -34,4 +42,5 @@
     <string name="error_title">Error</string>
     <string name="error_text">An error occurred while fetching data from the API.\nTry again later.</string>
     <string name="button_close">Close</string>
+    <string name="delete">delete</string>
 </resources>
